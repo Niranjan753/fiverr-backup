@@ -68,7 +68,7 @@ const products = [
   },
   {
     name: "Aerial Shell Kit",
-    price: 3999,
+    price: 399,
     discount: 22,
     image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=400&h=400&fit=crop",
     rating: 4.7,
@@ -139,20 +139,24 @@ export default function Home() {
       <ImageSlider />
 
       {/* Products Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          {/* Section Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
-            <p className="mt-2 text-gray-600">Discover our collection of premium crackers</p>
-          </div>
+      <section className="py-16 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
+        {/* Section Header */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Featured Products
+          </h2>
+          <p className="mt-1 text-gray-500">
+            Premium quality crackers for your celebrations
+          </p>
+        </div>
 
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <ProductCard key={index} {...product} />
-            ))}
-          </div>
+        {/* Product Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6 lg:gap-8">
+          {products.map((product, index) => (
+            <div key={index} className="h-full">
+              <ProductCard {...product} />
+            </div>
+          ))}
         </div>
       </section>
     </main>
