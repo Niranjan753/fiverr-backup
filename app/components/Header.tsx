@@ -14,7 +14,7 @@ export default function Header() {
         <div className="container mx-auto px-4 flex items-center justify-between gap-8">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <div className="text-2xl font-medium text-[#e31837]">SIVAKASI</div>
+            <div className="text-2xl font-medium text-[#e31837]">SRT CRACKERS</div>
           </Link>
 
           {/* Search Bar */}
@@ -48,28 +48,15 @@ export default function Header() {
       <nav className="bg-[#e31837] text-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              {/* Category Menu */}
-              <div className="relative group py-3 px-4 bg-gray-900 cursor-pointer hover:bg-gray-800 transition-colors duration-200">
-                <div className="flex items-center space-x-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                  <span className="text-sm">Shop By Category</span>
-                </div>
-              </div>
-
-              {/* Navigation Links */}
-              <div className="flex space-x-8 ml-8">
-                <Link href="/all-crackers" className="py-3 text-sm hover:text-yellow-300 transition-colors">All Crackers</Link>
-                <Link href="/day-time" className="py-3 text-sm hover:text-yellow-300 transition-colors">Day Time</Link>
-                <Link href="/night-time" className="py-3 text-sm hover:text-yellow-300 transition-colors">Night Time</Link>
-                <Link href="/kids-collection" className="py-3 text-sm hover:text-yellow-300 transition-colors">Kids Collection</Link>
-                <Link href="/new-arrivals" className="py-3 text-sm hover:text-yellow-300 transition-colors">New Arrivals</Link>
-                <Link href="/family-packs" className="py-3 text-sm hover:text-yellow-300 transition-colors">Family Packs</Link>
-                <Link href="/gift-boxes" className="py-3 text-sm hover:text-yellow-300 transition-colors">Gift Boxes</Link>
-                <Link href="/celebration" className="py-3 text-sm hover:text-yellow-300 transition-colors">Celebration</Link>
-              </div>
+            {/* Navigation Links */}
+            <div className="flex-1 flex justify-center space-x-8">
+              <Link href="/" className="py-3 text-sm hover:text-yellow-300 transition-colors">Home</Link>
+              <Link href="/about" className="py-3 text-sm hover:text-yellow-300 transition-colors">About Us</Link>
+              <Link href="/products" className="py-3 text-sm hover:text-yellow-300 transition-colors">Products</Link>
+              <Link href="/safety" className="py-3 text-sm hover:text-yellow-300 transition-colors">Safety Tips</Link>
+              <Link href="/contact" className="py-3 text-sm hover:text-yellow-300 transition-colors">Contact Us</Link>
+              <Link href="/kids-special" className="py-3 text-sm hover:text-yellow-300 transition-colors border-b-2 border-transparent hover:border-yellow-300">Kids Special</Link>
+              <Link href="/vanitha-series" className="py-3 text-sm hover:text-yellow-300 transition-colors border-b-2 border-transparent hover:border-yellow-300">Vanitha Series</Link>
             </div>
 
             {/* Cart & Account */}
