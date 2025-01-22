@@ -134,46 +134,53 @@ const products = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-black">
       {/* Hero Slider */}
       <ImageSlider />
 
       {/* Products Section */}
       <section className="relative py-16">
-        {/* SVG Pattern Background */}
+        {/* Background Pattern */}
         <div 
-          className="absolute inset-0 z-0 opacity-15" 
+          className="absolute inset-0 z-0" 
           style={{
-            backgroundImage: 'url("/dark-container-grid.svg")',
-            backgroundSize: '50px 50px',
+            background: `
+              linear-gradient(rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.92)),
+              url("/dark-container-grid.svg")
+            `,
+            backgroundSize: '80px 80px',
             backgroundRepeat: 'repeat',
-            backgroundColor: '#f5f5f5',
+            backgroundPosition: 'center center',
+            backgroundColor: '#000000',
           }}
-        />
-
-        {/* Subtle Gradient Overlay */}
-        <div 
-          className="absolute inset-0 z-0 bg-gradient-to-b from-white via-transparent to-white opacity-60"
         />
 
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="mb-12 text-center">
+            <h2 className="text-4xl font-bold text-yellow-400 mb-4">
               Featured Products
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-xl text-yellow-300/80">
               Premium quality crackers for your celebrations
             </p>
           </div>
 
-          {/* Product Grid with Shadow */}
+          {/* Product Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
             {products.map((product, index) => (
               <div key={index} className="transform transition-transform duration-300 hover:-translate-y-1">
                 <ProductCard {...product} />
               </div>
             ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="mt-16 text-center">
+            <button className="bg-yellow-400 text-black px-8 py-3 rounded-lg text-lg font-semibold 
+              hover:bg-yellow-300 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20">
+              View All Products
+            </button>
           </div>
         </div>
       </section>
