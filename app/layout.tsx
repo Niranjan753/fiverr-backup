@@ -7,8 +7,8 @@ import Footer from "./components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Bijili Crackers - Buy Crackers Online | Sivakasi Fireworks",
-  description: "Buy crackers online from Bijili Crackers. We offer a wide range of Sivakasi fireworks, sparklers, ground chakkars, and more at the best prices.",
+  title: "Sivakasi Crackers",
+  description: "Premium quality crackers for your celebrations",
 };
 
 export default function RootLayout({
@@ -18,8 +18,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
+      <body className={`${inter.className} min-h-screen`}>
+        {/* Background Pattern Container */}
+        <div
+          className="fixed inset-0 z-0 pointer-events-none opacity-[0.035]"
+          style={{
+            backgroundImage: 'url("/dark-container-grid.svg")',
+            backgroundSize: "50px 50px",
+            backgroundRepeat: "repeat",
+            backgroundColor: "#ffffff",
+          }}
+        />
+
+        {/* Content Container */}
+        <div className="relative z-10">
           <Header />
           <div className="flex-grow">
             {children}

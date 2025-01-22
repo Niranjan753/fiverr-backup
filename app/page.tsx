@@ -134,29 +134,47 @@ const products = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen">
       {/* Hero Slider */}
       <ImageSlider />
 
       {/* Products Section */}
-      <section className="py-16 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
-        {/* Section Header */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Featured Products
-          </h2>
-          <p className="mt-1 text-gray-500">
-            Premium quality crackers for your celebrations
-          </p>
-        </div>
+      <section className="relative py-16">
+        {/* SVG Pattern Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-15" 
+          style={{
+            backgroundImage: 'url("/dark-container-grid.svg")',
+            backgroundSize: '50px 50px',
+            backgroundRepeat: 'repeat',
+            backgroundColor: '#f5f5f5',
+          }}
+        />
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6 lg:gap-8">
-          {products.map((product, index) => (
-            <div key={index} className="h-full">
-              <ProductCard {...product} />
-            </div>
-          ))}
+        {/* Subtle Gradient Overlay */}
+        <div 
+          className="absolute inset-0 z-0 bg-gradient-to-b from-white via-transparent to-white opacity-60"
+        />
+
+        <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
+          {/* Section Header */}
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Featured Products
+            </h2>
+            <p className="text-lg text-gray-600">
+              Premium quality crackers for your celebrations
+            </p>
+          </div>
+
+          {/* Product Grid with Shadow */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+            {products.map((product, index) => (
+              <div key={index} className="transform transition-transform duration-300 hover:-translate-y-1">
+                <ProductCard {...product} />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

@@ -14,7 +14,7 @@ export default function ProductCard({ name, price, discount, image, rating, desc
   const discountedPrice = price - (price * discount) / 100;
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-gray-200">
+    <div className="bg-white rounded-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-gray-200 cursor-pointer">
       <Link href={`/product/${name.toLowerCase().replace(/\s+/g, '-')}`}>
         <div className="relative aspect-square overflow-hidden">
           <Image
