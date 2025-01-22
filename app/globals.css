@@ -3,19 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary-color: #e31837;
+  --secondary-color: #ffd700;
+  --background-color: #ffffff;
+  --text-color: #333333;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+}
+
+.product-card {
+  @apply border rounded-lg p-4 hover:shadow-lg transition-shadow;
+}
+
+.btn-primary {
+  @apply bg-[#e31837] text-white px-4 py-2 rounded-md hover:bg-[#c41430] transition-colors;
+}
+
+.header {
+  @apply bg-[#e31837] text-white;
+}
+
+.footer {
+  @apply bg-[#333] text-white;
 }
