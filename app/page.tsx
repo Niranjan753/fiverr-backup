@@ -1,134 +1,72 @@
 import ProductCard from "./components/ProductCard";
 import ImageSlider from "./components/ImageSlider";
+import Link from "next/link";
+import Image from "next/image";
 
-const products = [
+const categories = [
   {
-    name: "Supreme Deluxe",
-    price: 2999,
-    discount: 15,
-    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=400&h=400&fit=crop",
-    rating: 4.5,
-    description: "Premium quality crackers with extra-long duration and vibrant colors."
+    id: 1,
+    name: "Ground Chakkar",
+    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=800&h=600&fit=crop",
+    description: "Colorful ground spinners with mesmerizing effects",
+    count: 24
   },
   {
-    name: "Color Rain 5000",
-    price: 1999,
-    discount: 10,
-    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=400&fit=crop",
-    rating: 4.2,
-    description: "Creates a stunning display of colorful sparks that rain down."
+    id: 2,
+    name: "Flower Pots",
+    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=800&h=600&fit=crop",
+    description: "Beautiful aerial showers of colorful sparks",
+    count: 18
   },
   {
-    name: "Golden Sparklers",
-    price: 499,
-    discount: 5,
-    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=400&h=400&fit=crop",
-    rating: 4.8,
-    description: "Long-lasting sparklers that create beautiful golden patterns."
+    id: 3,
+    name: "Rockets",
+    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=800&h=600&fit=crop",
+    description: "High-flying crackers with spectacular effects",
+    count: 32
   },
   {
-    name: "Thunder Bombs",
-    price: 799,
-    discount: 12,
-    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=400&h=400&fit=crop",
-    rating: 4.0,
-    description: "High-intensity crackers that create impressive sound effects."
+    id: 4,
+    name: "Single Sound Crackers",
+    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=800&h=600&fit=crop",
+    description: "Classic crackers with powerful sound effects",
+    count: 45
   },
   {
-    name: "Rainbow Wheel",
-    price: 1299,
-    discount: 8,
-    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=400&h=400&fit=crop",
-    rating: 4.6,
-    description: "Spinning wheel that creates a mesmerizing display of rainbow colors."
+    id: 5,
+    name: "Sparklers",
+    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=800&h=600&fit=crop",
+    description: "Safe and beautiful hand-held sparklers",
+    count: 28
   },
   {
-    name: "Flower Shower",
-    price: 1599,
-    discount: 20,
-    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=400&h=400&fit=crop",
-    rating: 4.7,
-    description: "Creates beautiful flower-shaped patterns in the sky."
+    id: 6,
+    name: "Sky Shots",
+    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=800&h=600&fit=crop",
+    description: "Multi-shot aerial display with stunning effects",
+    count: 36
   },
   {
-    name: "Magic Missiles",
-    price: 899,
-    discount: 15,
-    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=400&h=400&fit=crop",
-    rating: 4.3,
-    description: "High-flying rockets that burst into spectacular patterns."
+    id: 7,
+    name: "Fountains",
+    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=800&h=600&fit=crop",
+    description: "Long-lasting fountains with colorful effects",
+    count: 22
   },
   {
-    name: "Diamond Chain",
-    price: 2499,
-    discount: 18,
-    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=400&h=400&fit=crop",
-    rating: 4.9,
-    description: "Premium crackers that create a chain reaction of patterns."
+    id: 8,
+    name: "Repeating Shots",
+    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=800&h=600&fit=crop",
+    description: "Multiple shots with continuous effects",
+    count: 30
   },
   {
-    name: "Aerial Shell Kit",
-    price: 399,
-    discount: 22,
-    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=400&h=400&fit=crop",
-    rating: 4.7,
-    description: "Professional-grade aerial shells for spectacular displays."
-  },
-  {
-    name: "Celebration Pack",
-    price: 4999,
-    discount: 25,
-    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=400&fit=crop",
-    rating: 4.8,
-    description: "Complete celebration pack with variety of effects."
-  },
-  {
-    name: "Kids Special",
-    price: 699,
-    discount: 10,
-    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=400&h=400&fit=crop",
-    rating: 4.4,
-    description: "Safe and fun crackers specially designed for children."
-  },
-  {
-    name: "Party Popper Set",
-    price: 299,
-    discount: 5,
-    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=400&h=400&fit=crop",
-    rating: 4.2,
-    description: "Colorful party poppers perfect for celebrations."
-  },
-  {
-    name: "Grand Finale Box",
-    price: 5999,
-    discount: 30,
-    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=400&h=400&fit=crop",
-    rating: 5.0,
-    description: "The ultimate finale box for your celebration."
-  },
-  {
-    name: "Sparkle Fountain",
-    price: 899,
-    discount: 12,
-    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=400&h=400&fit=crop",
-    rating: 4.6,
-    description: "Beautiful fountain effect with long duration."
-  },
-  {
-    name: "Diwali Special",
-    price: 3499,
-    discount: 20,
-    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=400&h=400&fit=crop",
-    rating: 4.8,
-    description: "Special Diwali assortment of premium crackers."
-  },
-  {
-    name: "Night Sky Pack",
-    price: 2799,
-    discount: 15,
-    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=400&h=400&fit=crop",
-    rating: 4.7,
-    description: "Perfect for lighting up the night sky."
+    id: 9,
+    name: "New Arrivals",
+    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=800&h=600&fit=crop",
+    description: "Latest additions to our collection",
+    count: 15,
+    isNew: true
   }
 ];
 
@@ -159,28 +97,73 @@ export default function Home() {
           {/* Section Header */}
           <div className="mb-12 text-center">
             <h2 className="text-4xl font-bold text-yellow-400 mb-4">
-              Featured Products
+              Featured Categories
             </h2>
             <p className="text-xl text-yellow-300/80">
-              Premium quality crackers for your celebrations
+              Explore our wide range of premium quality crackers
             </p>
           </div>
 
-          {/* Product Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
-            {products.map((product, index) => (
-              <div key={index} className="transform transition-transform duration-300 hover:-translate-y-1">
-                <ProductCard {...product} />
-              </div>
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {categories.map((category) => (
+              <Link 
+                href={`/category/${category.id}`} 
+                key={category.id}
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 to-black border border-yellow-400/10 hover:border-yellow-400/30 transition-all duration-300"
+              >
+                <div className="aspect-[4/3] relative overflow-hidden">
+                  {/* Category Image */}
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    width={400}
+                    height={300}
+                    className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300" />
+                  
+                  {/* New Badge */}
+                  {category.isNew && (
+                    <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-full">
+                      NEW
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-yellow-400 mb-2">
+                    {category.name}
+                  </h3>
+                  <p className="text-yellow-300/70 text-sm mb-4">
+                    {category.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-yellow-300/60 text-sm">
+                      {category.count} Products
+                    </span>
+                    <span className="text-yellow-400 group-hover:translate-x-1 transition-transform duration-300">
+                      →
+                    </span>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
 
           {/* View All Button */}
-          <div className="mt-16 text-center">
-            <button className="bg-yellow-400 text-black px-8 py-3 rounded-lg text-lg font-semibold 
-              hover:bg-yellow-300 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20">
+          <div className="mt-12 text-center">
+            <Link 
+              href="/products" 
+              className="inline-flex items-center bg-yellow-400 text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-300 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20"
+            >
               View All Products
-            </button>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
