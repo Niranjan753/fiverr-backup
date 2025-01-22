@@ -14,7 +14,9 @@ body {
   color: var(--text-color);
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -31,7 +33,7 @@ body {
 
 /* Header Styles */
 header {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .nav-link {
@@ -40,7 +42,7 @@ header {
 
 /* Search Bar */
 .search-input {
-  @apply w-full px-4 py-2 border border-gray-300 rounded-md;
+  @apply w-full px-4 py-2 border border-gray-200 rounded-lg text-sm;
   @apply focus:outline-none focus:border-[#e31837] focus:ring-1 focus:ring-[#e31837];
 }
 
@@ -49,7 +51,7 @@ header {
   @apply inline-flex items-center justify-center;
   @apply bg-yellow-300 text-[#e31837] text-xs;
   @apply rounded-full w-4 h-4;
-  @apply absolute -top-1 -right-1;
+  @apply absolute -top-2 -right-2;
 }
 
 .product-card {
@@ -57,7 +59,7 @@ header {
 }
 
 .button-primary {
-  @apply bg-[#e31837] text-white px-4 py-2 rounded-md hover:bg-[#c41430] transition-colors;
+  @apply bg-[#e31837] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#c41430] transition-colors;
 }
 
 .footer {
