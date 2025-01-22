@@ -29,16 +29,35 @@ body {
   }
 }
 
+/* Header Styles */
+header {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-link {
+  @apply text-white hover:text-yellow-300 transition-colors duration-200;
+}
+
+/* Search Bar */
+.search-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-md;
+  @apply focus:outline-none focus:border-[#e31837] focus:ring-1 focus:ring-[#e31837];
+}
+
+/* Cart Badge */
+.cart-badge {
+  @apply inline-flex items-center justify-center;
+  @apply bg-yellow-300 text-[#e31837] text-xs;
+  @apply rounded-full w-4 h-4;
+  @apply absolute -top-1 -right-1;
+}
+
 .product-card {
   @apply border rounded-lg p-4 hover:shadow-lg transition-shadow;
 }
 
-.btn-primary {
+.button-primary {
   @apply bg-[#e31837] text-white px-4 py-2 rounded-md hover:bg-[#c41430] transition-colors;
-}
-
-.header {
-  @apply bg-[#e31837] text-white;
 }
 
 .footer {
