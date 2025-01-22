@@ -1,97 +1,160 @@
-import Image from "next/image";
 import ProductCard from "./components/ProductCard";
-import Placeholder from "./components/Placeholder";
+import ImageSlider from "./components/ImageSlider";
 
-const featuredProducts = [
+const products = [
   {
-    name: "Classic Sparklers",
-    price: 299,
-    discount: 10,
-  },
-  {
-    name: "Ground Chakkar",
-    price: 199,
+    name: "Supreme Deluxe",
+    price: 2999,
     discount: 15,
+    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=400&h=400&fit=crop",
+    rating: 4.5,
+    description: "Premium quality crackers with extra-long duration and vibrant colors."
   },
   {
-    name: "Sky Rockets",
+    name: "Color Rain 5000",
+    price: 1999,
+    discount: 10,
+    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=400&fit=crop",
+    rating: 4.2,
+    description: "Creates a stunning display of colorful sparks that rain down."
+  },
+  {
+    name: "Golden Sparklers",
     price: 499,
-    discount: 20,
+    discount: 5,
+    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=400&h=400&fit=crop",
+    rating: 4.8,
+    description: "Long-lasting sparklers that create beautiful golden patterns."
   },
   {
-    name: "Flower Pots",
-    price: 399,
+    name: "Thunder Bombs",
+    price: 799,
+    discount: 12,
+    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=400&h=400&fit=crop",
+    rating: 4.0,
+    description: "High-intensity crackers that create impressive sound effects."
+  },
+  {
+    name: "Rainbow Wheel",
+    price: 1299,
+    discount: 8,
+    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=400&h=400&fit=crop",
+    rating: 4.6,
+    description: "Spinning wheel that creates a mesmerizing display of rainbow colors."
+  },
+  {
+    name: "Flower Shower",
+    price: 1599,
+    discount: 20,
+    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=400&h=400&fit=crop",
+    rating: 4.7,
+    description: "Creates beautiful flower-shaped patterns in the sky."
+  },
+  {
+    name: "Magic Missiles",
+    price: 899,
+    discount: 15,
+    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=400&h=400&fit=crop",
+    rating: 4.3,
+    description: "High-flying rockets that burst into spectacular patterns."
+  },
+  {
+    name: "Diamond Chain",
+    price: 2499,
+    discount: 18,
+    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=400&h=400&fit=crop",
+    rating: 4.9,
+    description: "Premium crackers that create a chain reaction of patterns."
+  },
+  {
+    name: "Aerial Shell Kit",
+    price: 3999,
+    discount: 22,
+    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=400&h=400&fit=crop",
+    rating: 4.7,
+    description: "Professional-grade aerial shells for spectacular displays."
+  },
+  {
+    name: "Celebration Pack",
+    price: 4999,
     discount: 25,
+    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=400&fit=crop",
+    rating: 4.8,
+    description: "Complete celebration pack with variety of effects."
+  },
+  {
+    name: "Kids Special",
+    price: 699,
+    discount: 10,
+    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=400&h=400&fit=crop",
+    rating: 4.4,
+    description: "Safe and fun crackers specially designed for children."
+  },
+  {
+    name: "Party Popper Set",
+    price: 299,
+    discount: 5,
+    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=400&h=400&fit=crop",
+    rating: 4.2,
+    description: "Colorful party poppers perfect for celebrations."
+  },
+  {
+    name: "Grand Finale Box",
+    price: 5999,
+    discount: 30,
+    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=400&h=400&fit=crop",
+    rating: 5.0,
+    description: "The ultimate finale box for your celebration."
+  },
+  {
+    name: "Sparkle Fountain",
+    price: 899,
+    discount: 12,
+    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=400&h=400&fit=crop",
+    rating: 4.6,
+    description: "Beautiful fountain effect with long duration."
+  },
+  {
+    name: "Diwali Special",
+    price: 3499,
+    discount: 20,
+    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=400&h=400&fit=crop",
+    rating: 4.8,
+    description: "Special Diwali assortment of premium crackers."
+  },
+  {
+    name: "Night Sky Pack",
+    price: 2799,
+    discount: 15,
+    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=400&h=400&fit=crop",
+    rating: 4.7,
+    description: "Perfect for lighting up the night sky."
   }
-];
-
-const categories = [
-  "Sparklers",
-  "Ground Chakkar",
-  "Rockets",
-  "Flower Pots"
 ];
 
 export default function Home() {
   return (
-    <>
-      {/* Hero Banner */}
-      <div className="w-full h-[400px] bg-[#8B0000] text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold mb-4">Diwali Special Offers</h1>
-          <p className="text-xl">Up to 50% off on selected items</p>
-        </div>
-      </div>
+    <main className="min-h-screen bg-gray-50">
+      {/* Hero Slider */}
+      <ImageSlider />
 
-      {/* Featured Categories */}
+      {/* Products Section */}
       <section className="py-12">
-        <h2 className="text-2xl font-bold mb-8 text-center">Featured Categories</h2>
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {categories.map((category) => (
-              <div key={category} className="text-center">
-                <div className="mx-auto w-24 h-24 rounded-full bg-[#e31837] flex items-center justify-center mb-4">
-                  <span className="text-white text-sm px-2 text-center">{category}</span>
-                </div>
-                <h3 className="font-medium">{category}</h3>
-              </div>
-            ))}
+          {/* Section Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
+            <p className="mt-2 text-gray-600">Discover our collection of premium crackers</p>
           </div>
-        </div>
-      </section>
 
-      {/* Best Sellers */}
-      <section className="py-12 bg-gray-50">
-        <h2 className="text-2xl font-bold mb-8 text-center">Best Sellers</h2>
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
+          {/* Product Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product, index) => (
               <ProductCard key={index} {...product} />
             ))}
           </div>
         </div>
       </section>
-
-      {/* Special Offers */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-[#e31837] text-white p-6 text-center">
-              <h3 className="text-xl font-bold mb-2">Early Bird Offer</h3>
-              <p>Get additional 10% off on orders above ₹2000</p>
-            </div>
-            <div className="bg-[#FFC107] text-white p-6 text-center">
-              <h3 className="text-xl font-bold mb-2">Combo Deals</h3>
-              <p>Save big with our specially curated combo boxes</p>
-            </div>
-            <div className="bg-[#28A745] text-white p-6 text-center">
-              <h3 className="text-xl font-bold mb-2">Bulk Orders</h3>
-              <p>Special discounts for bulk orders</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </>
+    </main>
   );
 }
