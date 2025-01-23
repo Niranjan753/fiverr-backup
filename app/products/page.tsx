@@ -23,8 +23,8 @@ const allProducts = [
       'Duration': '30-40 seconds',
       'Effects': 'Multi-color',
       'Quantity': '1 piece',
-      'Safety Rating': '4/5',
-      'Shots': ''
+      'Shots': '',
+      'Safety Rating': '4/5'
     },
     safetyInstructions: [
       'Light and step back immediately',
@@ -54,8 +54,8 @@ const allProducts = [
       'Duration': '50-60 seconds',
       'Effects': 'Vibrant colors',
       'Quantity': '1 piece',
-      'Safety Rating': '4.5/5',
-      'Shots': ''
+      'Shots': '',
+      'Safety Rating': '4.5/5'
     },
     safetyInstructions: [
       'Place on flat surface',
@@ -66,7 +66,7 @@ const allProducts = [
     stock: 30,
     isNew: true
   },
-  // Add more products from other categories...
+  // Sky Shots
   {
     id: 'sky1',
     name: 'Multi-Shot Aerial',
@@ -85,6 +85,7 @@ const allProducts = [
     specifications: {
       'Duration': '60-90 seconds',
       'Effects': 'Multi-color aerial bursts',
+      'Quantity': '1 piece',
       'Shots': '25 shots',
       'Safety Rating': '4/5'
     },
