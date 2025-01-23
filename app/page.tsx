@@ -2,6 +2,8 @@ import ProductCard from "./components/ProductCard";
 import VideoHero from "./components/VideoHero";
 import Link from "next/link";
 import Image from "next/image";
+import WelcomeSection from './components/WelcomeSection';
+import FeaturesSection from './components/FeaturesSection';
 
 const categories = [
   {
@@ -141,6 +143,16 @@ export default function Home() {
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* Welcome Section */}
+      <WelcomeSection />
+
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* Featured Categories */}
+      <section className="py-16 px-4 md:px-8 bg-black">
       </section>
     </main>
   );
