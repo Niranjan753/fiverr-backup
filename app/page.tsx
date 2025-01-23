@@ -86,7 +86,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {categories.map((category) => (
               <Link 
-                href={`/category/${category.id}`} 
+                href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                 key={category.id}
                 className="group relative overflow-hidden rounded-xl bg-black hover:transform hover:scale-[1.02] transition-all duration-300"
               >
