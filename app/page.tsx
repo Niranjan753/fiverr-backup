@@ -92,7 +92,7 @@ export default function Home() {
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <Image
-                    src={`https://source.unsplash.com/random/800x450?fireworks,${category.name}`}
+                    src="/demo.jpg"
                     alt={category.name}
                     fill
                     className="object-cover"

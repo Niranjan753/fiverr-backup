@@ -1,3 +1,4 @@
+"use client";
 import CategoryPage from '../components/CategoryPage';
 
 // Import all products from different categories
@@ -8,7 +9,7 @@ const allProducts = [
     name: 'Classic Ground Chakkar',
     price: 299,
     discount: 10,
-    image: '/products/ground-chakkar-1.jpg',
+    image: '/demo.jpg',
     rating: 4.5,
     description: 'Traditional ground spinner with colorful sparks and long-lasting performance',
     category: 'Ground Chakkar',
@@ -39,7 +40,7 @@ const allProducts = [
     name: 'Classic Flower Pot',
     price: 399,
     discount: 10,
-    image: '/products/flower-pot-1.jpg',
+    image: '/demo.jpg',
     rating: 4.5,
     description: 'Beautiful aerial fountain with multi-colored sparks',
     category: 'Flower Pots',
@@ -70,7 +71,7 @@ const allProducts = [
     name: 'Multi-Shot Aerial',
     price: 999,
     discount: 15,
-    image: '/products/sky-shot-1.jpg',
+    image: '/demo.jpg',
     rating: 4.7,
     description: 'Multiple aerial shots with spectacular effects',
     category: 'Sky Shots',
