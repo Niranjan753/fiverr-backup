@@ -1,4 +1,3 @@
-import ProductCard from "./components/ProductCard";
 import VideoHero from "./components/VideoHero";
 import Link from "next/link";
 import Image from "next/image";
