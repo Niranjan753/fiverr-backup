@@ -68,29 +68,16 @@ export default function Home() {
       <VideoHero />
 
       {/* Products Section */}
-      <section className="relative py-16">
-        {/* Background Pattern */}
-        <div 
-          className="absolute inset-0 z-0" 
-          style={{
-            background: `
-              linear-gradient(rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.92)),
-              url("/dark-container-grid.svg")
-            `,
-            backgroundSize: '80px 80px',
-            backgroundRepeat: 'repeat',
-            backgroundPosition: 'center center',
-            backgroundColor: '#000000',
-          }}
-        />
-
+      <section className="relative py-8" style={{
+        background: `radial-gradient(circle at center, #FACC15 0%, #EAB308 40%, #000000 100%)`
+      }}>
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
-          <div className="mb-12 text-center">
-            <h2 className="text-4xl font-bold text-yellow-400 mb-4">
+          <div className="mb-8 text-center">
+            <h2 className="text-4xl font-bold text-black mb-2">
               Featured Categories
             </h2>
-            <p className="text-xl text-yellow-300/80">
+            <p className="text-xl text-black/80">
               Explore our wide range of premium quality crackers
             </p>
           </div>
@@ -101,46 +88,38 @@ export default function Home() {
               <Link 
                 href={`/category/${category.id}`} 
                 key={category.id}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 to-black border border-yellow-400/10 hover:border-yellow-400/30 transition-all duration-300"
+                className="group relative overflow-hidden rounded-xl bg-black hover:transform hover:scale-[1.02] transition-all duration-300"
               >
-                <div className="aspect-[21/9] relative overflow-hidden">
-                  {/* Placeholder with dimensions: 600x260 pixels */}
-                  <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                    <div className="text-yellow-400/30 text-sm">
-                      Image: 600x260px
-                    </div>
-                  </div>
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300" />
+                <div className="aspect-[16/9] relative overflow-hidden">
+                  <Image
+                    src={`https://source.unsplash.com/random/800x450?fireworks,${category.name}`}
+                    alt={category.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
                   
                   {/* New Badge */}
                   {category.isNew && (
-                    <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-full">
+                    <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full">
                       NEW
                     </div>
                   )}
-
-                  {/* Category Name Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-2xl font-bold text-white text-center px-4 py-2 bg-black/60 rounded-lg">
-                      {category.name}
-                    </span>
-                  </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-yellow-400 mb-2">
+                  <h3 className="text-xl font-bold text-yellow-400 mb-2">
                     {category.name}
                   </h3>
-                  <p className="text-yellow-300/70 text-sm mb-4">
+                  <p className="text-yellow-400/70 text-sm mb-4">
                     {category.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-yellow-300/60 text-sm">
+                    <span className="text-yellow-400/60 text-sm">
                       {category.count} Products
                     </span>
-                    <span className="text-yellow-400 group-hover:translate-x-1 transition-transform duration-300">
+                    <span className="text-yellow-400 text-lg group-hover:translate-x-1 transition-transform duration-300">
                       →
                     </span>
                   </div>
@@ -153,7 +132,7 @@ export default function Home() {
           <div className="mt-12 text-center">
             <Link 
               href="/products" 
-              className="inline-flex items-center bg-yellow-400 text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-300 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20"
+              className="inline-flex items-center bg-black text-yellow-400 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20"
             >
               View All Products
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
