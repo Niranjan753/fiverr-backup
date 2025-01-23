@@ -22,7 +22,9 @@ const newArrivalsProducts = [
       'Duration': '60-70 seconds',
       'Effects': 'Premium color shower',
       'Quantity': '1 piece',
-      'Safety Rating': '5/5'
+      'Safety Rating': '5/5',
+      'Height': '', 
+      'Shots': ''   
     },
     safetyInstructions: [
       'Place on flat surface',
@@ -39,28 +41,29 @@ const newArrivalsProducts = [
     price: 499,
     discount: 10,
     image: '/demo.jpg',
-    rating: 4.7,
-    description: 'Premium rocket with thunderous sound and dazzling display',
+    rating: 4.5,
+    description: 'High altitude rocket with thunderous sound',
     category: 'Rockets',
     features: [
-      'Extra height',
-      'Thunder effect',
-      'Premium burst',
-      'Multiple effects'
+      'High altitude',
+      'Thunderous sound',
+      'Bright colors'
     ],
     specifications: {
-      'Height': '150-200 meters',
-      'Effects': 'Thunder with color burst',
-      'Quantity': '5 pieces',
-      'Safety Rating': '4/5'
+      'Duration': '30-40 seconds',
+      'Effects': 'Loud bang with colorful display',
+      'Quantity': '1 piece',
+      'Safety Rating': '4/5',
+      'Height': '', 
+      'Shots': ''   
     },
     safetyInstructions: [
-      'Launch from stable base',
-      'Clear area before launch',
-      'Keep away from buildings',
+      'Light fuse and retire quickly',
+      'Keep at safe distance',
+      'Use in open areas only',
       'Adult supervision required'
     ],
-    stock: 40,
+    stock: 50,
     isNew: true
   },
   {
@@ -82,7 +85,9 @@ const newArrivalsProducts = [
       'Duration': '90-120 seconds',
       'Effects': 'Premium aerial display',
       'Shots': '36 shots',
-      'Safety Rating': '4/5'
+      'Safety Rating': '4/5',
+      'Height': '', 
+      'Quantity': ''   
     },
     safetyInstructions: [
       'Place on flat surface',
