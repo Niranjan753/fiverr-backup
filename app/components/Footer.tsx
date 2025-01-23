@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-yellow-400">SRT CRACKERS</h3>
             <p className="text-gray-300 text-sm mb-4">
-              India's #1 Sivakasi Based Crackers Seller. Quality products directly from manufacturers.
+              India&apos;s #1 Sivakasi Based Crackers Seller. Quality products directly from manufacturers.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-300 hover:text-yellow-400">
