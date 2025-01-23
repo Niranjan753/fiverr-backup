@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import WelcomeSection from './components/WelcomeSection';
 import FeaturesSection from './components/FeaturesSection';
+import StatsCounter from './components/StatsCounter';
 
 const categories = [
   {
@@ -154,6 +155,9 @@ export default function Home() {
       {/* Featured Categories */}
       <section className="py-16 px-4 md:px-8 bg-black">
       </section>
+
+      {/* Stats Counter */}
+      <StatsCounter />
     </main>
   );
 }
