@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <header className="font-sans">
       {/* Top Info Bar */}
@@ -17,9 +20,19 @@ export default function Header() {
         <div className="bg-white shadow-md">
           <div className="py-2 border-b">
             <div className="container mx-auto px-4 flex items-center justify-between gap-4">
+              {/* Hamburger Menu - Mobile Only */}
+              <button 
+                className="md:hidden flex-none text-black"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+              </button>
+
               {/* Logo */}
-              <Link href="/" className="flex-shrink-0">
-                <div className="text-2xl font-medium text-black">SRT CRACKERS</div>
+              <Link href="/" className="flex-none md:flex-shrink-0">
+                <div className="text-xl md:text-2xl font-medium text-black">SRT CRACKERS</div>
               </Link>
 
               {/* Search Bar */}
@@ -38,8 +51,8 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Right Section: Select City, Cart, Account */}
-              <div className="flex items-center space-x-4">
+              {/* Right Section: Select City, Cart, Account - Hidden on Mobile */}
+              <div className="hidden md:flex items-center space-x-4">
                 <button className="flex items-center text-black border border-black px-3 py-1.5 rounded-lg text-sm hover:bg-black hover:text-white transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -68,8 +81,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Navigation Bar */}
-        <nav className="bg-black text-white">
+        {/* Navigation Bar - Hidden on Mobile */}
+        <nav className="hidden md:block bg-black text-white">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center">
               {/* Navigation Links */}
@@ -85,6 +98,65 @@ export default function Header() {
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* Mobile Slide-out Menu */}
+      <div 
+        className={`md:hidden fixed inset-0 z-50 ${isMobileMenuOpen ? 'visible' : 'invisible'}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        {/* Overlay */}
+        <div className={`absolute inset-0 bg-black transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-50' : 'opacity-0'}`} />
+        
+        {/* Slide-out Menu */}
+        <div 
+          className={`absolute top-0 left-0 w-64 h-full bg-white transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="p-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold">Menu</h2>
+              <button onClick={() => setIsMobileMenuOpen(false)}>
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Mobile Navigation Links */}
+            <nav className="space-y-4">
+              <Link href="/" className="block py-2 hover:text-yellow-600 transition-colors">Home</Link>
+              <Link href="/about" className="block py-2 hover:text-yellow-600 transition-colors">About Us</Link>
+              <Link href="/products" className="block py-2 hover:text-yellow-600 transition-colors">Products</Link>
+              <Link href="/safety" className="block py-2 hover:text-yellow-600 transition-colors">Safety Tips</Link>
+              <Link href="/contact" className="block py-2 hover:text-yellow-600 transition-colors">Contact Us</Link>
+              <Link href="/kids-special" className="block py-2 hover:text-yellow-600 transition-colors">Kids Special</Link>
+              <Link href="/vanitha-series" className="block py-2 hover:text-yellow-600 transition-colors">Vanitha Series</Link>
+              
+              {/* Mobile City Selection */}
+              <button className="w-full flex items-center text-left py-2 hover:text-yellow-600 transition-colors">
+                <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                </svg>
+                Select City
+              </button>
+
+              {/* Mobile Cart & Account */}
+              <Link href="/cart" className="flex items-center py-2 hover:text-yellow-600 transition-colors">
+                <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Cart
+              </Link>
+              <Link href="/account" className="flex items-center py-2 hover:text-yellow-600 transition-colors">
+                <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Account
+              </Link>
+            </nav>
+          </div>
+        </div>
       </div>
     </header>
   );
