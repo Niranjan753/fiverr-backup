@@ -23,7 +23,8 @@ const allProducts = [
       'Duration': '30-40 seconds',
       'Effects': 'Multi-color',
       'Quantity': '1 piece',
-      'Safety Rating': '4/5'
+      'Safety Rating': '4/5',
+      'Shots': ''
     },
     safetyInstructions: [
       'Light and step back immediately',
@@ -39,22 +40,22 @@ const allProducts = [
     id: 'fp1',
     name: 'Classic Flower Pot',
     price: 399,
-    discount: 10,
+    discount: 5,
     image: '/demo.jpg',
-    rating: 4.5,
-    description: 'Beautiful aerial fountain with multi-colored sparks',
+    rating: 4.7,
+    description: 'Classic flower pot with vibrant colors and safe performance',
     category: 'Flower Pots',
     features: [
-      'Multi-colored sparks',
-      'Long duration',
+      'Vibrant colors',
       'Safe to use',
-      'Fountain effect'
+      'Long-lasting'
     ],
     specifications: {
-      'Duration': '40-50 seconds',
-      'Effects': 'Multi-color fountain',
+      'Duration': '50-60 seconds',
+      'Effects': 'Vibrant colors',
       'Quantity': '1 piece',
-      'Safety Rating': '4/5'
+      'Safety Rating': '4.5/5',
+      'Shots': ''
     },
     safetyInstructions: [
       'Place on flat surface',
@@ -62,8 +63,8 @@ const allProducts = [
       'Use in open areas only',
       'Adult supervision required'
     ],
-    stock: 45,
-    isNew: false
+    stock: 30,
+    isNew: true
   },
   // Add more products from other categories...
   {
