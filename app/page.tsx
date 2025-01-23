@@ -74,10 +74,10 @@ export default function Home() {
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
           <div className="mb-8 text-center">
-            <h2 className="text-4xl font-bold text-black mb-2">
+            <h2 className="text-4xl font-bold text-white mb-2">
               Featured Categories
             </h2>
-            <p className="text-xl text-black/80">
+            <p className="text-xl text-white pt-[-4]">
               Explore our wide range of premium quality crackers
             </p>
           </div>
