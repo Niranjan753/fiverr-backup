@@ -1,5 +1,5 @@
 import ProductCard from "./components/ProductCard";
-import ImageSlider from "./components/ImageSlider";
+import VideoHero from "./components/VideoHero";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -7,63 +7,54 @@ const categories = [
   {
     id: 1,
     name: "Ground Chakkar",
-    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=800&h=600&fit=crop",
     description: "Colorful ground spinners with mesmerizing effects",
     count: 24
   },
   {
     id: 2,
     name: "Flower Pots",
-    image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=800&h=600&fit=crop",
     description: "Beautiful aerial showers of colorful sparks",
     count: 18
   },
   {
     id: 3,
     name: "Rockets",
-    image: "https://images.unsplash.com/photo-1514912885225-5c9ec8507d68?w=800&h=600&fit=crop",
     description: "High-flying crackers with spectacular effects",
     count: 32
   },
   {
     id: 4,
     name: "Single Sound Crackers",
-    image: "https://images.unsplash.com/photo-1576687772714-45db4c7c3cd5?w=800&h=600&fit=crop",
     description: "Classic crackers with powerful sound effects",
     count: 45
   },
   {
     id: 5,
     name: "Sparklers",
-    image: "https://images.unsplash.com/photo-1481846627958-6c5b29f8edaf?w=800&h=600&fit=crop",
     description: "Safe and beautiful hand-held sparklers",
     count: 28
   },
   {
     id: 6,
     name: "Sky Shots",
-    image: "https://images.unsplash.com/photo-1552525892-893defd34d54?w=800&h=600&fit=crop",
     description: "Multi-shot aerial display with stunning effects",
     count: 36
   },
   {
     id: 7,
     name: "Fountains",
-    image: "https://images.unsplash.com/photo-1533762385849-5aa14c83dbaf?w=800&h=600&fit=crop",
     description: "Long-lasting fountains with colorful effects",
     count: 22
   },
   {
     id: 8,
     name: "Repeating Shots",
-    image: "https://images.unsplash.com/photo-1468276311594-df7cb65d8df6?w=800&h=600&fit=crop",
     description: "Multiple shots with continuous effects",
     count: 30
   },
   {
     id: 9,
     name: "New Arrivals",
-    image: "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=800&h=600&fit=crop",
     description: "Latest additions to our collection",
     count: 15,
     isNew: true
@@ -74,7 +65,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black">
       {/* Hero Slider */}
-      <ImageSlider />
+      <VideoHero />
 
       {/* Products Section */}
       <section className="relative py-16">
@@ -112,15 +103,13 @@ export default function Home() {
                 key={category.id}
                 className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 to-black border border-yellow-400/10 hover:border-yellow-400/30 transition-all duration-300"
               >
-                <div className="aspect-[4/3] relative overflow-hidden">
-                  {/* Category Image */}
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    width={400}
-                    height={300}
-                    className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
-                  />
+                <div className="aspect-[21/9] relative overflow-hidden">
+                  {/* Placeholder with dimensions: 600x260 pixels */}
+                  <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                    <div className="text-yellow-400/30 text-sm">
+                      Image: 600x260px
+                    </div>
+                  </div>
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300" />
                   
@@ -130,6 +119,13 @@ export default function Home() {
                       NEW
                     </div>
                   )}
+
+                  {/* Category Name Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="text-2xl font-bold text-white text-center px-4 py-2 bg-black/60 rounded-lg">
+                      {category.name}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Content */}
