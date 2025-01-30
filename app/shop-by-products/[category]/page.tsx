@@ -52,7 +52,6 @@ const categoryProducts: Record<string, CategoryData> = {
 
 interface PageProps {
   params: { category: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -81,7 +80,7 @@ async function getCategoryData(category: string): Promise<CategoryData> {
   });
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const categoryData = await getCategoryData(params.category);
 
   return (

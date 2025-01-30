@@ -52,7 +52,6 @@ const brandProducts: Record<string, BrandData> = {
 
 interface PageProps {
   params: { brand: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -81,7 +80,7 @@ async function getBrandData(brand: string): Promise<BrandData> {
   });
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const brandData = await getBrandData(params.brand);
 
   return (
