@@ -49,20 +49,18 @@ const FloatingButtons = () => {
     <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
       <button
         onClick={handleOrderClick}
-        className="bg-black hover:bg-gray-800 text-yellow-400 px-6 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 font-semibold"
+        className="bg-black hover:bg-gray-800 text-yellow-400 p-4 rounded-full shadow-lg transition-all duration-300"
         aria-label="Order"
       >
         <CartIcon />
-        Order
       </button>
       
       <button
         onClick={handleWhatsAppClick}
-        className="bg-[#25D366] hover:bg-[#20BA5C] text-white p-4 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2"
+        className="bg-[#25D366] hover:bg-[#20BA5C] text-white p-4 rounded-full shadow-lg transition-all duration-300"
         aria-label="Contact on WhatsApp"
       >
         <WhatsAppLogo />
-        <span>whatsapp</span>
       </button>
     </div>
   );
