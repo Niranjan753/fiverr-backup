@@ -50,7 +50,12 @@ const brandProducts: Record<string, BrandData> = {
   },
 };
 
-export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
+interface PageProps {
+  params: { brand: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -64,15 +69,19 @@ export async function generateMetadata({ params }: { params: { brand: string } }
 // Simulate fetching data
 async function getBrandData(brand: string): Promise<BrandData> {
   // In a real app, this would be an API call
-  return brandProducts[brand] || {
-    name: brand.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' '),
-    products: []
-  };
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(brandProducts[brand] || {
+        name: brand.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' '),
+        products: []
+      });
+    }, 100); // Simulate network delay
+  });
 }
 
-export default async function Page({ params }: { params: { brand: string } }) {
+export default async function Page({ params, searchParams }: PageProps) {
   const brandData = await getBrandData(params.brand);
 
   return (

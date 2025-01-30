@@ -50,7 +50,12 @@ const categoryProducts: Record<string, CategoryData> = {
   },
 };
 
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+interface PageProps {
+  params: { category: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const categoryName = params.category.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -64,15 +69,19 @@ export async function generateMetadata({ params }: { params: { category: string 
 // Simulate fetching data
 async function getCategoryData(category: string): Promise<CategoryData> {
   // In a real app, this would be an API call
-  return categoryProducts[category] || {
-    name: category.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' '),
-    products: []
-  };
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(categoryProducts[category] || {
+        name: category.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' '),
+        products: []
+      });
+    }, 100); // Simulate network delay
+  });
 }
 
-export default async function Page({ params }: { params: { category: string } }) {
+export default async function Page({ params, searchParams }: PageProps) {
   const categoryData = await getCategoryData(params.category);
 
   return (
