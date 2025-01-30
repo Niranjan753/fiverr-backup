@@ -44,7 +44,6 @@ type Props = {
   params: {
     brand: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function BrandPage({ params, searchParams }: Props) {
+export default function BrandPage({ params }: Props) {
   // In a real app, you'd fetch this data from an API
   const brandData = brandProducts[params.brand as keyof typeof brandProducts] || {
     name: params.brand.split('-').map(word => 

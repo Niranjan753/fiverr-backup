@@ -44,7 +44,6 @@ type Props = {
   params: {
     category: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function CategoryPage({ params, searchParams }: Props) {
+export default function CategoryPage({ params }: Props) {
   // In a real app, you'd fetch this data from an API
   const categoryData = categoryProducts[params.category as keyof typeof categoryProducts] || {
     name: params.category.split('-').map(word => 
