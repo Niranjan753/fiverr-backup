@@ -66,11 +66,9 @@ const categories = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-black">
-      {/* Hero Slider */}
       <VideoHero />
-
       {/* Products Section */}
-      <section className="relative py-8" style={{
+      <section className="relative" style={{
         background: `radial-gradient(circle at center, #FACC15 0%, #EAB308 40%, #000000 100%)`
       }}>
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
