@@ -2,8 +2,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+type BrandProduct = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  description: string;
+};
+
+type BrandData = {
+  name: string;
+  products: BrandProduct[];
+};
+
 // This would typically come from an API or database
-const brandProducts = {
+const brandProducts: Record<string, BrandData> = {
   'cock': {
     name: "Cock Brand",
     products: [
@@ -40,7 +53,13 @@ const brandProducts = {
   // Add more brands...
 };
 
-export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
+type PageProps = {
+  params: {
+    brand: string;
+  };
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -51,7 +70,7 @@ export async function generateMetadata({ params }: { params: { brand: string } }
   };
 }
 
-export default async function BrandPage({ params }: { params: { brand: string } }) {
+export default function BrandPage({ params }: PageProps) {
   // In a real app, you'd fetch this data from an API
   const brandData = brandProducts[params.brand as keyof typeof brandProducts] || {
     name: params.brand.split('-').map(word => 
