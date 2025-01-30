@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 const WhatsAppLogo = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -12,23 +14,58 @@ const WhatsAppLogo = () => (
   </svg>
 );
 
-const WhatsAppButton = () => {
-  const phoneNumber = '919443155325'; // Format: country code + number without +
+const CartIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="8" cy="21" r="1" />
+    <circle cx="19" cy="21" r="1" />
+    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+  </svg>
+);
 
-  const handleClick = () => {
+const FloatingButtons = () => {
+  const router = useRouter();
+  const phoneNumber = '919443155325';
+
+  const handleWhatsAppClick = () => {
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleOrderClick = () => {
+    router.push('/cart');
+  };
+
   return (
-    <button
-      onClick={handleClick}
-      className="fixed bottom-6 right-6 bg-[#25D366] hover:bg-[#20BA5C] text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50"
-      aria-label="Contact on WhatsApp"
-    >
-      <WhatsAppLogo />
-    </button>
+    <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
+      <button
+        onClick={handleOrderClick}
+        className="bg-black hover:bg-gray-800 text-yellow-400 px-6 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 font-semibold"
+        aria-label="Order"
+      >
+        <CartIcon />
+        Order
+      </button>
+      
+      <button
+        onClick={handleWhatsAppClick}
+        className="bg-[#25D366] hover:bg-[#20BA5C] text-white p-4 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2"
+        aria-label="Contact on WhatsApp"
+      >
+        <WhatsAppLogo />
+        <span>whatsapp</span>
+      </button>
+    </div>
   );
 };
 
-export default WhatsAppButton;
+export default FloatingButtons;
