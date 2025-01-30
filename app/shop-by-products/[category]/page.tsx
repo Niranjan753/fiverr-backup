@@ -38,21 +38,6 @@ const categoryProducts: Record<string, CategoryData> = {
   },
 };
 
-type Props = {
-  params: { category: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const categoryName = params.category.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
-
-  return {
-    title: `${categoryName} - SRT Crackers`,
-    description: `Explore our collection of ${categoryName.toLowerCase()} crackers and fireworks`,
-  };
-}
-
 // Simulate fetching data
 async function getCategoryData(category: string): Promise<CategoryData> {
   // In a real app, this would be an API call
@@ -68,7 +53,26 @@ async function getCategoryData(category: string): Promise<CategoryData> {
   });
 }
 
-export default async function Page({ params }: Props) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { category: string };
+}): Promise<Metadata> {
+  const categoryName = params.category.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
+  return {
+    title: `${categoryName} - SRT Crackers`,
+    description: `Explore our collection of ${categoryName.toLowerCase()} crackers and fireworks`,
+  };
+}
+
+export default async function Page({
+  params,
+}: {
+  params: { category: string };
+}) {
   const categoryData = await getCategoryData(params.category);
 
   return (

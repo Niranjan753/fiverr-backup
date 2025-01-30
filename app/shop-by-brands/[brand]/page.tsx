@@ -38,21 +38,6 @@ const brandProducts: Record<string, BrandData> = {
   },
 };
 
-type Props = {
-  params: { brand: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const brandName = params.brand.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
-
-  return {
-    title: `${brandName} Products - SRT Crackers`,
-    description: `Explore our collection of ${brandName} crackers and fireworks products`,
-  };
-}
-
 // Simulate fetching data
 async function getBrandData(brand: string): Promise<BrandData> {
   // In a real app, this would be an API call
@@ -68,7 +53,26 @@ async function getBrandData(brand: string): Promise<BrandData> {
   });
 }
 
-export default async function Page({ params }: Props) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { brand: string };
+}): Promise<Metadata> {
+  const brandName = params.brand.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
+  return {
+    title: `${brandName} Products - SRT Crackers`,
+    description: `Explore our collection of ${brandName} crackers and fireworks products`,
+  };
+}
+
+export default async function Page({
+  params,
+}: {
+  params: { brand: string };
+}) {
   const brandData = await getBrandData(params.brand);
 
   return (
