@@ -1,19 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
-
-type BrandProduct = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-};
-
-type BrandData = {
-  name: string;
-  products: BrandProduct[];
-};
+import { BrandData } from '../../types';
 
 // This would typically come from an API or database
 const brandProducts: Record<string, BrandData> = {
@@ -50,11 +38,14 @@ const brandProducts: Record<string, BrandData> = {
   },
 };
 
-interface PageProps {
+type GenerateMetadataProps = {
   params: { brand: string };
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: GenerateMetadataProps
+): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -80,7 +71,12 @@ async function getBrandData(brand: string): Promise<BrandData> {
   });
 }
 
-export default async function Page({ params }: PageProps) {
+type Props = {
+  params: { brand: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const Page = async ({ params }: Props) => {
   const brandData = await getBrandData(params.brand);
 
   return (
@@ -133,3 +129,5 @@ export default async function Page({ params }: PageProps) {
     </div>
   );
 }
+
+export default Page;

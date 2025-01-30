@@ -1,19 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
-
-type CategoryProduct = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-};
-
-type CategoryData = {
-  name: string;
-  products: CategoryProduct[];
-};
+import { CategoryData } from '../../types';
 
 // This would typically come from an API or database
 const categoryProducts: Record<string, CategoryData> = {
@@ -50,11 +38,14 @@ const categoryProducts: Record<string, CategoryData> = {
   },
 };
 
-interface PageProps {
+type GenerateMetadataProps = {
   params: { category: string };
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: GenerateMetadataProps
+): Promise<Metadata> {
   const categoryName = params.category.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -80,7 +71,12 @@ async function getCategoryData(category: string): Promise<CategoryData> {
   });
 }
 
-export default async function Page({ params }: PageProps) {
+type Props = {
+  params: { category: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const Page = async ({ params }: Props) => {
   const categoryData = await getCategoryData(params.category);
 
   return (
@@ -157,3 +153,5 @@ export default async function Page({ params }: PageProps) {
     </div>
   );
 }
+
+export default Page;
