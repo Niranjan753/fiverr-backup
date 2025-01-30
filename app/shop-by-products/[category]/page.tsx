@@ -50,13 +50,7 @@ const categoryProducts: Record<string, CategoryData> = {
   },
 };
 
-type PageProps = {
-  params: {
-    category: string;
-  };
-};
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
   const categoryName = params.category.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -67,14 +61,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function CategoryPage({ params }: PageProps) {
-  // In a real app, you'd fetch this data from an API
-  const categoryData = categoryProducts[params.category] || {
-    name: params.category.split('-').map(word => 
+// Simulate fetching data
+async function getCategoryData(category: string): Promise<CategoryData> {
+  // In a real app, this would be an API call
+  return categoryProducts[category] || {
+    name: category.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' '),
     products: []
   };
+}
+
+export default async function Page({ params }: { params: { category: string } }) {
+  const categoryData = await getCategoryData(params.category);
 
   return (
     <div className="bg-black min-h-screen py-8">

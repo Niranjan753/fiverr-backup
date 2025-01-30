@@ -34,7 +34,6 @@ const brandProducts: Record<string, BrandData> = {
         image: "/products/color-sparklers.jpg",
         description: "Colorful hand sparklers"
       },
-      // Add more products...
     ]
   },
   'coronation': {
@@ -47,19 +46,11 @@ const brandProducts: Record<string, BrandData> = {
         image: "/products/aerial-shots.jpg",
         description: "Multi-shot aerial display"
       },
-      // Add more products...
     ]
   },
-  // Add more brands...
 };
 
-type PageProps = {
-  params: {
-    brand: string;
-  };
-};
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -70,14 +61,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function BrandPage({ params }: PageProps) {
-  // In a real app, you'd fetch this data from an API
-  const brandData = brandProducts[params.brand as keyof typeof brandProducts] || {
-    name: params.brand.split('-').map(word => 
+// Simulate fetching data
+async function getBrandData(brand: string): Promise<BrandData> {
+  // In a real app, this would be an API call
+  return brandProducts[brand] || {
+    name: brand.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' '),
     products: []
   };
+}
+
+export default async function Page({ params }: { params: { brand: string } }) {
+  const brandData = await getBrandData(params.brand);
 
   return (
     <div className="bg-black min-h-screen py-8">
