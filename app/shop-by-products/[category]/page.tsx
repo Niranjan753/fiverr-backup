@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 // This would typically come from an API or database
 const categoryProducts = {
@@ -39,10 +40,30 @@ const categoryProducts = {
   // Add more categories...
 };
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+type Props = {
+  params: {
+    category: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const categoryName = params.category.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
+  return {
+    title: `${categoryName} - SRT Crackers`,
+    description: `Explore our collection of ${categoryName.toLowerCase()} crackers and fireworks`,
+  };
+}
+
+export default function CategoryPage({ params, searchParams }: Props) {
   // In a real app, you'd fetch this data from an API
   const categoryData = categoryProducts[params.category as keyof typeof categoryProducts] || {
-    name: params.category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+    name: params.category.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' '),
     products: []
   };
 

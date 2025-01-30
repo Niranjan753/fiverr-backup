@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 // This would typically come from an API or database
 const brandProducts = {
@@ -39,10 +40,30 @@ const brandProducts = {
   // Add more brands...
 };
 
-export default function BrandPage({ params }: { params: { brand: string } }) {
+type Props = {
+  params: {
+    brand: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const brandName = params.brand.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
+  return {
+    title: `${brandName} Products - SRT Crackers`,
+    description: `Explore our collection of ${brandName} crackers and fireworks products`,
+  };
+}
+
+export default function BrandPage({ params, searchParams }: Props) {
   // In a real app, you'd fetch this data from an API
   const brandData = brandProducts[params.brand as keyof typeof brandProducts] || {
-    name: params.brand.charAt(0).toUpperCase() + params.brand.slice(1),
+    name: params.brand.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' '),
     products: []
   };
 
