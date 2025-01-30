@@ -1,5 +1,3 @@
-import { NextPage } from 'next';
-
 export type BrandProduct = {
   id: number;
   name: string;
