@@ -34,14 +34,16 @@ export default function WelcomeSection() {
           </div>
 
           {/* Image */}
-          <div className="relative aspect-square">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-transparent rounded-full" />
-            <Image
-              src="/demo.jpg"
-              alt="Diwali Celebration"
-              fill
-              className="object-cover rounded-full p-4"
-            />
+          <div className="relative w-[80%] mx-auto md:w-full">
+            <div className="relative aspect-[4/3] md:aspect-square">
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-transparent rounded-full" />
+              <Image
+                src="/demo.jpg"
+                alt="Diwali Celebration"
+                fill
+                className="object-cover rounded-full p-4"
+              />
+            </div>
           </div>
         </div>
       </div>
