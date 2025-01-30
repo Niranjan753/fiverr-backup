@@ -21,7 +21,6 @@ const categoryProducts = {
         image: "/products/100-shots.jpg",
         description: "Spectacular aerial display with 100 shots"
       },
-      // Add more products...
     ]
   },
   'ground-chakkar': {
@@ -34,19 +33,11 @@ const categoryProducts = {
         image: "/products/golden-spinner.jpg",
         description: "Classic ground spinner with golden sparks"
       },
-      // Add more products...
     ]
   },
-  // Add more categories...
 };
 
-type Props = {
-  params: {
-    category: string;
-  };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
   const categoryName = params.category.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -57,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function CategoryPage({ params }: Props) {
+export default async function CategoryPage({ params }: { params: { category: string } }) {
   // In a real app, you'd fetch this data from an API
   const categoryData = categoryProducts[params.category as keyof typeof categoryProducts] || {
     name: params.category.split('-').map(word => 

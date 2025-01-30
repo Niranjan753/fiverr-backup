@@ -40,13 +40,7 @@ const brandProducts = {
   // Add more brands...
 };
 
-type Props = {
-  params: {
-    brand: string;
-  };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -57,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function BrandPage({ params }: Props) {
+export default async function BrandPage({ params }: { params: { brand: string } }) {
   // In a real app, you'd fetch this data from an API
   const brandData = brandProducts[params.brand as keyof typeof brandProducts] || {
     name: params.brand.split('-').map(word => 
