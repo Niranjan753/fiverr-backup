@@ -1,12 +1,12 @@
 export default function VideoHero() {
   return (
-    <div className="relative w-full h-[40vh] md:h-[300px] overflow-hidden">
+    <div className="relative w-full h-[45vh] md:h-[350px] overflow-hidden">
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[150%] md:w-full h-auto object-cover"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[160%] md:w-[110%] h-auto object-cover"
       >
         <source src="/crackers-video.mp4" type="video/mp4" />
         Your browser does not support the video tag.
