@@ -38,14 +38,11 @@ const brandProducts: Record<string, BrandData> = {
   },
 };
 
-type GenerateMetadataProps = {
+type Props = {
   params: { brand: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata(
-  { params }: GenerateMetadataProps
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const brandName = params.brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -71,12 +68,7 @@ async function getBrandData(brand: string): Promise<BrandData> {
   });
 }
 
-type Props = {
-  params: { brand: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-const Page = async ({ params }: Props) => {
+export default async function Page({ params }: Props) {
   const brandData = await getBrandData(params.brand);
 
   return (
@@ -129,5 +121,3 @@ const Page = async ({ params }: Props) => {
     </div>
   );
 }
-
-export default Page;

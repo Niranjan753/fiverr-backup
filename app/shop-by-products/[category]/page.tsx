@@ -38,14 +38,11 @@ const categoryProducts: Record<string, CategoryData> = {
   },
 };
 
-type GenerateMetadataProps = {
+type Props = {
   params: { category: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata(
-  { params }: GenerateMetadataProps
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const categoryName = params.category.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
@@ -71,12 +68,7 @@ async function getCategoryData(category: string): Promise<CategoryData> {
   });
 }
 
-type Props = {
-  params: { category: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-const Page = async ({ params }: Props) => {
+export default async function Page({ params }: Props) {
   const categoryData = await getCategoryData(params.category);
 
   return (
@@ -153,5 +145,3 @@ const Page = async ({ params }: Props) => {
     </div>
   );
 }
-
-export default Page;
