@@ -6,33 +6,33 @@ import Image from 'next/image';
 const reviews = [
     {
         id: 1,
-        name: "John Doe",
+        name: "Vishal",
         rating: 5,
-        comment: "Amazing quality crackers! The sky shots were spectacular.",
+        comment: "It was really good and the shots went straight to my house kitchen near the gas cylinder, but it did not blast tho :)",
         avatar: "/avatar1.jpg",
         date: "January 15, 2025"
     },
     {
         id: 2,
-        name: "Sarah Smith",
+        name: "Barath Kumar",
         rating: 5,
-        comment: "Best sparklers I've ever used. Will definitely buy again!",
+        comment: "The chakkras where circling and it got misunderstood for chakklis, my friend ate it :(",
         avatar: "/avatar2.jpg",
         date: "January 20, 2025"
     },
     {
         id: 3,
-        name: "Mike Johnson",
-        rating: 4,
-        comment: "Great selection of ground chakkars. My kids loved them!",
+        name: "Niranjan",
+        rating: 5,
+        comment: "All good",
         avatar: "/avatar3.jpg",
         date: "January 25, 2025"
     },
     {
         id: 4,
-        name: "Emily Brown",
-        rating: 5,
-        comment: "The fountain crackers created beautiful displays. Highly recommend!",
+        name: "Desinhraja",
+        rating: 4,
+        comment: "Best sounding crackers ever!",
         avatar: "/avatar4.jpg",
         date: "January 28, 2025"
     }

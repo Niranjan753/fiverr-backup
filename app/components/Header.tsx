@@ -79,6 +79,8 @@ export default function Header() {
               <div className="flex justify-center space-x-8">
                 <Link href="/" className="py-2 text-sm hover:text-yellow-300 transition-colors">HOME</Link>
                 <Link href="/about" className="py-2 text-sm hover:text-yellow-300 transition-colors">ABOUT US</Link>
+                <Link href="/shop-by-products" className="py-2 text-sm hover:text-yellow-300 transition-colors">SHOP BY PRODUCTS</Link>
+                <Link href="/shop-by-brands" className="py-2 text-sm hover:text-yellow-300 transition-colors">SHOP BY BRANDS</Link>
                 <Link href="/chit-fund" className="py-2 text-sm hover:text-yellow-300 transition-colors">CHIT FUND</Link>
                 <Link href="/safety" className="py-2 text-sm hover:text-yellow-300 transition-colors">SAFETY TIPS</Link>
                 <Link href="/contact" className="py-2 text-sm hover:text-yellow-300 transition-colors">CONTACT US</Link>
