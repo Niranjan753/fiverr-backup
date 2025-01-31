@@ -75,7 +75,7 @@ export default function Home() {
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
           <div className="mb-8 text-center">
-            <h2 className="text-4xl font-bold text-white mb-2">
+            <h2 className="text-4xl font-bold text-white mb-2 mt-4 pt-10">
               Featured Categories
             </h2>
             <p className="text-xl text-white pt-[-4]">
@@ -153,6 +153,24 @@ export default function Home() {
 
       {/* Stats Counter */}
       <StatsCounter />
+      <LegalNotice />
     </main>
   );
 }
+const LegalNotice = () => (
+  <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 ">
+    <p className="font-bold mb-2">Important Legal Notice:</p>
+    <p className="text-sm">
+    As per the 2018 Supreme Court order, online sales of firecrackers are not 
+      permitted. At SRT Crackers, we value our customers and respect legal 
+      jurisdiction. We kindly request you to add products to your cart and submit 
+      your requirements through the enquiry button. Our team will contact you 
+      within 24 hours to confirm your order via WhatsApp or phone call. Please 
+      submit your enquiries and enjoy a safe Diwali with SRT Crackers. SRT Crackers 
+      adheres to 100% legal and statutory compliances, and all our shops and 
+      warehouses are maintained as per explosive acts. We dispatch orders 
+      through registered and legal transport service providers, in line with 
+      standard practices in Sivakasi.
+    </p>
+  </div>
+);    
