@@ -26,7 +26,8 @@ export default function Header() {
                 </svg>
               </button>
 
-              <Link href="/" className="flex-none md:flex-shrink-0">
+              <Link href="/" className="flex-none md:flex-shrink-0 flex items-center">
+                <span className="text-xl mr-4">SRT CRACKERS</span>
                 <Image src="/headerlogo.png" alt="SRT CRACKERS" width={150} height={50} />
               </Link>
 
@@ -103,7 +104,10 @@ export default function Header() {
         >
           <div className="p-4">
             <div className="flex justify-between items-center mb-6">
-              <Image src="/headerlogo.png" alt="SRT CRACKERS" width={100} height={33} />
+              <div className="flex items-center">
+                <span className="text-lg font-bold mr-2">SRT CRACKERS</span>
+                <Image src="/headerlogo.png" alt="SRT CRACKERS" width={100} height={33} />
+              </div>
               <button onClick={() => setIsMobileMenuOpen(false)}>
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
