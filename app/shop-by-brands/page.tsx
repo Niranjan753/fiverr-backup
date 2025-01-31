@@ -64,7 +64,7 @@ export default function ShopByBrands() {
                         Shop By Brands
                     </h1>
                     <p className="text-xl text-yellow-100 max-w-2xl mx-auto">
-                        Discover premium fireworks from India's most trusted manufacturers.
+                        Discover premium fireworks from India&apos;s most trusted manufacturers.
                         Quality and safety guaranteed.
                     </p>
                 </div>
