@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ export default function Header() {
               </button>
 
               <Link href="/" className="flex-none md:flex-shrink-0">
-                <div className="text-xl md:text-2xl font-medium text-black">SRT CRACKERS</div>
+                <Image src="/headerlogo.png" alt="SRT CRACKERS" width={150} height={50} />
               </Link>
 
               <div className="flex-grow max-w-2xl">
@@ -102,7 +103,7 @@ export default function Header() {
         >
           <div className="p-4">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold">Menu</h2>
+              <Image src="/headerlogo.png" alt="SRT CRACKERS" width={100} height={33} />
               <button onClick={() => setIsMobileMenuOpen(false)}>
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
