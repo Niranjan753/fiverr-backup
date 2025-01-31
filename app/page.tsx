@@ -4,6 +4,7 @@ import Image from "next/image";
 import WelcomeSection from './components/WelcomeSection';
 import FeaturesSection from './components/FeaturesSection';
 import StatsCounter from './components/StatsCounter';
+import ReviewsSection from './components/ReviewsSection';
 
 const categories = [
   {
@@ -129,7 +130,7 @@ export default function Home() {
           </div>
 
           {/* View All Button */}
-          <div className="mt-12 text-center">
+          <div className="mt-12 mb-10 text-center">
             <Link 
               href="/products" 
               className="inline-flex items-center bg-black text-yellow-400 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20"
@@ -142,11 +143,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Welcome Section */}
+      <ReviewsSection />
       <WelcomeSection />
-
-      {/* Features Section */}
       <FeaturesSection />
 
       {/* Featured Categories */}
