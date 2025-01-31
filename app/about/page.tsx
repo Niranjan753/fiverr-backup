@@ -1,17 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
 const brands = [
-    { name: "AJANTHA", logo: "/brand1.webp" },
-    { name: "SONNY", logo: "/brand2.webp" },
-    { name: "SPARKLES", logo: "/brand3.webp" },
-    { name: "THUNDER", logo: "/brand4.webp" },
-    { name: "GALAXY", logo: "/brand5.png" },
-    { name: "STELLAR", logo: "/brand6.webp" },
-    { name: "NOVA", logo: "/brand7.webp" },
-    { name: "COSMIC", logo: "/brand8.webp" }
+    { name: "STARVELL", logo: "/brand1.webp" },
+    { name: "SUPREME", logo: "/brand2.webp" },
+    { name: "VANITHA", logo: "/brand3.webp" },
+    { name: "VADIVEL", logo: "/brand4.webp" },
+    { name: "SUNSHINE", logo: "/brand5.png" },
+    { name: "AJANTA", logo: "/brand6.webp" },
+    { name: "SONNY", logo: "/brand7.webp" },
+    { name: "MOTHERS", logo: "/brand8.webp" }
 ];
 
 export default function About() {
