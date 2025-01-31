@@ -9,12 +9,12 @@ export default function Header() {
 
   return (
     <header className="font-sans">
-      <div className="bg-white text-gray-600 text-xs py-1.5 px-4 text-center border-b">
+      <div className="bg-black text-white text-xs py-1.5 px-4 text-center border-b">
         India&apos;s #1 Sivakasi Based Crackers Seller SHOP | Directly from Manufacturers | Factory Price | Assured Quality | Note : We do not sell/deliver to cities, where crackers are banned. Our License No: E/SS/TN
       </div>
 
       <div className="sticky top-0 z-50">
-        <div className="bg-white shadow-md">
+        <div className="bg-black shadow-md text-white">
           <div className="py-2 border-b">
             <div className="container mx-auto px-4 flex items-center justify-between gap-4">
               <button 
@@ -47,7 +47,7 @@ export default function Header() {
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
-                <button className="flex items-center text-black border border-black px-3 py-1.5 rounded-lg text-sm hover:bg-black hover:text-white transition-colors">
+                <button className="flex items-center text-white border border-black px-3 py-1.5 rounded-lg text-sm hover:bg-black hover:text-white transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
