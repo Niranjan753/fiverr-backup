@@ -46,23 +46,35 @@ const FloatingButtons = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
-      <button
-        onClick={handleOrderClick}
-        className="bg-black hover:bg-gray-800 text-yellow-400 p-4 rounded-full shadow-lg transition-all duration-300"
-        aria-label="Order"
-      >
-        <CartIcon />
-      </button>
-      
-      <button
-        onClick={handleWhatsAppClick}
-        className="bg-[#25D366] hover:bg-[#20BA5C] text-white p-4 rounded-full shadow-lg transition-all duration-300"
-        aria-label="Contact on WhatsApp"
-      >
-        <WhatsAppLogo />
-      </button>
-    </div>
+    <>
+      {/* Left side buttons */}
+      <div className="fixed bottom-6 left-6 flex flex-col gap-4 z-50">
+        <button
+          onClick={handleWhatsAppClick}
+          className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-colors"
+          aria-label="Contact on WhatsApp"
+        >
+          <WhatsAppLogo />
+        </button>
+        <button
+          onClick={handleOrderClick}
+          className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+          aria-label="View Cart"
+        >
+          <CartIcon />
+        </button>
+      </div>
+
+      {/* Right side blinking Order Now button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={handleOrderClick}
+          className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-600 transition-colors animate-pulse font-bold text-lg"
+        >
+          Order Now
+        </button>
+      </div>
+    </>
   );
 };
 
