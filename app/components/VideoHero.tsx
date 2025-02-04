@@ -6,9 +6,9 @@ import Image from 'next/image';
 export default function VideoHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
-    { type: 'video', src: '/crack-2.mp4' },
-    { type: 'image', src: '/sample-cracker.jpg' },
-    { type: 'image', src: '/fireworks-display.jpg' },
+    { type: 'image', src: '/poster1.webp' },
+    { type: 'image', src: '/poster2.webp' },
+    { type: 'video', src: '/crack-2.mp4' }
   ];
 
   useEffect(() => {
@@ -35,23 +35,21 @@ export default function VideoHero() {
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {slide.type === 'video' ? (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[160%] md:w-[110%] h-auto object-cover"
-            >
-              <source src={slide.src} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
+          {slide.type === 'image' ? (
             <Image
               src={slide.src}
               layout="fill"
               objectFit="cover"
               alt={`Slide ${index + 1}`}
+            />
+          ) : (
+            <video
+              src={slide.src}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
             />
           )}
         </div>
