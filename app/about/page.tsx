@@ -28,10 +28,10 @@ export default function About() {
                                     SRT Crackers is a premier brand in the fireworks industry, dedicated to bringing joy and excitement to your celebrations with our diverse range of high-quality crackers.
                                 </p>
                                 <p>
-                                    Our products are meticulously crafted in Sivakasi, Tamil Nadu - the heart of India's fireworks manufacturing. We pride ourselves on using premium raw materials and adhering to stringent quality control measures.
+                                    Our products are meticulously crafted in Sivakasi, Tamil Nadu - the heart of India&apos;s fireworks manufacturing. We pride ourselves on using premium raw materials and adhering to stringent quality control measures.
                                 </p>
                                 <p>
-                                    Explore our website to discover a comprehensive guide to our product range, helping you select the perfect crackers for your needs and budget. We're committed to enhancing your festive experience with unparalleled satisfaction.
+                                    Explore our website to discover a comprehensive guide to our product range, helping you select the perfect crackers for your needs and budget. We&apos;re committed to enhancing your festive experience with unparalleled satisfaction.
                                 </p>
                             </div>
                         </div>
