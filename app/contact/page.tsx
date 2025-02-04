@@ -11,7 +11,7 @@ export default function Contact() {
     };
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-red-50 to-white">
+        <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
             <motion.section 
                 className="relative py-24 bg-gradient-to-r from-red-600 to-red-800"
                 initial={{ opacity: 0 }}
@@ -84,7 +84,7 @@ export default function Contact() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d981.1496923095755!2d77.80600800000002!3d9.450694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0669c6c7e8082b%3A0xa5d9f6c5f0f5c33e!2sSRT%20CRACKERS!5e0!3m2!1sen!2sin!4v1707067611645!5m2!1sen!2sin"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3935.6751795073707!2d77.80343331472597!3d9.450693893246762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06cfb7d31cce6d%3A0xa5da865036326b4e!2sSRT%20CRACKERS!5e0!3m2!1sen!2sus!4v1684884512345!5m2!1sen!2sus"
                             width="100%"
                             height="450"
                             style={{ border: 0 }}
@@ -95,6 +95,6 @@ export default function Contact() {
                     </div>
                 </div>
             </motion.section>
-        </main>
+        </div>
     );
 }
