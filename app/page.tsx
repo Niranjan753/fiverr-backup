@@ -75,19 +75,19 @@ const categories = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-white">
       <VideoHero />
       {/* Products Section */}
       <section className="relative" style={{
-        background: `radial-gradient(circle at center, #FACC15 0%, #EAB308 40%, #000000 100%)`
+        background: `radial-gradient(circle at center, #FEF2F2 0%, #FEE2E2 40%, #FFFFFF 100%)`
       }}>
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
           <div className="mb-8 text-center">
-            <h2 className="text-4xl font-bold text-white mb-2 mt-4 pt-10">
+            <h2 className="text-4xl font-bold text-red-600 mb-2 mt-4 pt-10">
               Featured Categories
             </h2>
-            <p className="text-xl text-white pt-[-4]">
+            <p className="text-xl text-red-600 pt-[-4]">
               Explore our wide range of premium quality crackers
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function Home() {
               <Link 
                 href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                 key={category.id}
-                className="group relative overflow-hidden rounded-xl bg-black hover:transform hover:scale-[1.02] transition-all duration-300"
+                className="group relative overflow-hidden rounded-xl bg-white hover:transform hover:scale-[1.02] transition-all duration-300"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <Image
@@ -107,11 +107,10 @@ export default function Home() {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
                   
                   {/* New Badge */}
                   {category.isNew && (
-                    <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full">
+                    <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
                       NEW
                     </div>
                   )}
@@ -119,17 +118,17 @@ export default function Home() {
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-yellow-400 mb-2">
+                  <h3 className="text-xl font-bold text-red-600 mb-2">
                     {category.name}
                   </h3>
-                  <p className="text-yellow-400/70 text-sm mb-4">
+                  <p className="text-red-600/70 text-sm mb-4">
                     {category.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-yellow-400/60 text-sm">
+                    <span className="text-red-600/60 text-sm">
                       {category.count} Products
                     </span>
-                    <span className="text-yellow-400 text-lg group-hover:translate-x-1 transition-transform duration-300">
+                    <span className="text-red-600 text-lg group-hover:translate-x-1 transition-transform duration-300">
                       →
                     </span>
                   </div>
@@ -142,7 +141,7 @@ export default function Home() {
           <div className="mt-12 pb-16 text-center">
             <Link 
               href="/products" 
-              className="inline-flex items-center bg-black text-yellow-400 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors duration-200 shadow-lg hover:shadow-yellow-400/20"
+              className="inline-flex items-center bg-white text-red-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-red-600/20"
             >
               View All Products
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,7 +156,7 @@ export default function Home() {
       <FeaturesSection />
 
       {/* Featured Categories */}
-      <section className="py-16 px-4 md:px-8 bg-black">
+      <section className="py-16 px-4 md:px-8 bg-white">
       </section>
 
       {/* Stats Counter */}
@@ -167,7 +166,7 @@ export default function Home() {
   );
 }
 const LegalNotice = () => (
-  <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 ">
+  <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 ">
     <p className="font-bold mb-2">Important Legal Notice:</p>
     <p className="text-sm">
     As per the 2018 Supreme Court order, online sales of firecrackers are not 
