@@ -59,14 +59,6 @@ const products = [
         price: "₹2,999",
         description: "Complete celebration pack",
         image: "/demo.jpg"
-    },
-    {
-        id: 6,
-        name: "Color Match Box",
-        category: "color-matches",
-        price: "₹99",
-        description: "Colorful match sticks",
-        image: "/demo.jpg"
     }
 ];
 
@@ -102,7 +94,7 @@ export default function ShopByProducts() {
                         </div>
 
                         <div className="md:w-3/4 lg:w-4/5">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                                 {filteredProducts.map((product) => (
                                     <div key={product.id} className="group bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                                         <div className="relative aspect-square overflow-hidden">
@@ -114,17 +106,17 @@ export default function ShopByProducts() {
                                             />
                                             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                                             
-                                            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600">
+                                            <button className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-sm rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600">
                                                 Quick View
                                             </button>
                                         </div>
                                         
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold text-black mb-1">
+                                        <div className="p-3">
+                                            <h3 className="text-sm font-semibold text-black mb-1 truncate">
                                                 {product.name}
                                             </h3>
-                                            <p className="text-gray-500 text-sm mb-2">{product.description}</p>
-                                            <p className="text-xl font-bold text-black">{product.price}</p>
+                                            <p className="text-gray-500 text-xs mb-1 line-clamp-2">{product.description}</p>
+                                            <p className="text-base font-bold text-black">{product.price}</p>
                                         </div>
                                     </div>
                                 ))}
