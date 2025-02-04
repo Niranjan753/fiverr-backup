@@ -7,33 +7,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 const reviews = [
     {
         id: 1,
-        name: "Vishal",
+        name: "Vishal Kumar",
         rating: 5,
-        comment: "It was really good and the shots went straight to my house kitchen near the gas cylinder, but it did not blast tho :)",
+        comment: "Exceptional quality crackers! The vibrant colors and precise timing of the fireworks made our celebration truly memorable.",
         avatar: "/avatar1.jpg",
         date: "January 15, 2025"
     },
     {
         id: 2,
-        name: "Barath Kumar",
+        name: "Barath Ramanathan",
         rating: 5,
-        comment: "The chakkras where circling and it got misunderstood for chakklis, my friend ate it :(",
+        comment: "Impressive selection of ground spinners. The long-lasting effects and safe performance exceeded our expectations.",
         avatar: "/avatar2.jpg",
         date: "January 20, 2025"
     },
     {
         id: 3,
-        name: "Niranjan",
+        name: "Niranjan Patel",
         rating: 5,
-        comment: "All good",
+        comment: "Outstanding product quality and customer service. Will definitely purchase again for future celebrations.",
         avatar: "/avatar3.jpg",
         date: "January 25, 2025"
     },
     {
         id: 4,
-        name: "Desinhraja",
+        name: "Deepak Raja",
         rating: 4,
-        comment: "Best sounding crackers ever!",
+        comment: "The sound crackers were impressive with their powerful yet safe performance. Highly recommended for enthusiasts!",
         avatar: "/avatar4.jpg",
         date: "January 28, 2025"
     }
