@@ -77,13 +77,9 @@ export default function ShopByProducts() {
 
     return (
         <main className="min-h-screen bg-white">
-        
-
-            {/* Products Section with Categories */}
             <section className="py-12">
                 <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
                     <div className="flex flex-col md:flex-row gap-8">
-                        {/* Categories Sidebar */}
                         <div className="md:w-1/4 lg:w-1/5">
                             <div className="bg-white border rounded-lg p-4 sticky top-24">
                                 <h2 className="text-lg font-bold mb-4 text-black">Categories</h2>
@@ -94,7 +90,7 @@ export default function ShopByProducts() {
                                             onClick={() => setSelectedCategory(category.id)}
                                             className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
                                                 selectedCategory === category.id
-                                                    ? 'bg-yellow-500 text-white'
+                                                    ? 'bg-red-500 text-white'
                                                     : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                         >
@@ -105,7 +101,6 @@ export default function ShopByProducts() {
                             </div>
                         </div>
 
-                        {/* Products Grid */}
                         <div className="md:w-3/4 lg:w-4/5">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredProducts.map((product) => (
@@ -119,8 +114,7 @@ export default function ShopByProducts() {
                                             />
                                             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                                             
-                                            {/* Quick View Button */}
-                                            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white px-6 py-2 rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-yellow-600">
+                                            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600">
                                                 Quick View
                                             </button>
                                         </div>

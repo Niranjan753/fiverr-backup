@@ -15,46 +15,46 @@ const brands = [
 
 export default function About() {
     return (
-        <main className="min-h-screen bg-black">
-            <section className="relative py-20 bg-gradient-to-b from-yellow-900 to-black">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
+        <main className="min-h-screen bg-white">
+            <section className="relative py-20 bg-gradient-to-b from-red-800 to-red-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h1 className="text-4xl md:text-5xl font-bold text-yellow-400 mb-6">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                                 About SRT Crackers
                             </h1>
-                            <div className="text-yellow-100 space-y-4">
+                            <div className="text-red-100 space-y-4">
                                 <p>
-                                    SRT Crackers is a well-known brand name in the field of Crackers. We are here to serve you in your &quot;Green Diwali&quot; with our variety of fireworks according to your needs and budget.
+                                    SRT Crackers is a premier brand in the fireworks industry, dedicated to bringing joy and excitement to your celebrations with our diverse range of high-quality crackers.
                                 </p>
                                 <p>
-                                    Our products are manufactured in Sivakasi, Tamil Nadu, which is the hub of fireworks manufacturing in India. Our products are manufactured with high quality raw materials and with standard quality control measures.
+                                    Our products are meticulously crafted in Sivakasi, Tamil Nadu - the heart of India's fireworks manufacturing. We pride ourselves on using premium raw materials and adhering to stringent quality control measures.
                                 </p>
                                 <p>
-                                    In this website, we will take you to a clear description about the crackers we deal with, and help you to select your own needs. We do all this with great pleasure and satisfaction.
+                                    Explore our website to discover a comprehensive guide to our product range, helping you select the perfect crackers for your needs and budget. We're committed to enhancing your festive experience with unparalleled satisfaction.
                                 </p>
                             </div>
                         </div>
-                        <div className="relative aspect-square">
+                        <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden shadow-xl mx-auto">
                             <Image
-                                src="/demo.jpg"
+                                src="/srt-text.png"
                                 alt="SRT Crackers"
                                 fill
-                                className="object-cover rounded-xl"
+                                className="object-contain"
                             />
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section className="py-16">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
-                    <h2 className="text-3xl font-bold text-yellow-400 text-center mb-12">
-                        Our Brands
+            <section className="py-16 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl font-bold text-red-800 text-center mb-12">
+                        Our Esteemed Brands
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {brands.map((brand) => (
-                            <div key={brand.name} className="bg-gradient-to-br from-yellow-900 to-black border border-yellow-400/20 rounded-xl p-6 hover:from-yellow-800 hover:to-black transition-all duration-300">
+                            <div key={brand.name} className="bg-white shadow-lg rounded-xl p-6 transition-all duration-300 hover:shadow-xl">
                                 <div className="relative aspect-square mb-4">
                                     <Image
                                         src={brand.logo}
@@ -63,7 +63,7 @@ export default function About() {
                                         className="object-contain"
                                     />
                                 </div>
-                                <h3 className="text-yellow-400 text-center font-semibold">
+                                <h3 className="text-red-800 text-center font-semibold">
                                     {brand.name}
                                 </h3>
                             </div>
@@ -72,36 +72,22 @@ export default function About() {
                 </div>
             </section>
 
-            <section className="py-16 bg-gradient-to-b from-black to-yellow-900">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
+            <section className="py-16 bg-red-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <div className="bg-gradient-to-br from-yellow-900 to-black border border-yellow-400/20 rounded-xl p-8">
-                            <h2 className="text-3xl font-bold text-yellow-400 mb-6">Mission</h2>
-                            <p className="text-yellow-100">
-                                To be the best fireworks manufacturer committed to bring happiness and joy to everyone&apos;s life.
+                        <div className="bg-white shadow-lg rounded-xl p-8">
+                            <h2 className="text-3xl font-bold text-red-800 mb-6">Our Mission</h2>
+                            <p className="text-gray-700">
+                                To be the leading fireworks manufacturer, dedicated to bringing happiness and joy to every celebration, while maintaining the highest standards of safety and quality.
                             </p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-yellow-900 to-black border border-yellow-400/20 rounded-xl p-8">
-                            <h2 className="text-3xl font-bold text-yellow-400 mb-6">Vision</h2>
-                            <p className="text-yellow-100">
-                                Every day we strive for innovation, to be a leader in providing quality and value to our customers in all we do.
+                        <div className="bg-white shadow-lg rounded-xl p-8">
+                            <h2 className="text-3xl font-bold text-red-800 mb-6">Our Vision</h2>
+                            <p className="text-gray-700">
+                                To continuously innovate and set new benchmarks in the fireworks industry, providing unparalleled value and experiences to our customers in everything we do.
                             </p>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="py-16">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12 text-center">
-                    <div className="bg-gradient-to-br from-yellow-900 to-black border border-yellow-400/20 rounded-xl p-8">
-                        <h2 className="text-2xl font-bold text-yellow-400 mb-4">
-                            Join us as we embark on a journey of light,
-                        </h2>
-                        <p className="text-yellow-100 text-lg">
-                            laughter, and love, and together, let&apos;s make this
-                            Diwali a truly unforgettable experience for all.
-                        </p>
                     </div>
                 </div>
             </section>
