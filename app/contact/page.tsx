@@ -2,13 +2,41 @@
 
 import { FaHome, FaEnvelope, FaPhone } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { IconType } from 'react-icons';
+
+interface ContactItem {
+    icon: IconType;
+    title: string;
+    content: string | string[];
+    href?: string | string[];
+}
 
 export default function Contact() {
     const fadeInUp = {
-        initial: { opacity: 0, y: 60 }, 
+        initial: { opacity: 0, y: 60 },
         animate: { opacity: 1, y: 0 },
         transition: { duration: 0.6 }
     };
+
+    const contactInfo: ContactItem[] = [
+        { 
+            icon: FaHome, 
+            title: "VISIT US", 
+            content: "171-A, P.K.N Road, SIVAKASI-626189" 
+        },
+        { 
+            icon: FaEnvelope, 
+            title: "EMAIL", 
+            content: "crackersrt@gmail.com", 
+            href: "mailto:crackersrt@gmail.com" 
+        },
+        { 
+            icon: FaPhone, 
+            title: "CALL US", 
+            content: ["+91 94446 52762", "+91 94431 55325"], 
+            href: ["tel:+919444652762", "tel:+919443155325"] 
+        }
+    ];
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
@@ -37,11 +65,7 @@ export default function Contact() {
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                        {[
-                            { icon: FaHome, title: "VISIT US", content: "171-A, P.K.N Road, SIVAKASI-626189" },
-                            { icon: FaEnvelope, title: "EMAIL", content: "crackersrt@gmail.com", href: "mailto:crackersrt@gmail.com" },
-                            { icon: FaPhone, title: "CALL US", content: ["+91 94446 52762", "+91 94431 55325"], href: ["tel:+919444652762", "tel:+919443155325"] }
-                        ].map((item, index) => (
+                        {contactInfo.map((item, index) => (
                             <motion.div 
                                 key={index}
                                 className="bg-white rounded-xl shadow-lg p-8 text-center transform hover:scale-105 transition-all duration-300"
@@ -55,7 +79,11 @@ export default function Contact() {
                                 {Array.isArray(item.content) ? (
                                     <div className="space-y-2">
                                         {item.content.map((line, i) => (
-                                            <a key={i} href={item.href[i]} className="block text-red-600 hover:text-red-800 transition-colors">
+                                            <a 
+                                                key={i} 
+                                                href={Array.isArray(item.href) ? item.href[i] : '#'} 
+                                                className="block text-red-600 hover:text-red-800 transition-colors"
+                                            >
                                                 {line}
                                             </a>
                                         ))}
@@ -63,7 +91,12 @@ export default function Contact() {
                                 ) : (
                                     <p className="text-gray-600">
                                         {item.href ? (
-                                            <a href={item.href} className="text-red-600 hover:text-red-800 transition-colors">{item.content}</a>
+                                            <a 
+                                                href={item.href as string} 
+                                                className="text-red-600 hover:text-red-800 transition-colors"
+                                            >
+                                                {item.content}
+                                            </a>
                                         ) : (
                                             item.content
                                         )}
