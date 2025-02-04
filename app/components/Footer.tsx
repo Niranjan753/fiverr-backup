@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <h3 className="text-2xl font-bold mb-4 text-red-600">SRT CRACKERS</h3>
             <p className="text-red-700 text-sm mb-4">
-              India's #1 Sivakasi Based Crackers Seller. Quality products directly from manufacturers.
+              India&apos;s #1 Sivakasi Based Crackers Seller. Quality products directly from manufacturers.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-red-600 hover:text-red-800 transition-colors duration-300">
@@ -77,7 +77,7 @@ export default function Footer() {
         <div className="border-t border-red-200 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-red-600 text-sm">
-              © 2025 SRT Crackers. All rights reserved. License No: E/SS/TN
+              2025 SRT Crackers. All rights reserved. License No: E/SS/TN
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-red-600 hover:text-red-800 text-sm transition-colors duration-300">Privacy Policy</Link>

@@ -16,7 +16,7 @@ export default function VideoHero() {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);

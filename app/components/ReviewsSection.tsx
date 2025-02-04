@@ -101,7 +101,7 @@ const ReviewsSection = () => {
                                     </div>
                                 </div>
                             </div>
-                            <p className="text-gray-600 text-lg mb-4 italic">"{reviews[currentIndex].comment}"</p>
+                            <p className="text-gray-600 text-lg mb-4 italic">&ldquo;{reviews[currentIndex].comment}&rdquo;</p>
                             <p className="text-gray-400 text-sm">{reviews[currentIndex].date}</p>
                         </motion.div>
                     </AnimatePresence>
