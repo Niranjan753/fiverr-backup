@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { MdOutlineSafetyDivider } from 'react-icons/md';
 import { GiWaterDrop, GiFireplace } from 'react-icons/gi';
