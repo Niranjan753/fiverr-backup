@@ -11,56 +11,65 @@ const categories = [
     id: 1,
     name: "Ground Chakkar",
     description: "Colorful ground spinners with mesmerizing effects",
-    count: 24
+    count: 24,
+    image: "/ground-chakkar.webp"
   },
   {
     id: 2,
     name: "Flower Pots",
     description: "Beautiful aerial showers of colorful sparks",
-    count: 18
+    count: 18,
+    image: "/flowerpot.webp"
   },
   {
     id: 3,
     name: "Rockets",
     description: "High-flying crackers with spectacular effects",
-    count: 32
+    count: 32,
+    image: "/rocket.webp"
   },
   {
     id: 4,
     name: "Single Sound Crackers",
     description: "Classic crackers with powerful sound effects",
-    count: 45
+    count: 45,
+    image: "/singlesound.webp"
   },
   {
     id: 5,
     name: "Sparklers",
     description: "Safe and beautiful hand-held sparklers",
-    count: 28
+    count: 28,
+    image: "/sparklers.webp"
   },
   {
     id: 6,
     name: "Sky Shots",
     description: "Multi-shot aerial display with stunning effects",
-    count: 36
+    count: 36,
+    image: "/skyshots.webp"
   },
   {
     id: 7,
     name: "Fountains",
     description: "Long-lasting fountains with colorful effects",
-    count: 22
+    count: 22,
+    image: "/fountain.webp"
   },
   {
     id: 8,
     name: "Repeating Shots",
     description: "Multiple shots with continuous effects",
-    count: 30
+    count: 30,
+    image: "/repeatingshot.webp"
   },
   {
     id: 9,
     name: "New Arrivals",
     description: "Latest additions to our collection",
     count: 15,
-    isNew: true
+    isNew: true,
+    image: "/newarrival.webp"
   }
 ];
 
@@ -93,7 +102,7 @@ export default function Home() {
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <Image
-                    src="/demo.jpg"
+                    src={category.image}
                     alt={category.name}
                     fill
                     className="object-cover"
