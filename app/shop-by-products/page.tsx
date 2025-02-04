@@ -1,126 +1,148 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+const categories = [
+    { id: 'gift-pack', name: 'Gift Pack' },
+    { id: 'sparklers', name: 'Sparklers' },
+    { id: 'color-matches', name: 'Color Matches' },
+    { id: 'sound-crackers', name: 'Sound Crackers' },
+    { id: 'flower-pots', name: 'Flower Pots' },
+    { id: 'ground-chakkar', name: 'Ground Chakkar' },
+    { id: 'soil-pots', name: 'Soil Pots' },
+    { id: 'bombs', name: 'Bombs' },
+    { id: 'paper-bomb', name: 'Paper Bomb' },
+    { id: 'vanitha-colors', name: 'Vanitha Colors' },
+    { id: 'fancy-candles', name: 'Fancy Candles' },
+    { id: 'kids-special', name: 'Kids Special' },
+    { id: 'kids-night-attraction', name: 'Kids Night Attraction' }
+];
 
 const products = [
     {
         id: 1,
-        name: "Supreme Sky Shot",
-        category: "Sky Shots",
-        price: "₹1,499",
-        description: "Multi-color aerial display with stunning effects",
+        name: "7CM - ELECTRIC",
+        category: "sparklers",
+        price: "₹149",
+        description: "Electric sparklers with bright effects",
         image: "/demo.jpg"
     },
     {
         id: 2,
-        name: "Golden Sparklers",
-        category: "Sparklers",
-        price: "₹299",
-        description: "Long-lasting sparklers with golden sparkles",
+        name: "7CM - CRACKLING",
+        category: "sparklers",
+        price: "₹159",
+        description: "Crackling sparklers with sound effects",
         image: "/demo.jpg"
     },
     {
         id: 3,
-        name: "Thunder King",
-        category: "Sound Crackers",
-        price: "₹799",
-        description: "Powerful sound crackers with maximum impact",
+        name: "7CM - 50/50",
+        category: "sparklers",
+        price: "₹139",
+        description: "Mixed effects sparklers",
         image: "/demo.jpg"
     },
     {
         id: 4,
-        name: "Color Rain Fountain",
-        category: "Fountains",
-        price: "₹999",
-        description: "Beautiful fountain with colorful rain effects",
+        name: "10CM - ELECTRIC",
+        category: "sparklers",
+        price: "₹199",
+        description: "Long electric sparklers",
         image: "/demo.jpg"
     },
     {
         id: 5,
-        name: "Mega Ground Chakkar",
-        category: "Ground Chakkars",
-        price: "₹399",
-        description: "High-speed spinning with colorful sparks",
+        name: "Mega Gift Pack",
+        category: "gift-pack",
+        price: "₹2,999",
+        description: "Complete celebration pack",
         image: "/demo.jpg"
     },
     {
         id: 6,
-        name: "Rocket Express",
-        category: "Rockets",
-        price: "₹599",
-        description: "High-flying rockets with trail effects",
+        name: "Color Match Box",
+        category: "color-matches",
+        price: "₹99",
+        description: "Colorful match sticks",
         image: "/demo.jpg"
     }
 ];
 
 export default function ShopByProducts() {
-    return (
-        <main className="min-h-screen bg-black">
-            {/* Hero Section */}
-            <section className="relative py-20 bg-gradient-to-b from-yellow-900 to-black">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12 text-center">
-                    <h1 className="text-5xl md:text-6xl font-bold text-yellow-400 mb-6">
-                        Shop By Products
-                    </h1>
-                    <p className="text-xl text-yellow-100 max-w-2xl mx-auto">
-                        Explore our extensive collection of premium quality crackers, 
-                        carefully curated for your celebration needs.
-                    </p>
-                </div>
-            </section>
+    const [selectedCategory, setSelectedCategory] = useState(categories[0].id);
+    
+    const filteredProducts = products.filter(product => product.category === selectedCategory);
 
-            {/* Products Grid */}
-            <section className="py-16">
+    return (
+        <main className="min-h-screen bg-white">
+        
+
+            {/* Products Section with Categories */}
+            <section className="py-12">
                 <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {products.map((product) => (
-                            <div key={product.id} className="group">
-                                <div className="relative aspect-square overflow-hidden rounded-xl mb-4">
-                                    <Image
-                                        src={product.image}
-                                        alt={product.name}
-                                        fill
-                                        className="object-cover transition-transform duration-300 group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300" />
-                                    
-                                    {/* Quick View Button */}
-                                    <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-6 py-2 rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-yellow-500">
-                                        Quick View
-                                    </button>
-                                </div>
-                                
-                                <div className="text-center">
-                                    <h3 className="text-xl font-semibold text-yellow-400 mb-1">
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-yellow-100/80 mb-2">{product.category}</p>
-                                    <p className="text-2xl font-bold text-yellow-400 mb-4">{product.price}</p>
-                                    <p className="text-yellow-100/60 text-sm">{product.description}</p>
+                    <div className="flex flex-col md:flex-row gap-8">
+                        {/* Categories Sidebar */}
+                        <div className="md:w-1/4 lg:w-1/5">
+                            <div className="bg-white border rounded-lg p-4 sticky top-24">
+                                <h2 className="text-lg font-bold mb-4 text-black">Categories</h2>
+                                <div className="space-y-2">
+                                    {categories.map((category) => (
+                                        <button
+                                            key={category.id}
+                                            onClick={() => setSelectedCategory(category.id)}
+                                            className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                                                selectedCategory === category.id
+                                                    ? 'bg-yellow-500 text-white'
+                                                    : 'text-gray-600 hover:bg-gray-100'
+                                            }`}
+                                        >
+                                            {category.name}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                        </div>
 
-            {/* Categories Section */}
-            <section className="py-16 bg-gradient-to-b from-black to-yellow-900">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
-                    <h2 className="text-4xl font-bold text-yellow-400 text-center mb-12">
-                        Browse By Category
-                    </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {['Sky Shots', 'Sparklers', 'Sound Crackers', 'Fountains', 'Ground Chakkars', 'Rockets', 'Flower Pots', 'New Arrivals'].map((category) => (
-                            <Link
-                                key={category}
-                                href={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="bg-black/40 backdrop-blur-sm border border-yellow-400/20 rounded-xl p-6 text-center hover:bg-black/60 transition-all duration-300"
-                            >
-                                <h3 className="text-yellow-400 font-semibold">{category}</h3>
-                            </Link>
-                        ))}
+                        {/* Products Grid */}
+                        <div className="md:w-3/4 lg:w-4/5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredProducts.map((product) => (
+                                    <div key={product.id} className="group bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                                        <div className="relative aspect-square overflow-hidden">
+                                            <Image
+                                                src={product.image}
+                                                alt={product.name}
+                                                fill
+                                                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                                            
+                                            {/* Quick View Button */}
+                                            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-white px-6 py-2 rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-yellow-600">
+                                                Quick View
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="p-4">
+                                            <h3 className="text-lg font-semibold text-black mb-1">
+                                                {product.name}
+                                            </h3>
+                                            <p className="text-gray-500 text-sm mb-2">{product.description}</p>
+                                            <p className="text-xl font-bold text-black">{product.price}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {filteredProducts.length === 0 && (
+                                <div className="text-center py-12">
+                                    <p className="text-gray-500">No products found in this category.</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>
