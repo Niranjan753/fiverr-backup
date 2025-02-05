@@ -85,10 +85,13 @@ const products: Product[] = [
 ];
 
 export default function ShopByProducts() {
-    const [selectedCategory, setSelectedCategory] = useState(categories[0].id);
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const filteredProducts = products.filter(product => product.category === selectedCategory);
+    const filteredProducts = products.filter((product) => {
+        return product.category === selectedCategory;
+    });
 
     return (
         <main className="min-h-screen bg-white">
@@ -143,10 +146,16 @@ export default function ShopByProducts() {
                 </div>
             </section>
 
+            {/* Product Modal */}
             {selectedProduct && (
                 <ProductModal
                     product={selectedProduct}
+                    isOpen={selectedProduct !== null}
                     onClose={() => setSelectedProduct(null)}
+                    onAddToCart={() => {
+                        // Add to cart logic here
+                        setSelectedProduct(null);
+                    }}
                 />
             )}
         </main>

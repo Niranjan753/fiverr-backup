@@ -14,6 +14,7 @@ type ProductCardProps = Partial<Product> & {
   image: string;
   rating: number;
   description: string;
+  onClick?: () => void;
 };
 
 export default function ProductCard(props: ProductCardProps) {
@@ -33,7 +34,8 @@ export default function ProductCard(props: ProductCardProps) {
     stock = 0,
     category = '',
     isNew = false,
-    id = ''
+    id = '',
+    onClick,
   } = props;
 
   const discountedPrice = price - (price * discount) / 100;
@@ -64,7 +66,7 @@ export default function ProductCard(props: ProductCardProps) {
         whileHover={{ scale: 1.02 }}
         className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:border-red-500 transition-colors"
       >
-        <div className="relative h-48 cursor-pointer" onClick={() => setIsModalOpen(true)}>
+        <div className="relative h-48 cursor-pointer" onClick={onClick || (() => setIsModalOpen(true))}>
           <Image
             src={image}
             alt={name}
