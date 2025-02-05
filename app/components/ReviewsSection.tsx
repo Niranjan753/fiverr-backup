@@ -10,7 +10,7 @@ const reviews = [
         name: "Vishal Kumar",
         rating: 5,
         comment: "Exceptional quality crackers! The vibrant colors and precise timing of the fireworks made our celebration truly memorable.",
-        avatar: "/avatar1.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/1.jpg",
         date: "January 15, 2025"
     },
     {
@@ -18,7 +18,7 @@ const reviews = [
         name: "Barath Ramanathan",
         rating: 5,
         comment: "Impressive selection of ground spinners. The long-lasting effects and safe performance exceeded our expectations.",
-        avatar: "/avatar2.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/2.jpg",
         date: "January 20, 2025"
     },
     {
@@ -26,7 +26,7 @@ const reviews = [
         name: "Niranjan Patel",
         rating: 5,
         comment: "Outstanding product quality and customer service. Will definitely purchase again for future celebrations.",
-        avatar: "/avatar3.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/3.jpg",
         date: "January 25, 2025"
     },
     {
@@ -34,7 +34,7 @@ const reviews = [
         name: "Deepak Raja",
         rating: 4,
         comment: "The sound crackers were impressive with their powerful yet safe performance. Highly recommended for enthusiasts!",
-        avatar: "/avatar4.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/4.jpg",
         date: "January 28, 2025"
     }
 ];
