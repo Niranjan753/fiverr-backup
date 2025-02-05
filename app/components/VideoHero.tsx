@@ -11,7 +11,7 @@ export default function VideoHero() {
   const slides = [
     { type: 'image', src: '/poster1.webp' },
     { type: 'image', src: '/poster2.webp' },
-    { type: 'video', src: '/new-srtvideo.mp4' }
+    { type: 'video', src: '/newsrtvideo.mp4' }
   ];
 
   useEffect(() => {
