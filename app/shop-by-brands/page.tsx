@@ -96,20 +96,21 @@ export default function ShopByBrands() {
     return (
         <main className="min-h-screen bg-white">
             <section className="py-12">
-                <div className="max-w-[1400px] mx-auto px-6 md:px-8 lg:px-12">
-                    <div className="flex flex-col md:flex-row gap-8">
-                        <div className="md:w-1/4 lg:w-1/5">
-                            <div className="bg-white/40 backdrop-blur-sm border border-red-400/20 rounded-lg p-4 sticky top-24">
-                                <h2 className="text-lg font-bold mb-4 text-red-400">Brands</h2>
-                                <div className="space-y-2">
+                <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row gap-6">
+                        {/* Brands Sidebar */}
+                        <div className="w-full md:w-1/4 lg:w-1/5">
+                            <div className="bg-white border rounded-lg p-4 md:sticky md:top-24">
+                                <h2 className="text-lg font-bold mb-4 text-black">Brands</h2>
+                                <div className="grid grid-cols-2 md:grid-cols-1 gap-2">
                                     {categories.map((category) => (
                                         <button
                                             key={category.id}
                                             onClick={() => setSelectedBrand(category.id)}
-                                            className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                                            className={`w-full text-left px-3 py-2 rounded-md transition-colors text-sm md:text-base ${
                                                 selectedBrand === category.id
                                                     ? 'bg-red-500 text-white'
-                                                    : 'text-red-400 hover:bg-red-100'
+                                                    : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                         >
                                             {category.name}
@@ -119,31 +120,34 @@ export default function ShopByBrands() {
                             </div>
                         </div>
 
-                        <div className="md:w-3/4 lg:w-4/5">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {/* Brands Grid */}
+                        <div className="w-full md:w-3/4 lg:w-4/5">
+                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                                 {filteredBrands.map((brand) => (
                                     <Link
                                         key={brand.id}
                                         href={`/brands/${brand.name.toLowerCase().replace(/\s+/g, '-')}`}
                                         className="group"
                                     >
-                                        <div className="relative aspect-square overflow-hidden rounded-lg">
-                                            <Image
-                                                src={brand.logo}
-                                                alt={brand.name}
-                                                fill
-                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                            />
-                                            <div className="absolute inset-0 bg-white/10 group-hover:bg-white/20 transition-colors" />
-                                            
-                                            <button className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-1 rounded-md text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600">
-                                                View Products
-                                            </button>
-                                        </div>
-                                        <div className="mt-2">
-                                            <h3 className="text-base font-semibold text-red-400">{brand.name}</h3>
-                                            <p className="text-xs text-red-100 line-clamp-2">{brand.description}</p>
-                                            <p className="text-sm text-red-600 font-semibold mt-1">{brand.products.length} Products</p>
+                                        <div className="bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                                            <div className="relative aspect-square overflow-hidden">
+                                                <Image
+                                                    src={brand.logo}
+                                                    alt={brand.name}
+                                                    fill
+                                                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                />
+                                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                                                
+                                                <button className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-red-500 text-white px-2 py-1 text-xs md:text-sm rounded-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600 whitespace-nowrap">
+                                                    View Products
+                                                </button>
+                                            </div>
+                                            <div className="p-2 md:p-3">
+                                                <h3 className="text-xs md:text-sm font-semibold text-black mb-1 truncate">{brand.name}</h3>
+                                                <p className="text-xs text-gray-500 mb-1 line-clamp-2">{brand.description}</p>
+                                                <p className="text-xs md:text-sm text-red-600 font-semibold">{brand.products.length} Products</p>
+                                            </div>
                                         </div>
                                     </Link>
                                 ))}
