@@ -41,8 +41,10 @@ const reviews = [
 
 const ReviewsSection = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => 
                 prevIndex === reviews.length - 1 ? 0 : prevIndex + 1
@@ -63,6 +65,10 @@ const ReviewsSection = () => {
             prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
         );
     };
+
+    if (!isMounted) {
+        return null; // Return null on server-side and initial client-side render
+    }
 
     return (
         <section className="py-16 bg-white">
@@ -101,39 +107,28 @@ const ReviewsSection = () => {
                                     </div>
                                 </div>
                             </div>
-                            <p className="text-gray-600 text-lg mb-4 italic">&ldquo;{reviews[currentIndex].comment}&rdquo;</p>
+                            <p className="text-gray-600 mb-4">{reviews[currentIndex].comment}</p>
                             <p className="text-gray-400 text-sm">{reviews[currentIndex].date}</p>
                         </motion.div>
                     </AnimatePresence>
 
                     <button 
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 bg-white hover:bg-gray-100 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
+
                     <button 
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 bg-white hover:bg-gray-100 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
-                </div>
-
-                <div className="flex justify-center mt-8 gap-2">
-                    {reviews.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentIndex(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                                index === currentIndex ? 'bg-blue-500 scale-125' : 'bg-gray-300 hover:bg-gray-400'
-                            }`}
-                        />
-                    ))}
                 </div>
             </div>
         </section>

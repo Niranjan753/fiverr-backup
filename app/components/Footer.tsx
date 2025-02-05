@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Copyright from './Copyright';
 
 export default function Footer() {
   return (
@@ -78,9 +79,7 @@ export default function Footer() {
         </div>
         <div className="border-t border-red-200 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-red-600 text-sm">
-              2025 SRT Crackers. All rights reserved. License No: E/SS/TN
-            </p>
+            <Copyright />
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-red-600 hover:text-red-800 text-sm transition-colors duration-300">Privacy Policy</Link>
               <Link href="/terms" className="text-red-600 hover:text-red-800 text-sm transition-colors duration-300">Terms of Service</Link>
