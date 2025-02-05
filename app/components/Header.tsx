@@ -82,8 +82,11 @@ export default function Header() {
                     href={href}
                     className="py-2 text-sm relative group"
                   >
-                    {label}
+                    {/* {label} */}
                     <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                    <span className="group-hover:text-red-600 transition-colors duration-300">
+                      {label}
+                    </span>
                   </Link>
                 ))}
               </div>
