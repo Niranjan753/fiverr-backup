@@ -68,13 +68,24 @@ export default function Header() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center">
               <div className="flex justify-center space-x-8">
-                <Link href="/" className="py-2 text-sm hover:text-red-600 transition-colors">HOME</Link>
-                <Link href="/about" className="py-2 text-sm hover:text-red-600 transition-colors">ABOUT US</Link>
-                <Link href="/shop-by-products" className="py-2 text-sm hover:text-red-600 transition-colors">SHOP BY PRODUCTS</Link>
-                <Link href="/shop-by-brands" className="py-2 text-sm hover:text-red-600 transition-colors">SHOP BY BRANDS</Link>
-                <Link href="/chit-fund" className="py-2 text-sm hover:text-red-600 transition-colors">CHIT FUND</Link>
-                <Link href="/safety" className="py-2 text-sm hover:text-red-600 transition-colors">SAFETY TIPS</Link>
-                <Link href="/contact" className="py-2 text-sm hover:text-red-600 transition-colors">CONTACT US</Link>
+                {[
+                  { href: "/", label: "HOME" },
+                  { href: "/about", label: "ABOUT US" },
+                  { href: "/shop-by-products", label: "SHOP BY PRODUCTS" },
+                  { href: "/shop-by-brands", label: "SHOP BY BRANDS" },
+                  { href: "/chit-fund", label: "CHIT FUND" },
+                  { href: "/safety", label: "SAFETY TIPS" },
+                  { href: "/contact", label: "CONTACT US" }
+                ].map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="py-2 text-sm relative group"
+                  >
+                    {label}
+                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
