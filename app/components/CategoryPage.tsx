@@ -28,11 +28,11 @@ export default function CategoryPage({ title, description, products }: CategoryP
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-400 via-yellow-500 to-black">
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-black mb-4">{title}</h1>
-          <p className="text-lg text-black/80">{description}</p>
+          <h1 className="text-4xl font-bold text-red-600 mb-4">{title}</h1>
+          <p className="text-lg text-gray-700">{description}</p>
         </div>
 
         {/* Filters */}
@@ -41,7 +41,7 @@ export default function CategoryPage({ title, description, products }: CategoryP
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-black text-yellow-400 px-4 py-2 rounded-lg border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="bg-white text-gray-800 px-4 py-2 rounded-lg border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 hover:border-red-500 transition-colors"
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -52,7 +52,7 @@ export default function CategoryPage({ title, description, products }: CategoryP
             <select
               value={filterPrice}
               onChange={(e) => setFilterPrice(e.target.value)}
-              className="bg-black text-yellow-400 px-4 py-2 rounded-lg border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="bg-white text-gray-800 px-4 py-2 rounded-lg border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 hover:border-red-500 transition-colors"
             >
               <option value="all">All Prices</option>
               <option value="under-500">Under ₹500</option>
@@ -61,7 +61,7 @@ export default function CategoryPage({ title, description, products }: CategoryP
             </select>
           </div>
 
-          <p className="text-black font-medium">
+          <p className="text-gray-600">
             Showing {sortedProducts.length} products
           </p>
         </div>
