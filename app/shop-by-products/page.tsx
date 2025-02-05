@@ -86,7 +86,6 @@ const products: Product[] = [
 
 export default function ShopByProducts() {
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [searchQuery, setSearchQuery] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     const filteredProducts = products.filter((product) => {
