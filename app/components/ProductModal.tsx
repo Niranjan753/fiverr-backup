@@ -76,7 +76,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
 
                     <div className="space-y-4">
                       {/* Features */}
-                      {product.features && product.features.length > 0 && (
+                      {product.features !== null && product.features !== undefined && product.features.length > 0 && (
                         <div>
                           <h4 className="text-lg font-semibold text-gray-900 mb-2">Features</h4>
                           <ul className="list-disc list-inside text-gray-600 space-y-1">
@@ -88,7 +88,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
                       )}
 
                       {/* Specifications */}
-                      {Object.keys(product.specifications).length > 0 && (
+                      {product.specifications !== null && product.specifications !== undefined && Object.keys(product.specifications).length > 0 && (
                         <div>
                           <h4 className="text-lg font-semibold text-gray-900 mb-2">Specifications</h4>
                           <dl className="grid grid-cols-2 gap-2 text-sm">
@@ -103,7 +103,7 @@ export default function ProductModal({ product, isOpen, onClose, onAddToCart }: 
                       )}
 
                       {/* Safety Instructions */}
-                      {product.safetyInstructions && product.safetyInstructions.length > 0 && (
+                      {product.safetyInstructions !== null && product.safetyInstructions !== undefined && product.safetyInstructions.length > 0 && (
                         <div>
                           <h4 className="text-lg font-semibold text-gray-900 mb-2">Safety Instructions</h4>
                           <ul className="list-disc list-inside text-gray-600 space-y-1">
