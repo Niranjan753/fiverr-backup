@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const WhatsAppLogo = () => (
   <svg
@@ -64,14 +65,19 @@ const FloatingButtons = () => {
           <CartIcon />
         </button>
       </div>
-
       {/* Right side blinking Order Now button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={handleOrderClick}
-          className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-600 transition-colors animate-pulse font-bold text-lg"
+          className="relative overflow-hidden rounded-lg shadow-lg hover:bg-red-600 transition-colors"
         >
-          Order Now
+          <Image
+            src="/ordernow-blink.webp"
+            alt="Order Now"
+            width={150}
+            height={50}
+            className="animate-pulse"
+          />
         </button>
       </div>
     </>
