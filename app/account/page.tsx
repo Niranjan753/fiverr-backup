@@ -1,47 +1,26 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { FaUser, FaLock } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username === 'niranjanr753@gmail.com' && password === '12345678') {
-      setIsLoggedIn(true);
+      // Store auth state in localStorage
+      localStorage.setItem('isAdminLoggedIn', 'true');
+      // Redirect to admin dashboard
+      router.push('/admin');
     } else {
       alert('Invalid credentials');
     }
   };
-
-  if (isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Admin Dashboard</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-100 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Statistics</h3>
-              <p>Users: 1,234</p>
-              <p>Orders: 567</p>
-              <p>Revenue: $89,012</p>
-            </div>
-            <div className="bg-green-100 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Recent Activity</h3>
-              <ul className="list-disc list-inside">
-                <li>New user registration</li>
-                <li>Order #12345 completed</li>
-                <li>Product inventory updated</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
@@ -54,33 +33,55 @@ export default function AdminLogin() {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Admin Login</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="text-sm font-medium text-gray-700 block mb-2">Email</label>
-            <input
-              type="email"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              required
-            />
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <div className="mt-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaUser className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                id="username"
+                name="username"
+                type="email"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                placeholder="Enter your email"
+              />
+            </div>
           </div>
+
           <div>
-            <label htmlFor="password" className="text-sm font-medium text-gray-700 block mb-2">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              required
-            />
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <div className="mt-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaLock className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                placeholder="Enter your password"
+              />
+            </div>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300 text-lg font-semibold"
-          >
-            Login
-          </button>
+
+          <div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Sign in
+            </button>
+          </div>
         </form>
       </motion.div>
     </div>
