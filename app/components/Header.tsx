@@ -107,8 +107,8 @@ export default function Header() {
             <nav className="space-y-4">
               <Link href="/" className="block py-2 text-black hover:text-yellow-600 transition-colors">HOME</Link>
               <Link href="/about" className="block py-2 text-black hover:text-yellow-600 transition-colors">ABOUT US</Link>
-              <Link href="/products" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY PRODUCTS</Link>
-              <Link href="/brands" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY BRANDS</Link>
+              <Link href="/shop-by-products" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY PRODUCTS</Link>
+              <Link href="/shop-by-brands" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY BRANDS</Link>
               <Link href="/chit-fund" className="block py-2 text-black hover:text-yellow-600 transition-colors">CHIT FUND</Link>
               <Link href="/safety" className="block py-2 text-black hover:text-yellow-600 transition-colors">SAFETY TIPS</Link>
               <Link href="/contact" className="block py-2 text-black hover:text-yellow-600 transition-colors">CONTACT US</Link>
