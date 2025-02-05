@@ -7,11 +7,11 @@ export interface Product {
   rating: number;
   description: string;
   category: string;
-  features: string[];
-  specifications: {
+  features?: string[];
+  specifications?: {
     [key: string]: string;
   };
-  safetyInstructions: string[];
+  safetyInstructions?: string[];
   stock: number;
   isNew: boolean;
 }
