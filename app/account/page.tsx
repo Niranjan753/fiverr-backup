@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
 
 export default function AdminLogin() {
@@ -8,7 +8,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username === 'niranjanr753@gmail.com' && password === '12345678') {
       setIsLoggedIn(true);
