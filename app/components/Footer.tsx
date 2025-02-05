@@ -1,12 +1,14 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-white to-red-100 text-red-800">
+    <footer className="bg-white text-red-800">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <h3 className="text-2xl font-bold mb-4 text-red-600">SRT CRACKERS</h3>
+            <Image src="/srt-text.png" alt="SRT CRACKERS" width={150} height={50} className="mb-4" />
             <p className="text-red-700 text-sm mb-4">
               India&apos;s #1 Sivakasi Based Crackers Seller. Quality products directly from manufacturers.
             </p>
@@ -86,7 +88,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      
       </div>
     </footer>
   );
