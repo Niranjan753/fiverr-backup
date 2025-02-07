@@ -69,7 +69,7 @@ const FloatingButtons = () => {
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={handleOrderClick}
-          className="relative overflow-hidden rounded-lg shadow-lg hover:bg-red-600 transition-colors"
+          className="relative overflow-hidden  transition-colors"
         >
           <Image
             src="/ordernow-blink.webp"
