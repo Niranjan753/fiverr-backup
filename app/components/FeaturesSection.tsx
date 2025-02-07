@@ -1,7 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { FaFire, FaShieldAlt, FaStar, FaCoins } from 'react-icons/fa';
 
 const features = [
@@ -28,39 +26,22 @@ const features = [
 ];
 
 export default function FeaturesSection() {
-  const [currentFeature, setCurrentFeature] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleFeatureClick = (index: number) => {
-    setCurrentFeature(index);
-  };
-
   return (
     <section className="py-24 px-6 bg-white">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-extrabold text-center text-red-600 mb-16">Why Choose Us?</h2>
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={index}
-              className={`bg-white rounded-2xl p-6 shadow-xl border border-red-600 flex items-center transition-opacity duration-500 cursor-pointer ${
-                index === currentFeature ? 'opacity-100' : 'opacity-50'
-              }`}
-              animate={{ opacity: index === currentFeature ? 1 : 0.5 }}
-              onClick={() => handleFeatureClick(index)}
+              className="bg-white rounded-2xl p-6 shadow-xl border border-red-600 flex items-start"
             >
-              <div className="text-4xl mr-6">{feature.icon}</div>
+              <div className="text-4xl mr-6 mt-1">{feature.icon}</div>
               <div>
                 <h3 className="text-2xl font-bold text-red-600 mb-2">{feature.title}</h3>
                 <p className="text-gray-700 text-lg">{feature.description}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
