@@ -51,7 +51,7 @@ export default function Contact() {
                         className="text-5xl md:text-6xl font-extrabold text-white mb-6"
                         {...fadeInUp}
                     >
-                        Get in Touch
+                        Get in Touch with us
                     </motion.h1>
                     <motion.p 
                         className="text-xl text-red-100 max-w-2xl mx-auto"
