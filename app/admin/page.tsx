@@ -1,95 +1,141 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Brand {
-  id: string;
-  name: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  category: string;
-  brand: string;
-}
+import { supabase } from '@/lib/supabase';
+import { Product, Category } from '@/types/database';
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'products' | 'categories'>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
   
   // New product form state
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
+  const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: '',
     price: 0,
     description: '',
-    image: '',
-    category: '',
-    brand: ''
+    image_url: '',
+    category_id: ''
   });
 
   // New category form state
   const [newCategory, setNewCategory] = useState('');
 
   useEffect(() => {
-    // Check authentication
-    const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
-    if (!isLoggedIn) {
-      router.push('/account');
+    const checkSession = async () => {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        console.log('Admin session check:', { session, sessionError });
+        
+        if (!session) {
+          console.log('No session found, redirecting to login...');
+          router.replace('/login');
+          return;
+        }
+
+        // Load initial data
+        const { data: categoriesData, error: categoriesError } = await supabase
+          .from('categories')
+          .select('*')
+          .order('name');
+        
+        if (categoriesError) throw categoriesError;
+        
+        if (categoriesData) {
+          setCategories(categoriesData);
+        }
+
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('*, categories(name)')
+          .order('name');
+        
+        if (productsError) throw productsError;
+        
+        if (productsData) {
+          setProducts(productsData);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error in admin dashboard:', error);
+        router.replace('/login');
+      }
+    };
+
+    checkSession();
+  }, [router]);
+
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([newProduct])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setProducts([...products, data]);
+        // Reset form
+        setNewProduct({
+          name: '',
+          price: 0,
+          description: '',
+          image_url: '',
+          category_id: ''
+        });
+      }
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Error adding product. Please try again.');
     }
+  };
 
-    // Load initial data
-    // In a real app, these would be API calls
-    setCategories([
-      { id: '1', name: 'Sparklers' },
-      { id: '2', name: 'Rockets' }
-    ]);
-
-    setBrands([
-      { id: '1', name: 'Standard Fireworks' },
-      { id: '2', name: 'Sri Kaliswari' }
-    ]);
-  }, []);
-
-  const handleAddProduct = (e: FormEvent) => {
+  const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newId = Math.random().toString(36).substr(2, 9);
-    setProducts([...products, { ...newProduct, id: newId }]);
-    // Reset form
-    setNewProduct({
-      name: '',
-      price: 0,
-      description: '',
-      image: '',
-      category: '',
-      brand: ''
-    });
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .insert([{ name: newCategory }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setCategories([...categories, data]);
+        setNewCategory('');
+      }
+    } catch (error) {
+      console.error('Error adding category:', error);
+      alert('Error adding category. Please try again.');
+    }
   };
 
-  const handleAddCategory = (e: FormEvent) => {
-    e.preventDefault();
-    const newId = Math.random().toString(36).substr(2, 9);
-    setCategories([...categories, { id: newId, name: newCategory }]);
-    setNewCategory('');
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.replace('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAdminLoggedIn');
-    router.push('/account');
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-xl font-semibold">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -139,7 +185,40 @@ export default function AdminDashboard() {
         {activeTab === 'products' ? (
           <div className="bg-white shadow sm:rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Add New Product</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Products</h3>
+              <div className="mt-4">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {products.map((product) => (
+                      <tr key={product.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{product.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{product.price}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {categories.find(c => c.id === product.category_id)?.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <button className="text-blue-600 hover:text-blue-900 mr-3">
+                            <FaEdit />
+                          </button>
+                          <button className="text-red-600 hover:text-red-900">
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mt-8">Add New Product</h3>
               <form onSubmit={handleAddProduct} className="mt-5 space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
@@ -170,153 +249,113 @@ export default function AdminDashboard() {
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                      Category
-                    </label>
-                    <select
-                      id="category"
-                      name="category"
-                      required
-                      value={newProduct.category}
-                      onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-                    >
-                      <option value="">Select a category</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="brand" className="block text-sm font-medium text-gray-700">
-                      Brand
-                    </label>
-                    <select
-                      id="brand"
-                      name="brand"
-                      required
-                      value={newProduct.brand}
-                      onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-                    >
-                      <option value="">Select a brand</option>
-                      {brands.map((brand) => (
-                        <option key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                      Description
-                    </label>
-                    <textarea
-                      id="description"
-                      name="description"
-                      rows={3}
-                      required
-                      value={newProduct.description}
-                      onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-                      Image URL
-                    </label>
-                    <input
-                      type="text"
-                      name="image"
-                      id="image"
-                      required
-                      value={newProduct.image}
-                      onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
                 </div>
-                <div className="flex justify-end">
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    rows={3}
+                    value={newProduct.description}
+                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    required
+                    value={newProduct.category_id}
+                    onChange={(e) => setNewProduct({ ...newProduct, category_id: e.target.value })}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="image_url" className="block text-sm font-medium text-gray-700">
+                    Image URL
+                  </label>
+                  <input
+                    type="text"
+                    id="image_url"
+                    name="image_url"
+                    value={newProduct.image_url}
+                    onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+                <div>
                   <button
                     type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                   >
-                    <FaPlus className="mr-2" />
                     Add Product
                   </button>
                 </div>
               </form>
-
-              {/* Products List */}
-              <div className="mt-8">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Products List</h3>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {products.map((product) => (
-                    <div key={product.id} className="border rounded-lg p-4">
-                      <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-md" />
-                      <h4 className="mt-2 text-lg font-medium">{product.name}</h4>
-                      <p className="text-gray-600">{product.description}</p>
-                      <p className="mt-2 text-red-600 font-bold">₹{product.price}</p>
-                      <div className="mt-4 flex justify-end space-x-2">
-                        <button className="p-2 text-blue-600 hover:text-blue-800">
-                          <FaEdit />
-                        </button>
-                        <button className="p-2 text-red-600 hover:text-red-800">
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         ) : (
           <div className="bg-white shadow sm:rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Add New Category</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Categories</h3>
+              <div className="mt-4">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {categories.map((category) => (
+                      <tr key={category.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{category.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <button className="text-blue-600 hover:text-blue-900 mr-3">
+                            <FaEdit />
+                          </button>
+                          <button className="text-red-600 hover:text-red-900">
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mt-8">Add New Category</h3>
               <form onSubmit={handleAddCategory} className="mt-5">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                   <input
                     type="text"
-                    required
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Category name"
+                    className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                    required
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                   >
-                    <FaPlus className="mr-2" />
                     Add Category
                   </button>
                 </div>
               </form>
-
-              {/* Categories List */}
-              <div className="mt-8">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Categories List</h3>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {categories.map((category) => (
-                    <div key={category.id} className="border rounded-lg p-4 flex justify-between items-center">
-                      <span className="text-lg">{category.name}</span>
-                      <div className="flex space-x-2">
-                        <button className="p-2 text-blue-600 hover:text-blue-800">
-                          <FaEdit />
-                        </button>
-                        <button className="p-2 text-red-600 hover:text-red-800">
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         )}

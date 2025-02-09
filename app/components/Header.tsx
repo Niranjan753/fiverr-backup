@@ -53,7 +53,7 @@ export default function Header() {
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
                     </div>
                   </Link>
-                  <Link href="/account" className="hover:text-yellow-600 transition-colors">
+                  <Link href="/login" className="hover:text-yellow-600 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -140,7 +140,7 @@ export default function Header() {
                 </svg>
                 Cart
               </Link>
-              <Link href="/account" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors">
+              <Link href="/login" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors">
                 <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
