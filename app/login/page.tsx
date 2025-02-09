@@ -17,10 +17,6 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // First, ensure we're logged out
-      await supabase.auth.signOut();
-
-      // Then login
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -29,9 +25,8 @@ export default function LoginPage() {
       if (error) throw error;
 
       if (data.session) {
-        // Force a router cache invalidation and navigation
-        router.refresh(); // This is important!
-        router.replace('/dashboard');
+        // Use window.location for hard navigation
+        window.location.href = '/dashboard';
       }
     } catch (error: any) {
       console.error('Login error:', error);

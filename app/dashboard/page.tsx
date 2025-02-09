@@ -9,20 +9,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-          router.replace('/login');
-        }
-      } catch (error) {
-        console.error('Error in dashboard:', error);
-        router.replace('/login');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = '/login';
       }
     };
 
     checkSession();
-  }, [router]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
