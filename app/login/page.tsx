@@ -2,37 +2,23 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        // Use window.location for hard navigation
-        window.location.href = '/dashboard';
-      }
-    } catch (error: any) {
-      console.error('Login error:', error);
-      setError(error.message || 'Failed to login');
-    } finally {
-      setLoading(false);
+    // Hardcoded credentials check
+    if (email === 'niranjanr753@gmail.com' && password === '123109sairam') {
+      // Set auth and navigate
+      sessionStorage.setItem('auth', 'true');
+      router.push('/dashboard');
+    } else {
+      setError('Invalid credentials');
     }
   };
 
@@ -47,7 +33,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email
@@ -76,10 +62,9 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
+            className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            Login
           </button>
         </form>
       </div>
