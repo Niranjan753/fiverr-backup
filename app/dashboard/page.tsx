@@ -7,13 +7,6 @@ import Cookies from 'js-cookie';
 import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
-interface SupabaseError {
-  message: string;
-  details?: string;
-  hint?: string;
-  code?: string;
-}
-
 export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
