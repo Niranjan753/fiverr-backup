@@ -2,159 +2,159 @@
 
 import { useCart } from '../context/CartContext';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, getCartTotal } = useCart();
-  const [isMobile, setIsMobile] = useState(false);
+  const { items, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleEvaluationSubmit = () => {
-    console.log('Submitting evaluation for:', cartItems);
-  };
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+            <div className="mb-4">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h2>
+            <p className="text-gray-600 mb-6">Looks like you haven't added any items to your cart yet.</p>
+            <Link
+              href="/shop-by-products"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-white text-red-600 py-8 sm:py-16">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-red-600 mb-6 sm:mb-8">Your Cart</h1>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Cart Items */}
+          <div className="lg:w-2/3">
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-200">
+                <h1 className="text-2xl font-semibold text-gray-900">Shopping Cart</h1>
+                <p className="text-gray-600 mt-1">{totalItems} items</p>
+              </div>
 
-        {cartItems.length === 0 ? (
-          <div className="text-center py-12 sm:py-16">
-            <h2 className="text-xl sm:text-2xl text-gray-600">Your cart is empty</h2>
-          </div>
-        ) : (
-          <>
-            <div className="bg-white rounded-lg overflow-hidden shadow-xl border border-red-100">
-              {isMobile ? (
-                <div className="divide-y divide-red-100">
-                  {cartItems.map((item) => {
-                    const discountedPrice = item.price - (item.price * item.discount) / 100;
-                    return (
-                      <div key={item.id} className="p-4">
-                        <div className="flex items-center mb-4">
-                          <div className="h-20 w-20 relative flex-shrink-0">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover rounded-lg"
-                            />
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium">{item.name}</div>
-                            <div className="text-xs text-gray-500">{item.category}</div>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                          <div>Price:</div>
-                          <div>₹{item.price}</div>
-                          <div>Discount:</div>
-                          <div className="text-red-600">{item.discount}%</div>
-                          <div>Final Price:</div>
-                          <div className="font-medium">₹{discountedPrice}</div>
-                        </div>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="mt-4 text-red-600 hover:text-red-700 text-sm font-medium"
-                        >
-                          Remove
-                        </button>
+              <div className="divide-y divide-gray-200">
+                {items.map((item) => {
+                  const discountedPrice = item.price - (item.price * (item.discount || 0)) / 100;
+                  
+                  return (
+                    <div key={item.id} className="p-6 flex flex-col sm:flex-row gap-6">
+                      {/* Product Image */}
+                      <div className="relative w-full sm:w-32 h-32 flex-shrink-0">
+                        <Image
+                          src={item.image || '/placeholder.jpg'}
+                          alt={item.name}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
                       </div>
-                    );
-                  })}
-                  <div className="p-4 bg-red-50 flex justify-between items-center">
-                    <span className="font-medium">Total:</span>
-                    <span className="font-bold text-red-600">₹{getCartTotal()}</span>
+
+                      {/* Product Details */}
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                          <p className="text-lg font-semibold text-gray-900">
+                            ₹{(discountedPrice * item.quantity).toFixed(2)}
+                          </p>
+                        </div>
+                        
+                        <p className="mt-1 text-sm text-gray-600 line-clamp-2">{item.description}</p>
+
+                        {(item.discount || 0) > 0 && (
+                          <p className="mt-1 text-sm text-green-600">
+                            You save ₹{((item.price * (item.discount || 0)) / 100 * item.quantity).toFixed(2)}
+                          </p>
+                        )}
+
+                        <div className="mt-4 flex items-center gap-4">
+                          <select
+                            value={item.quantity}
+                            onChange={(e) => updateQuantity(item.id, Number(e.target.value))}
+                            className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"
+                          >
+                            {[...Array(10)].map((_, i) => (
+                              <option key={i + 1} value={i + 1}>
+                                {i + 1}
+                              </option>
+                            ))}
+                          </select>
+
+                          <button
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-sm text-red-600 hover:text-red-700"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="lg:w-1/3">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Subtotal ({totalItems} items)</p>
+                  <p className="text-gray-900">₹{totalPrice.toFixed(2)}</p>
+                </div>
+                
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Delivery</p>
+                  <p className="text-gray-900">Free</p>
+                </div>
+
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="flex justify-between">
+                    <p className="text-lg font-semibold text-gray-900">Order Total</p>
+                    <p className="text-lg font-semibold text-gray-900">₹{totalPrice.toFixed(2)}</p>
                   </div>
                 </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-red-50">
-                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">Product</th>
-                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">Price</th>
-                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">Discount</th>
-                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">Final Price</th>
-                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-red-100">
-                      {cartItems.map((item) => {
-                        const discountedPrice = item.price - (item.price * item.discount) / 100;
-                        return (
-                          <tr key={item.id} className="hover:bg-red-50">
-                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="h-12 w-12 sm:h-16 sm:w-16 relative flex-shrink-0">
-                                  <Image
-                                    src={item.image}
-                                    alt={item.name}
-                                    fill
-                                    className="object-cover rounded-lg"
-                                  />
-                                </div>
-                                <div className="ml-4">
-                                  <div className="text-sm font-medium">{item.name}</div>
-                                  <div className="text-xs text-gray-500">{item.category}</div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm">₹{item.price}</div>
-                            </td>
-                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-red-600">{item.discount}%</div>
-                            </td>
-                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium">₹{discountedPrice}</div>
-                            </td>
-                            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                              <button
-                                onClick={() => removeFromCart(item.id)}
-                                className="text-red-600 hover:text-red-700 text-sm font-medium"
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                    <tfoot>
-                      <tr className="bg-red-50">
-                        <td colSpan={3} className="px-4 sm:px-6 py-4 text-right font-medium">Total:</td>
-                        <td className="px-4 sm:px-6 py-4 font-bold text-red-600">₹{getCartTotal()}</td>
-                        <td></td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              )}
-            </div>
 
-            <div className="mt-8 flex justify-end">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleEvaluationSubmit}
-                className="bg-red-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
-              >
-                Send for Evaluation
-              </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors mt-6"
+                >
+                  Proceed to Checkout
+                </motion.button>
+
+                <p className="text-xs text-gray-500 text-center mt-4">
+                  Free Delivery for orders above ₹500
+                </p>
+              </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
