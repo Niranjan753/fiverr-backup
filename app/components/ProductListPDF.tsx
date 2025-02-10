@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#000',
     paddingVertical: 3,
+    backgroundColor: '#fff',
   },
   columnHeader: {
     fontSize: 9,
@@ -53,27 +54,34 @@ const styles = StyleSheet.create({
   },
   cell: {
     fontSize: 9,
+    backgroundColor: '#fff',
   },
   productCode: {
     width: '10%',
+    paddingRight: 4,
   },
   productName: {
     width: '30%',
+    paddingRight: 4,
   },
   contents: {
     width: '15%',
+    paddingRight: 4,
   },
   rateQty: {
     width: '15%',
     textAlign: 'right',
+    paddingRight: 4,
   },
   discount: {
     width: '15%',
     textAlign: 'right',
+    paddingRight: 4,
   },
   finalRate: {
     width: '15%',
     textAlign: 'right',
+    paddingRight: 4,
   },
   categoryHeader: {
     fontSize: 11,
