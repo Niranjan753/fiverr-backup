@@ -4,10 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
+import ProductListModal from './ProductListModal';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const [isProductListModalOpen, setIsProductListModalOpen] = useState(false);
 
   return (
     <header className="font-sans">
@@ -38,33 +41,21 @@ export default function Header() {
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
-                <button className="flex items-center text-black border border-black px-3 py-1.5 rounded-lg text-sm hover:bg-black hover:text-white transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Select City
+                <button
+                  onClick={() => setIsProductListModalOpen(true)}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Download Price List
                 </button>
 
-                <div className="flex items-center space-x-4">
-                  <Link href="/cart" className="flex items-center hover:text-yellow-600 transition-colors">
-                    <div className="relative">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      {totalItems > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                          {totalItems}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                  <Link href="/login" className="hover:text-yellow-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </Link>
-                </div>
+                <Link href="/cart" className="relative">
+                  <FaShoppingCart className="h-6 w-6 text-gray-600 hover:text-gray-900" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
               </div>
             </div>
           </div>
@@ -163,6 +154,11 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      <ProductListModal
+        isOpen={isProductListModalOpen}
+        onClose={() => setIsProductListModalOpen(false)}
+      />
     </header>
   );
 }
