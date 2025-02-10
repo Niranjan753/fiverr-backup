@@ -19,7 +19,6 @@ export function useProducts(category?: string) {
           .from('products')
           .select('*');
 
-        // If category is provided, filter by it
         if (category) {
           query = query.eq('category', category);
         }
@@ -28,11 +27,15 @@ export function useProducts(category?: string) {
 
         if (supabaseError) throw supabaseError;
 
-        // Transform the data to match the expected format
-        const transformedProducts = data.map(product => {
+        // Transform the data to match the Product interface
+        const transformedProducts: Product[] = data.map(product => {
           const imageUrl = product.image_url || '/placeholder.jpg';
           return {
-            ...product,
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            category: product.category,
             image: imageUrl,
             image_url: imageUrl,
             discount: product.discount || 0,
@@ -40,8 +43,9 @@ export function useProducts(category?: string) {
             features: product.features || [],
             specifications: product.specifications || {},
             safetyInstructions: product.safetyInstructions || [],
-            stock: product.stock || 50,
-            isNew: product.isNew || false
+            stock: product.stock || 0,
+            isNew: product.isNew || false,
+            created_at: product.created_at
           };
         });
 

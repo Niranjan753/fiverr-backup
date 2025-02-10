@@ -7,14 +7,21 @@ import { Product } from '../types/product';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 
-type ProductCardProps = Partial<Product> & {
+type ProductCardProps = {
+  id: string;
   name: string;
-  price: number;
-  discount: number;
-  image: string;
-  image_url: string;
-  rating: number;
   description: string;
+  price: number;
+  category: string;
+  image: string;
+  image_url?: string;
+  discount?: number;
+  rating?: number;
+  features?: string[];
+  specifications?: Record<string, string>;
+  safetyInstructions?: string[];
+  stock?: number;
+  isNew?: boolean;
   onClick?: () => void;
   className?: string;
 };
@@ -27,10 +34,10 @@ export default function ProductCard(props: ProductCardProps) {
   const { 
     name, 
     price, 
-    discount, 
+    discount = 0, 
     image,
     image_url, 
-    rating,
+    rating = 4.5,
     description,
     features = [],
     specifications = {},
