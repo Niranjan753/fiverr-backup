@@ -2,9 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
+
+interface SupabaseError {
+  message: string;
+  details?: string;
+  hint?: string;
+  code?: string;
+}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -61,7 +69,7 @@ export default function Dashboard() {
 
       // Upload image to Supabase Storage
       const { error: uploadError } = await supabase.storage
-        .from('products') // Changed bucket name to 'products'
+        .from('products')
         .upload(filePath, formData.image, {
           cacheControl: '3600',
           upsert: false
@@ -71,7 +79,7 @@ export default function Dashboard() {
 
       // Get public URL for the uploaded image
       const { data: { publicUrl } } = supabase.storage
-        .from('products') // Changed bucket name to 'products'
+        .from('products')
         .getPublicUrl(filePath);
 
       // Insert product data into database
@@ -99,9 +107,10 @@ export default function Dashboard() {
         image: null,
       });
       setImagePreview(null);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error:', error);
-      setMessage({ type: 'error', text: error.message });
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -217,11 +226,14 @@ export default function Dashboard() {
               />
               {imagePreview && (
                 <div className="mt-2">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="h-32 w-32 object-cover rounded-lg"
-                  />
+                  <div className="relative h-32 w-32">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 </div>
               )}
             </div>

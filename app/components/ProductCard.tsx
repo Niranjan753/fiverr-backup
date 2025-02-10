@@ -128,7 +128,11 @@ export default function ProductCard(props: ProductCardProps) {
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.stopPropagation();
-                onClick ? onClick() : setIsModalOpen(true);
+                if (onClick) {
+                  onClick();
+                } else {
+                  setIsModalOpen(true);
+                }
               }}
               className="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium hover:bg-red-700 transition-colors"
             >
