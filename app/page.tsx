@@ -16,7 +16,7 @@ const categories = [
   },
   {
     id: 2,
-    name: "Flower Pots",
+    name: "Flower Pots", 
     description: "Beautiful aerial showers of colorful sparks",
     count: 18,
     image: "/flowerpot.webp"
@@ -75,61 +75,59 @@ const categories = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <VideoHero />
       {/* Products Section */}
-      <section className="relative" style={{
-        background: `radial-gradient(circle at center, #FEF2F2 0%, #FEE2E2 40%, #FFFFFF 100%)`
-      }}>
+      <section className="relative py-20">
         <div className="relative z-10 px-6 md:px-8 lg:px-12 max-w-[1400px] mx-auto">
           {/* Section Header */}
-          <div className="mb-8 text-center">
-            <h2 className="text-4xl font-bold text-red-600 mb-2 mt-4 pt-10">
+          <div className="mb-12 text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-3">
               Featured Categories
             </h2>
-            <p className="text-xl text-red-600 pt-[-4]">
+            <p className="text-xl text-gray-600">
               Explore our wide range of premium quality crackers
             </p>
           </div>
 
           {/* Categories Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category) => (
               <Link 
                 href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
                 key={category.id}
-                className="group relative overflow-hidden rounded-xl bg-white hover:transform hover:scale-[1.02] transition-all duration-300"
+                className="group relative overflow-hidden rounded-2xl bg-white hover:transform hover:scale-[1.03] transition-all duration-500 shadow-lg hover:shadow-xl"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <Image
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="object-cover"
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />
                   
                   {/* New Badge */}
                   {category.isNew && (
-                    <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    <div className="absolute top-4 right-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                       NEW
                     </div>
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-red-600 mb-2">
+                <div className="p-6 bg-white">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
                     {category.name}
                   </h3>
-                  <p className="text-red-600/70 text-sm mb-4">
+                  <p className="text-gray-600 text-sm mb-4">
                     {category.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-red-600/60 text-sm">
+                    <span className="text-gray-500 text-sm">
                       {category.count} Products
                     </span>
-                    <span className="text-red-600 text-lg group-hover:translate-x-1 transition-transform duration-300">
-                      →
+                    <span className="text-indigo-600 text-lg opacity-0 group-hover:opacity-100 transform translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300">
+                      Explore →
                     </span>
                   </div>
                 </div>
@@ -138,13 +136,13 @@ export default function Home() {
           </div>
 
           {/* View All Button */}
-          <div className="mt-12 pb-16 text-center">
+          <div className="mt-16 text-center">
             <Link 
               href="/products" 
-              className="inline-flex items-center bg-white text-red-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-red-600/20"
+              className="inline-flex items-center bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-indigo-300/50 transform hover:-translate-y-1"
             >
               View All Products
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -165,11 +163,12 @@ export default function Home() {
     </main>
   );
 }
+
 const LegalNotice = () => (
-  <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 ">
-    <p className="font-bold mb-2">Important Legal Notice:</p>
-    <p className="text-sm">
-    As per the 2018 Supreme Court order, online sales of firecrackers are not 
+  <div className="bg-slate-50 border-l-4 border-indigo-500 text-gray-700 p-6 shadow-inner">
+    <p className="font-bold mb-3 text-gray-900">Important Legal Notice:</p>
+    <p className="text-sm leading-relaxed">
+      As per the 2018 Supreme Court order, online sales of firecrackers are not 
       permitted. At SRT Crackers, we value our customers and respect legal 
       jurisdiction. We kindly request you to add products to your cart and submit 
       your requirements through the enquiry button. Our team will contact you 
@@ -181,4 +180,4 @@ const LegalNotice = () => (
       standard practices in Sivakasi.
     </p>
   </div>
-);    
+);
