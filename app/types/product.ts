@@ -5,7 +5,7 @@ export interface Product {
   price: number;
   category: string;
   image_url: string;
-  image?: string; // For backward compatibility
+  image: string;  // This will be the same as image_url
   discount?: number;
   rating?: number;
   features?: string[];

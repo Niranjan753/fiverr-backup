@@ -29,17 +29,21 @@ export function useProducts(category?: string) {
         if (supabaseError) throw supabaseError;
 
         // Transform the data to match the expected format
-        const transformedProducts = data.map(product => ({
-          ...product,
-          image: product.image_url, // For backward compatibility with ProductCard
-          discount: 0,
-          rating: 4.5,
-          features: [],
-          specifications: {},
-          safetyInstructions: [],
-          stock: 50,
-          isNew: false
-        }));
+        const transformedProducts = data.map(product => {
+          const imageUrl = product.image_url || '/placeholder.jpg';
+          return {
+            ...product,
+            image: imageUrl,
+            image_url: imageUrl,
+            discount: product.discount || 0,
+            rating: product.rating || 4.5,
+            features: product.features || [],
+            specifications: product.specifications || {},
+            safetyInstructions: product.safetyInstructions || [],
+            stock: product.stock || 50,
+            isNew: product.isNew || false
+          };
+        });
 
         setProducts(transformedProducts);
       } catch (err) {

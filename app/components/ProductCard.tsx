@@ -12,6 +12,7 @@ type ProductCardProps = Partial<Product> & {
   price: number;
   discount: number;
   image: string;
+  image_url: string;
   rating: number;
   description: string;
   onClick?: () => void;
@@ -27,7 +28,8 @@ export default function ProductCard(props: ProductCardProps) {
     name, 
     price, 
     discount, 
-    image, 
+    image,
+    image_url, 
     rating,
     description,
     features = [],
@@ -42,13 +44,15 @@ export default function ProductCard(props: ProductCardProps) {
   } = props;
 
   const discountedPrice = price - (price * discount) / 100;
+  const imageSource = image_url || image || '/placeholder.jpg';
 
   const fullProduct: Product = {
     id,
     name,
     price,
     discount,
-    image,
+    image: imageSource,
+    image_url: imageSource,
     rating,
     description,
     features,
@@ -57,7 +61,6 @@ export default function ProductCard(props: ProductCardProps) {
     stock,
     category,
     isNew,
-    image_url: image,
   };
 
   const handleAddToCart = () => {
@@ -73,7 +76,7 @@ export default function ProductCard(props: ProductCardProps) {
       >
         <div className="relative h-40 cursor-pointer" onClick={onClick || (() => setIsModalOpen(true))}>
           <Image
-            src={image}
+            src={imageSource}
             alt={name}
             fill
             className="object-cover"
