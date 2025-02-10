@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header className="font-sans">
-      <div className="bg-white text-black text-xs py-1.5 px-4 text-center border-b border-gray-200">
+      <div className="bg-white text-red-600 text-xs py-1.5 px-4 text-center border-b border-gray-200 font-bold">
         India&apos;s #1 Sivakasi Based Crackers Seller SHOP | Directly from Manufacturers | Factory Price | Assured Quality | Note : We do not sell/deliver to cities, where crackers are banned. Our License No: E/SS/TN
       </div>
 
