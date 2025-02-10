@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '../types/product';
 import Cookies from 'js-cookie';
 
-interface CartItem extends Product {
+export interface CartItem extends Product {
   quantity: number;
 }
 
