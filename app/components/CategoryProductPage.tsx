@@ -32,11 +32,25 @@ export default function CategoryProductPage({
     );
   }
 
+  // Transform products to ensure they have all required fields
+  const transformedProducts = products.map(product => ({
+    ...product,
+    image: product.image_url || product.image || '/placeholder.jpg',
+    image_url: product.image_url || product.image || '/placeholder.jpg',
+    discount: product.discount || 0,
+    rating: product.rating || 4.5,
+    features: product.features || [],
+    specifications: product.specifications || {},
+    safetyInstructions: product.safetyInstructions || [],
+    stock: product.stock || 50,
+    isNew: product.isNew || false
+  }));
+
   return (
     <CategoryPage
       title={title}
       description={description}
-      products={products}
+      products={transformedProducts}
     />
   );
 } 
