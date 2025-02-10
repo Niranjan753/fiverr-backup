@@ -4,9 +4,29 @@ import { useCart } from '../context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useState, Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import PDFPreviewModal from '../components/PDFPreviewModal';
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const [isPDFModalOpen, setIsPDFModalOpen] = useState(false);
+  const [customerDetails, setCustomerDetails] = useState({
+    name: '',
+    mobile: '',
+    address: ''
+  });
+  const [showCustomerForm, setShowCustomerForm] = useState(false);
+
+  const handleProceedToCheckout = () => {
+    setShowCustomerForm(true);
+  };
+
+  const handleCustomerSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowCustomerForm(false);
+    setIsPDFModalOpen(true);
+  };
 
   if (items.length === 0) {
     return (
@@ -160,6 +180,7 @@ export default function CartPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={handleProceedToCheckout}
                   className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
                 >
                   Proceed to Checkout
@@ -169,6 +190,74 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Customer Details Form Modal */}
+      <Transition show={showCustomerForm} as={Fragment}>
+        <Dialog onClose={() => setShowCustomerForm(false)} className="relative z-50">
+          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="mx-auto max-w-md rounded bg-white p-6">
+              <Dialog.Title className="text-lg font-medium mb-4">Enter Your Details</Dialog.Title>
+              <form onSubmit={handleCustomerSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Name</label>
+                  <input
+                    type="text"
+                    value={customerDetails.name}
+                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, name: e.target.value }))}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Mobile</label>
+                  <input
+                    type="tel"
+                    value={customerDetails.mobile}
+                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, mobile: e.target.value }))}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Address</label>
+                  <textarea
+                    value={customerDetails.address}
+                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, address: e.target.value }))}
+                    rows={3}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+                    required
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowCustomerForm(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                  >
+                    Generate Estimate
+                  </button>
+                </div>
+              </form>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* PDF Preview Modal */}
+      <PDFPreviewModal
+        isOpen={isPDFModalOpen}
+        onClose={() => setIsPDFModalOpen(false)}
+        items={items}
+        totalAmount={totalPrice}
+        customerDetails={customerDetails}
+      />
     </div>
   );
 }
