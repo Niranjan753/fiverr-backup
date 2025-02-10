@@ -156,7 +156,7 @@ const ProductListPDF = ({ products, state, district }: ProductListPDFProps) => {
                 <Text style={[styles.columnHeader, styles.finalRate]}>Final Rate</Text>
               </View>
 
-              {categoryProducts.map((product: Product, index: number) => {
+              {categoryProducts.map((product: Product) => {
                 const discount = product.price * 0.8; // 80% discount
                 const finalRate = product.price - discount;
 

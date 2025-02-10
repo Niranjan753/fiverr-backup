@@ -68,9 +68,7 @@ export default function PDFPreviewModal({
                     fileName={`SRT-Estimate-${new Date().toISOString().split('T')[0]}.pdf`}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                   >
-                    {({ blob, url, loading, error }) =>
-                      loading ? 'Generating PDF...' : 'Download PDF'
-                    }
+                    {({ loading }) => loading ? 'Generating PDF...' : 'Download PDF'}
                   </PDFDownloadLink>
                 </div>
 
