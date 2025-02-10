@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,8 +15,8 @@ export default function LoginPage() {
 
     // Hardcoded credentials check
     if (email === 'niranjanr753@gmail.com' && password === '123109sairam') {
-      // Set auth and navigate
-      sessionStorage.setItem('auth', 'true');
+      // Set auth cookie and navigate
+      Cookies.set('auth', 'true', { expires: 7 }); // Cookie expires in 7 days
       router.push('/dashboard');
     } else {
       setError('Invalid credentials');

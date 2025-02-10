@@ -2,19 +2,20 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const auth = sessionStorage.getItem('auth');
+    const auth = Cookies.get('auth');
     if (!auth) {
       router.push('/login');
     }
   }, [router]);
 
   const handleLogout = () => {
-    sessionStorage.removeItem('auth');
+    Cookies.remove('auth');
     router.push('/login');
   };
 
