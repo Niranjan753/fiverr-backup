@@ -12,28 +12,12 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <div className="mb-4">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Looks like you haven't added any items to your cart yet.</p>
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
+            <p className="text-lg text-gray-600 mb-8">Add some exciting products to your cart!</p>
             <Link
-              href="/shop-by-products"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              href="/products"
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
             >
               Continue Shopping
             </Link>
@@ -46,110 +30,140 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Cart Items */}
-          <div className="lg:w-2/3">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-gray-200">
-                <h1 className="text-2xl font-semibold text-gray-900">Shopping Cart</h1>
-                <p className="text-gray-600 mt-1">{totalItems} items</p>
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+          <div className="lg:col-span-8">
+            <div className="bg-white shadow-sm rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-2xl font-semibold text-gray-900">Shopping Cart ({totalItems} items)</h2>
               </div>
 
-              <div className="divide-y divide-gray-200">
+              <ul role="list" className="divide-y divide-gray-200">
                 {items.map((item) => {
                   const discountedPrice = item.price - (item.price * (item.discount || 0)) / 100;
-                  
                   return (
-                    <div key={item.id} className="p-6 flex flex-col sm:flex-row gap-6">
-                      {/* Product Image */}
-                      <div className="relative w-full sm:w-32 h-32 flex-shrink-0">
-                        <Image
-                          src={item.image || '/placeholder.jpg'}
-                          alt={item.name}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      </div>
-
-                      {/* Product Details */}
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                          <p className="text-lg font-semibold text-gray-900">
-                            ₹{(discountedPrice * item.quantity).toFixed(2)}
-                          </p>
+                    <li key={item.id} className="p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 w-24 h-24 relative rounded-md overflow-hidden">
+                          <Image
+                            src={item.image || '/placeholder.jpg'}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
-                        
-                        <p className="mt-1 text-sm text-gray-600 line-clamp-2">{item.description}</p>
 
-                        {(item.discount || 0) > 0 && (
-                          <p className="mt-1 text-sm text-green-600">
-                            You save ₹{((item.price * (item.discount || 0)) / 100 * item.quantity).toFixed(2)}
-                          </p>
-                        )}
+                        <div className="ml-6 flex-1">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                              <div className="mt-1 flex items-center">
+                                <div className="flex text-yellow-400">
+                                  {[...Array(5)].map((_, i) => (
+                                    <svg
+                                      key={i}
+                                      className={`w-4 h-4 ${i < (item.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                  ))}
+                                </div>
+                                <span className="text-sm text-gray-600 ml-2">{item.rating}</span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-lg font-medium text-red-600">₹{discountedPrice.toFixed(2)}</div>
+                              {(item.discount || 0) > 0 && (
+                                <div className="mt-1">
+                                  <span className="text-sm text-gray-500 line-through mr-2">₹{item.price.toFixed(2)}</span>
+                                  <span className="text-sm text-green-600">
+                                    You save ₹{((item.price * (item.discount || 0)) / 100 * item.quantity).toFixed(2)}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
 
-                        <div className="mt-4 flex items-center gap-4">
-                          <select
-                            value={item.quantity}
-                            onChange={(e) => updateQuantity(item.id, Number(e.target.value))}
-                            className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"
-                          >
-                            {[...Array(10)].map((_, i) => (
-                              <option key={i + 1} value={i + 1}>
-                                {i + 1}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="mt-4 flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                              <label htmlFor={`quantity-${item.id}`} className="text-sm font-medium text-gray-700">
+                                Quantity:
+                              </label>
+                              <div className="flex items-center">
+                                <button
+                                  onClick={() => item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)}
+                                  className="px-2 py-1 border border-gray-300 rounded-l text-gray-600 hover:bg-gray-100"
+                                  disabled={item.quantity <= 1}
+                                >
+                                  -
+                                </button>
+                                <input
+                                  type="number"
+                                  id={`quantity-${item.id}`}
+                                  min="1"
+                                  max="100"
+                                  value={item.quantity}
+                                  onChange={(e) => {
+                                    const value = parseInt(e.target.value);
+                                    if (!isNaN(value) && value >= 1 && value <= 100) {
+                                      updateQuantity(item.id, value);
+                                    }
+                                  }}
+                                  className="w-16 text-center border-y border-gray-300 py-1"
+                                />
+                                <button
+                                  onClick={() => item.quantity < 100 && updateQuantity(item.id, item.quantity + 1)}
+                                  className="px-2 py-1 border border-gray-300 rounded-r text-gray-600 hover:bg-gray-100"
+                                  disabled={item.quantity >= 100}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
 
-                          <button
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-sm text-red-600 hover:text-red-700"
-                          >
-                            Delete
-                          </button>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => removeFromCart(item.id)}
+                              className="text-sm font-medium text-red-600 hover:text-red-500"
+                            >
+                              Remove
+                            </motion.button>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           </div>
 
-          {/* Order Summary */}
-          <div className="lg:w-1/3">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Subtotal ({totalItems} items)</p>
-                  <p className="text-gray-900">₹{totalPrice.toFixed(2)}</p>
-                </div>
-                
-                <div className="flex justify-between">
-                  <p className="text-gray-600">Delivery</p>
-                  <p className="text-gray-900">Free</p>
-                </div>
-
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex justify-between">
-                    <p className="text-lg font-semibold text-gray-900">Order Total</p>
-                    <p className="text-lg font-semibold text-gray-900">₹{totalPrice.toFixed(2)}</p>
+          <div className="mt-8 lg:mt-0 lg:col-span-4">
+            <div className="bg-white shadow-sm rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h2>
+              <div className="flow-root">
+                <dl className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <dt className="text-gray-600">Subtotal</dt>
+                    <dd className="text-gray-900 font-medium">₹{totalPrice.toFixed(2)}</dd>
                   </div>
-                </div>
+                  <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                    <dt className="text-lg font-medium text-gray-900">Order total</dt>
+                    <dd className="text-lg font-medium text-red-600">₹{totalPrice.toFixed(2)}</dd>
+                  </div>
+                </dl>
+              </div>
 
+              <div className="mt-6">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors mt-6"
+                  className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
                 >
                   Proceed to Checkout
                 </motion.button>
-
-                <p className="text-xs text-gray-500 text-center mt-4">
-                  Free Delivery for orders above ₹500
-                </p>
               </div>
             </div>
           </div>

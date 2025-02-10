@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
 import { Product } from '../types/product';
 import { useProducts } from '../hooks/useProducts';
+import { useCart } from '../context/CartContext';
 
 const categories = [
     { id: 'gift_pack', name: 'Gift Pack' },
@@ -25,11 +26,18 @@ const categories = [
 export default function ShopByProducts() {
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [quantity, setQuantity] = useState(1);
     const { products, loading, error } = useProducts(selectedCategory);
+    const { addToCart } = useCart();
+
+    const handleProductClick = (product: Product) => {
+        setSelectedProduct(product);
+        setQuantity(1); // Reset quantity when opening modal
+    };
 
     return (
         <main className="min-h-screen bg-white">
-            <section className="py-12">
+            <section className="py-8">
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row gap-6">
                         {/* Categories Sidebar */}
@@ -66,12 +74,13 @@ export default function ShopByProducts() {
                                     <p className="mt-2 text-sm text-gray-500">{error}</p>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                                     {products.map((product) => (
                                         <ProductCard
                                             key={product.id}
                                             {...product}
-                                            onClick={() => setSelectedProduct(product)}
+                                            onClick={() => handleProductClick(product)}
+                                            className="h-full"
                                         />
                                     ))}
                                 </div>
@@ -101,9 +110,12 @@ export default function ShopByProducts() {
                     isOpen={selectedProduct !== null}
                     onClose={() => setSelectedProduct(null)}
                     onAddToCart={() => {
-                        // Add to cart logic here
+                        addToCart(selectedProduct, quantity);
                         setSelectedProduct(null);
+                        setQuantity(1);
                     }}
+                    quantity={quantity}
+                    onQuantityChange={setQuantity}
                 />
             )}
         </main>
