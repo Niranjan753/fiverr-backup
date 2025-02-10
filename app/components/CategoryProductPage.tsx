@@ -16,18 +16,30 @@ export default function CategoryProductPage({
 }: CategoryProductPageProps) {
   const { products, loading, error } = useProducts(category);
 
-  if (loading) {
+  if (error) {
+    // Handle Supabase initialization errors
+    if (error.includes('NEXT_PUBLIC_SUPABASE_URL') || error.includes('NEXT_PUBLIC_SUPABASE_ANON_KEY')) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-xl text-red-600 max-w-md text-center px-4">
+            <p>Configuration Error: Unable to connect to the database.</p>
+            <p className="text-sm mt-2 text-gray-600">Please check the environment variables.</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl text-gray-600">Loading products...</div>
+        <div className="text-xl text-red-600">Error: {error}</div>
       </div>
     );
   }
 
-  if (error) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-red-600">Error: {error}</div>
+        <div className="text-2xl text-gray-600">Loading products...</div>
       </div>
     );
   }
