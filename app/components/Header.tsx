@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import ProductListModal from './ProductListModal';
 
 export default function Header() {
@@ -55,6 +55,10 @@ export default function Header() {
                       {totalItems}
                     </span>
                   )}
+                </Link>
+
+                <Link href="/login">
+                  <FaUser className="h-6 w-6 text-gray-600 hover:text-gray-900" />
                 </Link>
               </div>
             </div>
