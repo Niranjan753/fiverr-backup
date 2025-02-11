@@ -120,22 +120,22 @@ export default function Header() {
             </div>
 
             <nav className="space-y-4">
-              <Link href="/" className="block py-2 text-black hover:text-yellow-600 transition-colors">HOME</Link>
-              <Link href="/about" className="block py-2 text-black hover:text-yellow-600 transition-colors">ABOUT US</Link>
-              <Link href="/shop-by-products" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY PRODUCTS</Link>
-              <Link href="/shop-by-brands" className="block py-2 text-black hover:text-yellow-600 transition-colors">SHOP BY BRANDS</Link>
-              <Link href="/chit-fund" className="block py-2 text-black hover:text-yellow-600 transition-colors">CHIT FUND</Link>
-              <Link href="/safety" className="block py-2 text-black hover:text-yellow-600 transition-colors">SAFETY TIPS</Link>
-              <Link href="/contact" className="block py-2 text-black hover:text-yellow-600 transition-colors">CONTACT US</Link>
+              <Link href="/" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>HOME</Link>
+              <Link href="/about" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ABOUT US</Link>
+              <Link href="/shop-by-products" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>SHOP BY PRODUCTS</Link>
+              <Link href="/shop-by-brands" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>SHOP BY BRANDS</Link>
+              <Link href="/chit-fund" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>CHIT FUND</Link>
+              <Link href="/safety" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>SAFETY TIPS</Link>
+              <Link href="/contact" className="block py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>CONTACT US</Link>
               
-              <button className="w-full flex items-center text-left py-2 text-black hover:text-yellow-600 transition-colors">
+              <button className="w-full flex items-center text-left py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 </svg>
                 Select City
               </button>
 
-              <Link href="/cart" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors">
+              <Link href="/cart" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 <div className="relative">
                   <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -148,7 +148,7 @@ export default function Header() {
                 </div>
                 Cart
               </Link>
-              <Link href="/login" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors">
+              <Link href="/login" className="flex items-center py-2 text-black hover:text-yellow-600 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
