@@ -1,39 +1,77 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import ProductModal from '../components/ProductModal';
 import { Product } from '../types/product';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-const categories = [
-    { id: 'gift_pack', name: 'Gift Pack' },
-    { id: 'sparklers', name: 'Sparklers' },
-    { id: 'color_matches', name: 'Color Matches' },
-    { id: 'sound_crackers', name: 'Sound Crackers' },
-    { id: 'flower_pots', name: 'Flower Pots' },
-    { id: 'ground_chakkar', name: 'Ground Chakkar' },
-    { id: 'soil_pots', name: 'Soil Pots' },
-    { id: 'bombs', name: 'Bombs' },
-    { id: 'paper_bomb', name: 'Paper Bomb' },
-    { id: 'vanitha_colors', name: 'Vanitha Colors' },
-    { id: 'fancy_candles', name: 'Fancy Candles' },
-    { id: 'kids_special', name: 'Kids Special' },
-    { id: 'kids_night_attraction', name: 'Kids Night Attraction' }
-];
+interface Category {
+    id: string;
+    name: string;
+    slug: string;
+}
 
 export default function ShopByProducts() {
+    const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState(1);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
+    const [categoriesError, setCategoriesError] = useState('');
     const { products, loading, error } = useProducts(selectedCategory);
     const { addToCart } = useCart();
+    const supabase = createClientComponentClient();
+
+    useEffect(() => {
+        async function fetchCategories() {
+            try {
+                setCategoriesLoading(true);
+                setCategoriesError('');
+
+                const { data, error: supabaseError } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .order('name');
+
+                if (supabaseError) throw supabaseError;
+
+                if (data) {
+                    setCategories(data);
+                }
+            } catch (err) {
+                console.error('Error fetching categories:', err);
+                setCategoriesError('Failed to load categories');
+            } finally {
+                setCategoriesLoading(false);
+            }
+        }
+
+        fetchCategories();
+    }, [supabase]);
 
     const handleProductClick = (product: Product) => {
         setSelectedProduct(product);
-        setQuantity(1); // Reset quantity when opening modal
+        setQuantity(1);
     };
+
+    if (categoriesLoading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-2xl text-gray-600">Loading categories...</div>
+            </div>
+        );
+    }
+
+    if (categoriesError) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-xl text-red-600">{categoriesError}</div>
+            </div>
+        );
+    }
 
     return (
         <main className="min-h-screen bg-white">
@@ -48,9 +86,9 @@ export default function ShopByProducts() {
                                     {categories.map((category) => (
                                         <button
                                             key={category.id}
-                                            onClick={() => setSelectedCategory(category.id)}
+                                            onClick={() => setSelectedCategory(category.slug)}
                                             className={`w-full text-left px-3 py-2 rounded-md transition-colors text-sm md:text-base ${
-                                                selectedCategory === category.id
+                                                selectedCategory === category.slug
                                                     ? 'bg-red-600 text-white'
                                                     : 'text-gray-600 hover:bg-gray-100'
                                             }`}
