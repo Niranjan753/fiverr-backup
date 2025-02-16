@@ -87,40 +87,95 @@ export default function Dashboard() {
     setMessage({ type: '', text: '' });
 
     try {
+      // Validate form data
+      if (!formData.name || !formData.description || !formData.price || !formData.category) {
+        throw new Error('All fields are required');
+      }
+
       if (!formData.image) {
         throw new Error('Please select an image');
       }
+
+      // Log the form data for debugging
+      console.log('Form Data:', {
+        ...formData,
+        image: formData.image ? {
+          name: formData.image.name,
+          size: formData.image.size,
+          type: formData.image.type
+        } : null
+      });
 
       const fileExt = formData.image.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
+      console.log('Attempting file upload...', {
+        fileName,
+        filePath,
+        fileType: formData.image.type,
+        fileSize: formData.image.size
+      });
+
+      // Test storage bucket access
+      const { data: bucketTest, error: bucketError } = await supabase
+        .storage
+        .from('products')
+        .list();
+
+      if (bucketError) {
+        console.error('Storage bucket access error:', bucketError);
+        throw new Error('Unable to access storage bucket: ' + bucketError.message);
+      }
+
+      // Upload file
+      const { error: uploadError, data: uploadData } = await supabase.storage
         .from('products')
         .upload(filePath, formData.image, {
           cacheControl: '3600',
           upsert: false
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload Error Details:', uploadError);
+        throw new Error('File upload failed: ' + uploadError.message);
+      }
 
-      const { data: { publicUrl } } = supabase.storage
+      console.log('Upload successful:', uploadData);
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
         .from('products')
         .getPublicUrl(filePath);
 
-      const { error: insertError } = await supabase
-        .from('products')
-        .insert([
-          {
-            name: formData.name,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            category: formData.category,
-            image_url: publicUrl,
-          },
-        ]);
+      if (!urlData || !urlData.publicUrl) {
+        throw new Error('Failed to get public URL for uploaded image');
+      }
 
-      if (insertError) throw insertError;
+      console.log('Public URL generated:', urlData.publicUrl);
+
+      // Prepare product data
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        category: formData.category,
+        image_url: urlData.publicUrl,
+      };
+
+      console.log('Attempting to insert product:', productData);
+
+      // Insert into database
+      const { error: insertError, data: insertData } = await supabase
+        .from('products')
+        .insert([productData]);
+
+      if (insertError) {
+        console.error('Insert Error Details:', insertError);
+        throw new Error('Failed to insert product: ' + insertError.message);
+      }
+
+      console.log('Product inserted successfully:', insertData);
 
       setMessage({ type: 'success', text: 'Product added successfully!' });
       setFormData({
@@ -133,8 +188,18 @@ export default function Dashboard() {
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
     } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      console.error('Detailed Error:', {
+        error,
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL
+      });
+      
+      const errorMessage = error instanceof Error 
+        ? `Error: ${error.message}`
+        : 'An unexpected error occurred';
+      
       setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);

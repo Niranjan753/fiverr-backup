@@ -8,18 +8,27 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    // Hardcoded credentials check
-    if (email === 'niranjanr753@gmail.com' && password === '123109sairam') {
-      // Set auth cookie and navigate
-      Cookies.set('auth', 'true', { expires: 7 }); // Cookie expires in 7 days
-      router.push('/dashboard');
-    } else {
-      setError('Invalid credentials');
+    try {
+      // Simple credential check
+      if (email === 'niranjanr753@gmail.com' && password === '123109sairam') {
+        Cookies.set('auth', 'true', { expires: 7 }); // Cookie expires in 7 days
+        router.push('/dashboard');
+      } else {
+        setError('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An error occurred during login');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,6 +54,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500"
               required
+              disabled={loading}
             />
           </div>
 
@@ -58,14 +68,16 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500"
               required
+              disabled={loading}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
+            disabled={loading}
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>
