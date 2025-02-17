@@ -86,7 +86,13 @@ export default function ProductCard(props: ProductCardProps) {
             src={imageSource}
             alt={name}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
+            priority={false}
+            quality={75}
+            onError={(e: any) => {
+              e.target.src = '/placeholder.jpg';
+            }}
           />
           {isNew && (
             <div className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
