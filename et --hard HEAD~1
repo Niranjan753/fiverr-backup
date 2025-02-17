@@ -1,0 +1,131 @@
+[33m1c64bdf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m removed hardcoded products
+[33m01034d2[m chit-fund added
+[33m7d5f7a8[m mobile nav fix
+[33ma38e0fb[m something something
+[33m63c2e35[m vercel something
+[33m3072f44[m something again
+[33ma5863ff[m something
+[33mfd5e2e9[m added functionality for downloading price list
+[33mea1bbb0[m fixed top text
+[33m28d7c49[m added pdf checkout
+[33mb2aeec9[m added cart context
+[33ma08aa7d[m login for admin
+[33m95ce1ff[m better design in featured and footer
+[33m7a5fa33[m added env
+[33m48fa20f[m build successful
+[33mecbe632[m 4th try
+[33m64ecf66[m try fix vercel error 3
+[33m3ab000a[m fix vercel 2
+[33m172823d[m try fixing vercel error
+[33m1de4c9b[m fixed cart context
+[33m43e4cbb[m added quantities for checkout
+[33m82e46f2[m successful functionality for adding products
+[33m41d348b[m maybe done the logic
+[33m05643d0[m fixed the authenticaton
+[33m84f6f9b[m fuck auth
+[33mfbc9e8c[m login page redirection
+[33md192238[m add supabase config
+[33m54a875c[m updated footer
+[33m291c66b[m fix blinking
+[33m6581670[m fixed Features section
+[33m6ee0ccb[m fixed the navbar hover to red color
+[33m57bd482[m approx final product
+[33mfbb9e80[m vercel
+[33md9128d1[m try fix vercel error
+[33md91762f[m fix vercel error
+[33mf6793e6[m added same design for products in everywhere
+[33m6be2e8e[m added new colors for the produts
+[33m569219b[m added yet another video
+[33m5b349ff[m added new video
+[33m9368a55[m added actual data in footer
+[33mfe58a6c[m added new hover animation
+[33m3109e90[m fixed order now blink
+[33mf9674ba[m fixed hydration error
+[33me1d3b93[m added footer redesign
+[33m318d3df[m added profile images in reviews section
+[33meb1dfbc[m added products style in cart
+[33m1966c9f[m added admin and account page
+[33m95e3032[m fix vercel error
+[33mf7a303c[m added admin page
+[33m243803e[m mobile fix
+[33m419e491[m added mobile responsive for shop by products and brands
+[33mc73a60f[m added reviews
+[33mce28d4a[m vercel-fix-2
+[33m384123f[m added vercel fix
+[33m2ed5f96[m embedded google maps
+[33mb87ba51[m added contact page
+[33md337e0c[m added safety
+[33m74259df[m trying to fix vercel error
+[33m4230bac[m added about us page
+[33m5e9e825[m tryna fix vercel errors
+[33m4dd55ae[m updated footer
+[33mc2b7629[m added everything except counter
+[33m54ca247[m improved review section and colors
+[33md971468[m added colors for reviews
+[33mcec1283[m finished header and featured products
+[33mdc9543f[m added images for featured categories
+[33m06682dc[m created product categories
+[33m10493bc[m added white background and logo for the header
+[33m7f05bf2[m added poster and video
+[33m5f49d7a[m added slider function
+[33m19ef72a[m moved icons to the left
+[33m0b78d67[m added other video
+[33m2e7396a[m added other video
+[33ma00fdf9[m added black color background
+[33mf9483ab[m added text and logo
+[33m23f775a[m added logo in the header
+[33m46e36eb[m added legal notice
+[33md77a5de[m vercel
+[33mcaab418[m added about and logos
+[33m8f34dc1[m try resolve vercel error
+[33ma6caa24[m added shop by products and brands
+[33m3e852c3[m added customer reviews section for this
+[33macf9a18[m added some shit
+[33m6f94309[m removed shop-by-products
+[33mdc4defb[m Updated crackers website
+[33m1922c06[m vercel error 11
+[33mcac9944[m vercel error 10
+[33m83afbfd[m vercel error 9
+[33m2986f9e[m vercel error 8
+[33md6beb33[m vercel error 7
+[33m5e94d1c[m vercel error 6
+[33m51f290f[m vercel error 5
+[33m0355c66[m vercel error 4
+[33mbc8960e[m vercel error 3
+[33m05f9434[m vercel error 2
+[33mcaa2612[m vercel error fix
+[33m726767c[m added categoris seperation
+[33m5e9ec43[m added product categoris
+[33m1f71f79[m added new navtags
+[33m75b94de[m another sloppy shit
+[33mde2f5b9[m added some shit
+[33me1929be[m added a fresh look for bottom logos
+[33mb17de37[m added new video
+[33m93e76b5[m added order now and whatsapp logos
+[33mb7c8397[m added whatsapp logo
+[33m082b076[m sixth try
+[33m1e0b693[m fifth vercel
+[33m03ffbb7[m fix vercel error third time
+[33ma652ebc[m fix vercel errors second time
+[33m11a2f14[m try fixing vercel errors
+[33m34c0ef9[m fixed header
+[33mbe2737b[m added dark side
+[33m2439b83[m added cart
+[33m75b453d[m added counters
+[33m0377b31[m added welcome and about section
+[33me60ff2f[m added individual product pages
+[33m3fa2ffc[m added product pages and product cards
+[33med5f59b[m added footer
+[33ma167796[m added gradient for the product cards
+[33m2edea99[m added video
+[33m979fefe[m added new style
+[33mfafebd6[m added black colors
+[33mfcdb4f5[m added product card finals
+[33m6d124d3[m some progress
+[33m236625c[m added product zoom and everything
+[33m33fc166[m 4th revision
+[33m6d8b56d[m second commit
+[33m42985c4[m second commit
+[33m7b26ba7[m initial design
+[33m4653568[m first commit
+[33mdd220b4[m Initial commit from Create Next App

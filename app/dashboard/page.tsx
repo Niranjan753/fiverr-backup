@@ -7,6 +7,16 @@ import Cookies from 'js-cookie';
 import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
+interface Product {
+  name: string;
+  price: number;
+  description: string;
+  image_url: string;
+  category_id: string;
+  brand?: string;
+  image?: File | null;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -19,12 +29,13 @@ export default function Dashboard() {
     activeVisitors: 0,
     totalSales: 0
   });
-  const [formData, setFormData] = useState({
+  const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: '',
+    price: 0,
     description: '',
-    price: '',
-    category: '',
-    image: null as File | null,
+    image_url: '',
+    category_id: '',
+    brand: ''
   });
 
   useEffect(() => {
@@ -66,13 +77,13 @@ export default function Dashboard() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setNewProduct(prev => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData(prev => ({ ...prev, image: file }));
+      setNewProduct(prev => ({ ...prev, image: file }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -87,54 +98,129 @@ export default function Dashboard() {
     setMessage({ type: '', text: '' });
 
     try {
-      if (!formData.image) {
+      if (!newProduct.image) {
         throw new Error('Please select an image');
       }
 
-      const fileExt = formData.image.name.split('.').pop();
+      // Upload image to storage
+      const fileExt = newProduct.image.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
+      console.log('Starting upload process...');
+      console.log('File details:', {
+        name: fileName,
+        type: newProduct.image.type,
+        size: newProduct.image.size
+      });
+
+      // First check if bucket exists
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+
+      console.log('Available buckets:', buckets);
+
+      if (bucketsError) {
+        console.error('Error listing buckets:', bucketsError);
+        throw new Error(`Cannot access storage: ${bucketsError.message}`);
+      }
+
+      // Try to create bucket if it doesn't exist
+      const productsBucket = buckets?.find(b => b.name === 'products');
+      if (!productsBucket) {
+        console.log('Products bucket not found, attempting to create...');
+        const { data: newBucket, error: createError } = await supabase
+          .storage
+          .createBucket('products', {
+            public: true,
+            fileSizeLimit: 1024 * 1024 * 2 // 2MB limit
+          });
+
+        if (createError) {
+          console.error('Error creating bucket:', createError);
+          throw new Error(`Failed to create storage bucket: ${createError.message}`);
+        }
+        console.log('Bucket created successfully:', newBucket);
+      }
+
+      // Now try to upload
+      console.log('Attempting to upload to bucket: products');
+      const { error: uploadError, data: uploadData } = await supabase.storage
         .from('products')
-        .upload(filePath, formData.image, {
+        .upload(`${fileName}`, newProduct.image, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
+          contentType: newProduct.image.type
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Detailed upload error:', uploadError);
+        throw new Error(`Failed to upload image: ${uploadError.message}`);
+      }
 
-      const { data: { publicUrl } } = supabase.storage
+      console.log('Image uploaded successfully', uploadData);
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
         .from('products')
         .getPublicUrl(filePath);
 
-      const { error: insertError } = await supabase
-        .from('products')
-        .insert([
-          {
-            name: formData.name,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            category: formData.category,
-            image_url: publicUrl,
-          },
-        ]);
+      if (!urlData.publicUrl) {
+        throw new Error('Failed to generate public URL');
+      }
 
-      if (insertError) throw insertError;
+      console.log('Generated public URL:', urlData.publicUrl);
+
+      // Insert product data with explicit RLS bypass if possible
+      const productData = {
+        name: newProduct.name,
+        description: newProduct.description,
+        price: parseFloat((newProduct.price || 0).toString()),
+        category: newProduct.category_id,
+        image_url: urlData.publicUrl,
+        brand: newProduct.brand || '',
+        created_at: new Date().toISOString(), // Add creation timestamp
+        updated_at: new Date().toISOString()  // Add update timestamp
+      };
+
+      console.log('Inserting product data:', productData);
+
+      const { error: insertError, data: insertData } = await supabase
+        .from('products')
+        .insert([productData])
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Product insert error:', insertError);
+        throw new Error(`Failed to add product: ${insertError.message}`);
+      }
+
+      console.log('Product inserted successfully:', insertData);
 
       setMessage({ type: 'success', text: 'Product added successfully!' });
-      setFormData({
+      setNewProduct({
         name: '',
         description: '',
-        price: '',
-        category: '',
+        price: 0,
+        category_id: '',
+        brand: '',
         image: null,
       });
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
     } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      console.error('Error details:', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'An unexpected error occurred while adding the product. Please try again.';
+      
       setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);
@@ -243,7 +329,7 @@ export default function Dashboard() {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
+                  value={newProduct.name}
                   onChange={handleInputChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
@@ -254,7 +340,7 @@ export default function Dashboard() {
                 <label className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="description"
-                  value={formData.description}
+                  value={newProduct.description}
                   onChange={handleInputChange}
                   required
                   rows={3}
@@ -267,7 +353,7 @@ export default function Dashboard() {
                 <input
                   type="number"
                   name="price"
-                  value={formData.price}
+                  value={newProduct.price}
                   onChange={handleInputChange}
                   required
                   min="0"
@@ -279,8 +365,8 @@ export default function Dashboard() {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Category</label>
                 <select
-                  name="category"
-                  value={formData.category}
+                  name="category_id"
+                  value={newProduct.category_id}
                   onChange={handleInputChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
@@ -292,6 +378,17 @@ export default function Dashboard() {
                   <option value="fountains">Fountains</option>
                   <option value="rockets">Rockets</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Brand (Optional)</label>
+                <input
+                  type="text"
+                  name="brand"
+                  value={newProduct.brand || ''}
+                  onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                />
               </div>
 
               <div>
