@@ -1,9 +1,7 @@
 'use client';
 
 import { useCart } from '../context/CartContext';
-import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import PDFPreviewModal from '../components/PDFPreviewModal';

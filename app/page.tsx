@@ -9,8 +9,6 @@ import StatsCounter from './components/StatsCounter';
 import ReviewsSection from './components/ReviewsSection';
 import FeaturedCategories from './components/FeaturedCategories';
 
-const categoryData = [/* ... same category data ... */];
-
 export default function Home() {
   const supabase = createClientComponentClient();
 

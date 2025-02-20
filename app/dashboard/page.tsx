@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface Product {
   name: string;
