@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface Product {
   name: string;
@@ -183,7 +184,7 @@ export default function Dashboard() {
       });
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Detailed Error:', {
         error,
         name: error instanceof Error ? error.name : 'Unknown',

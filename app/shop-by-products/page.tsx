@@ -63,8 +63,14 @@ export default function ShopByProducts() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
+      {loading ? (
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
+        {/* Header */}
+        <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <h1 className="text-2xl font-bold text-gray-900">Shop by Products</h1>
         </div>
@@ -150,6 +156,8 @@ export default function ShopByProducts() {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

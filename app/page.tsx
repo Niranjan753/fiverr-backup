@@ -1,10 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import VideoHero from "./components/VideoHero";
-import Link from "next/link";
-import Image from "next/image";
 import WelcomeSection from './components/WelcomeSection';
 import FeaturesSection from './components/FeaturesSection';
 import StatsCounter from './components/StatsCounter';
@@ -14,8 +12,6 @@ import FeaturedCategories from './components/FeaturedCategories';
 const categoryData = [/* ... same category data ... */];
 
 export default function Home() {
-  const [categories, setCategories] = useState(categoryData.map(cat => ({ ...cat, count: 0 })));
-  const [loading, setLoading] = useState(true);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
