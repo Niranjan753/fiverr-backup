@@ -55,11 +55,11 @@ export default function Header() {
                       {totalItems}
                     </span>
                   )}
-                  </Link>
+                </Link>
 
                 <Link href="/login">
                   <FaUser className="h-6 w-6 text-gray-600 hover:text-gray-900" />
-                  </Link>
+                </Link>
               </div>
             </div>
           </div>

@@ -4,9 +4,8 @@ const nextConfig = {
     domains: [
       'images.unsplash.com', 
       'source.unsplash.com', 
-      'randomuser.me', 
-      'scvmbywihcjlhxprdqcy.supabase.co',
-      `${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co`
+      'randomuser.me',
+      'yuvhstlrwczqxcqqxfjg.supabase.co'
     ],
   },
 }

@@ -19,7 +19,7 @@ export function useProducts(category?: string) {
           .from('products')
           .select('*');
 
-        if (category) {
+        if (category && category !== '') {
           query = query.eq('category', category);
         }
 
@@ -27,27 +27,28 @@ export function useProducts(category?: string) {
 
         if (supabaseError) throw supabaseError;
 
-        // Transform the data to match the Product interface
-        const transformedProducts: Product[] = data.map(product => {
-          const imageUrl = product.image_url || '/placeholder.jpg';
-          return {
-            id: product.id,
-            name: product.name,
-            description: product.description,
-            price: product.price,
-            category: product.category,
-            image: imageUrl,
-            image_url: imageUrl,
-            discount: product.discount || 0,
-            rating: product.rating || 4.5,
-            features: product.features || [],
-            specifications: product.specifications || {},
-            safetyInstructions: product.safetyInstructions || [],
-            stock: product.stock || 0,
-            isNew: product.isNew || false,
-            created_at: product.created_at
-          };
-        });
+        if (!data) {
+          setProducts([]);
+          return;
+        }
+
+        const transformedProducts: Product[] = data.map(product => ({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          category: product.category,
+          image: product.image_url || '',
+          image_url: product.image_url,
+          discount: 0,
+          rating: 5,
+          features: [],
+          specifications: {},
+          safetyInstructions: [],
+          stock: 100,
+          isNew: true,
+          created_at: product.created_at
+        }));
 
         setProducts(transformedProducts);
       } catch (err) {
@@ -62,4 +63,4 @@ export function useProducts(category?: string) {
   }, [category]);
 
   return { products, loading, error };
-} 
+}

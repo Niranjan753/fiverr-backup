@@ -9,7 +9,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import PDFPreviewModal from '../components/PDFPreviewModal';
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
   const [isPDFModalOpen, setIsPDFModalOpen] = useState(false);
   const [customerDetails, setCustomerDetails] = useState({
     name: '',
@@ -28,7 +28,15 @@ export default function CartPage() {
     setIsPDFModalOpen(true);
   };
 
-  if (items.length === 0) {
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,15 +66,15 @@ export default function CartPage() {
               </div>
 
               <ul role="list" className="divide-y divide-gray-200">
-                {items.map((item) => {
-                  const discountedPrice = item.price - (item.price * (item.discount || 0)) / 100;
+                {cart.map((item) => {
+                  const discountedPrice = item.product.price - (item.product.price * (item.product.discount || 0)) / 100;
                   return (
-                    <li key={item.id} className="p-6">
+                    <li key={item.product.id} className="p-6">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-24 h-24 relative rounded-md overflow-hidden">
                           <Image
-                            src={item.image || '/placeholder.jpg'}
-                            alt={item.name}
+                            src={item.product.image_url || '/placeholder.jpg'}
+                            alt={item.product.name}
                             fill
                             className="object-cover"
                           />
@@ -75,13 +83,13 @@ export default function CartPage() {
                         <div className="ml-6 flex-1">
                           <div className="flex items-center justify-between">
                             <div>
-                              <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                              <h3 className="text-lg font-medium text-gray-900">{item.product.name}</h3>
                               <div className="mt-1 flex items-center">
                                 <div className="flex text-yellow-400">
                                   {[...Array(5)].map((_, i) => (
                                     <svg
                                       key={i}
-                                      className={`w-4 h-4 ${i < (item.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
+                                      className={`w-4 h-4 ${i < (item.product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
                                       fill="currentColor"
                                       viewBox="0 0 20 20"
                                     >
@@ -89,16 +97,16 @@ export default function CartPage() {
                                     </svg>
                                   ))}
                                 </div>
-                                <span className="text-sm text-gray-600 ml-2">{item.rating}</span>
+                                <span className="text-sm text-gray-600 ml-2">{item.product.rating}</span>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-lg font-medium text-red-600">₹{discountedPrice.toFixed(2)}</div>
-                              {(item.discount || 0) > 0 && (
+                              <div className="text-lg font-medium text-red-600">{formatPrice(discountedPrice)}</div>
+                              {(item.product.discount || 0) > 0 && (
                                 <div className="mt-1">
-                                  <span className="text-sm text-gray-500 line-through mr-2">₹{item.price.toFixed(2)}</span>
+                                  <span className="text-sm text-gray-500 line-through mr-2">{formatPrice(item.product.price)}</span>
                                   <span className="text-sm text-green-600">
-                                    You save ₹{((item.price * (item.discount || 0)) / 100 * item.quantity).toFixed(2)}
+                                    You save {formatPrice((item.product.price * (item.product.discount || 0)) / 100 * item.quantity)}
                                   </span>
                                 </div>
                               )}
@@ -107,12 +115,12 @@ export default function CartPage() {
 
                           <div className="mt-4 flex items-center justify-between">
                             <div className="flex items-center space-x-4">
-                              <label htmlFor={`quantity-${item.id}`} className="text-sm font-medium text-gray-700">
+                              <label htmlFor={`quantity-${item.product.id}`} className="text-sm font-medium text-gray-700">
                                 Quantity:
                               </label>
                               <div className="flex items-center">
                                 <button
-                                  onClick={() => item.quantity > 1 && updateQuantity(item.id, item.quantity - 1)}
+                                  onClick={() => item.quantity > 1 && updateQuantity(item.product.id, item.quantity - 1)}
                                   className="px-2 py-1 border border-gray-300 rounded-l text-gray-600 hover:bg-gray-100"
                                   disabled={item.quantity <= 1}
                                 >
@@ -120,20 +128,20 @@ export default function CartPage() {
                                 </button>
                                 <input
                                   type="number"
-                                  id={`quantity-${item.id}`}
+                                  id={`quantity-${item.product.id}`}
                                   min="1"
                                   max="100"
                                   value={item.quantity}
                                   onChange={(e) => {
                                     const value = parseInt(e.target.value);
                                     if (!isNaN(value) && value >= 1 && value <= 100) {
-                                      updateQuantity(item.id, value);
+                                      updateQuantity(item.product.id, value);
                                     }
                                   }}
                                   className="w-16 text-center border-y border-gray-300 py-1"
                                 />
                                 <button
-                                  onClick={() => item.quantity < 100 && updateQuantity(item.id, item.quantity + 1)}
+                                  onClick={() => item.quantity < 100 && updateQuantity(item.product.id, item.quantity + 1)}
                                   className="px-2 py-1 border border-gray-300 rounded-r text-gray-600 hover:bg-gray-100"
                                   disabled={item.quantity >= 100}
                                 >
@@ -145,7 +153,7 @@ export default function CartPage() {
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
-                              onClick={() => removeFromCart(item.id)}
+                              onClick={() => removeFromCart(item.product.id)}
                               className="text-sm font-medium text-red-600 hover:text-red-500"
                             >
                               Remove
@@ -167,11 +175,11 @@ export default function CartPage() {
                 <dl className="space-y-4">
                   <div className="flex items-center justify-between">
                     <dt className="text-gray-600">Subtotal</dt>
-                    <dd className="text-gray-900 font-medium">₹{totalPrice.toFixed(2)}</dd>
+                    <dd className="text-gray-900 font-medium">{formatPrice(totalPrice)}</dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                     <dt className="text-lg font-medium text-gray-900">Order total</dt>
-                    <dd className="text-lg font-medium text-red-600">₹{totalPrice.toFixed(2)}</dd>
+                    <dd className="text-lg font-medium text-red-600">{formatPrice(totalPrice)}</dd>
                   </div>
                 </dl>
               </div>
@@ -254,7 +262,7 @@ export default function CartPage() {
       <PDFPreviewModal
         isOpen={isPDFModalOpen}
         onClose={() => setIsPDFModalOpen(false)}
-        items={items}
+        items={cart}
         totalAmount={totalPrice}
         customerDetails={customerDetails}
       />

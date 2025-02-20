@@ -120,7 +120,7 @@ export default function Dashboard() {
       // Upload image to storage
       const fileExt = newProduct.image.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const filePath = fileName;
 
       console.log('Attempting file upload...', {
         fileName,
@@ -129,13 +129,13 @@ export default function Dashboard() {
         fileSize: newProduct.image.size
       });
 
-      // Now try to upload to the existing 'products' bucket
-      console.log('Attempting to upload to bucket: products');
+      // Upload to the 'products' bucket
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('products')
-        .upload(`${fileName}`, newProduct.image, {
+        .upload(filePath, newProduct.image, {
           cacheControl: '3600',
-          upsert: false,
+          upsert: true,
+          contentType: newProduct.image.type
         });
 
       if (uploadError) {
@@ -145,16 +145,9 @@ export default function Dashboard() {
 
       console.log('Upload successful:', uploadData);
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('products')
-        .getPublicUrl(filePath);
-
-      if (!urlData || !urlData.publicUrl) {
-        throw new Error('Failed to get public URL for uploaded image');
-      }
-
-      console.log('Generated public URL:', urlData.publicUrl);
+      // Get public URL - using the correct path format
+      const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
+      console.log('Generated public URL:', imageUrl);
 
       // Prepare and insert product data
       const productData = {
@@ -162,7 +155,7 @@ export default function Dashboard() {
         description: newProduct.description,
         price: parseFloat((newProduct.price || 0).toString()),
         category: newProduct.category_id,
-        image_url: urlData.publicUrl
+        image_url: imageUrl
       };
 
       console.log('Inserting product data:', productData);

@@ -2,160 +2,101 @@
 
 import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import ProductModal from '../components/ProductModal';
 import { Product } from '../types/product';
 import { useProducts } from '../hooks/useProducts';
-import { useCart } from '../context/CartContext';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-
-interface Category {
-    id: string;
-    name: string;
-    slug: string;
-}
 
 export default function ShopByProducts() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [quantity, setQuantity] = useState(1);
-    const [categoriesLoading, setCategoriesLoading] = useState(true);
-    const [categoriesError, setCategoriesError] = useState('');
-    const { products, loading, error } = useProducts(selectedCategory);
-    const { addToCart } = useCart();
-    const supabase = createClientComponentClient();
+  const { products, loading, error } = useProducts();
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-    useEffect(() => {
-        async function fetchCategories() {
-            try {
-                setCategoriesLoading(true);
-                setCategoriesError('');
+  const categories = [
+    { id: 'all', name: 'All Products' },
+    { id: 'ground_chakras', name: 'Ground Chakras' },
+    { id: 'fountains', name: 'Fountains' },
+  ];
 
-                const { data, error: supabaseError } = await supabase
-                    .from('categories')
-                    .select('*')
-                    .order('name');
-
-                if (supabaseError) throw supabaseError;
-
-                if (data) {
-                    setCategories(data);
-                }
-            } catch (err) {
-                console.error('Error fetching categories:', err);
-                setCategoriesError('Failed to load categories');
-            } finally {
-                setCategoriesLoading(false);
-            }
-        }
-
-        fetchCategories();
-    }, [supabase]);
-
-    const handleProductClick = (product: Product) => {
-        setSelectedProduct(product);
-        setQuantity(1);
-    };
-
-    if (categoriesLoading) {
-        return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="text-2xl text-gray-600">Loading categories...</div>
-            </div>
-        );
+  useEffect(() => {
+    if (products) {
+      setFilteredProducts(
+        selectedCategory === 'all'
+          ? products
+          : products.filter(product => product.category === selectedCategory)
+      );
     }
+  }, [selectedCategory, products]);
 
-    if (categoriesError) {
-        return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="text-xl text-red-600">{categoriesError}</div>
-            </div>
-        );
-    }
-
+  if (loading) {
     return (
-        <main className="min-h-screen bg-white">
-            <section className="py-8">
-                <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row gap-6">
-                        {/* Categories Sidebar */}
-                        <div className="w-full md:w-1/4 lg:w-1/5">
-                            <div className="bg-white border rounded-lg p-4 md:sticky md:top-24">
-                                <h2 className="text-lg font-bold mb-4 text-gray-900">Categories</h2>
-                                <div className="grid grid-cols-2 md:grid-cols-1 gap-2">
-                                    {categories.map((category) => (
-                                        <button
-                                            key={category.id}
-                                            onClick={() => setSelectedCategory(category.slug)}
-                                            className={`w-full text-left px-3 py-2 rounded-md transition-colors text-sm md:text-base ${
-                                                selectedCategory === category.slug
-                                                    ? 'bg-red-600 text-white'
-                                                    : 'text-gray-600 hover:bg-gray-100'
-                                            }`}
-                                        >
-                                            {category.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Products Grid */}
-                        <div className="w-full md:w-3/4 lg:w-4/5">
-                            {loading ? (
-                                <div className="flex items-center justify-center h-64">
-                                    <div className="text-2xl text-gray-600">Loading products...</div>
-                                </div>
-                            ) : error ? (
-                                <div className="text-center py-12">
-                                    <h3 className="text-lg font-medium text-red-600">Error loading products</h3>
-                                    <p className="mt-2 text-sm text-gray-500">{error}</p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                                    {products.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            {...product}
-                                            onClick={() => handleProductClick(product)}
-                                            className="h-full"
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Empty State */}
-                            {!loading && !error && products.length === 0 && (
-                                <div className="text-center py-12">
-                                    <h3 className="text-lg font-medium text-gray-900">No products found</h3>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        {selectedCategory 
-                                            ? 'Try selecting a different category'
-                                            : 'Please select a category to view products'
-                                        }
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Product Modal */}
-            {selectedProduct && (
-                <ProductModal
-                    product={selectedProduct}
-                    isOpen={selectedProduct !== null}
-                    onClose={() => setSelectedProduct(null)}
-                    onAddToCart={() => {
-                        addToCart(selectedProduct, quantity);
-                        setSelectedProduct(null);
-                        setQuantity(1);
-                    }}
-                    quantity={quantity}
-                    onQuantityChange={setQuantity}
-                />
-            )}
-        </main>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2874f0]"></div>
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        Error loading products: {error.message}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Left Sidebar - Categories */}
+          <div className="w-64 flex-shrink-0">
+            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Categories</h2>
+              <div className="space-y-1">
+                {categories.map(category => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`w-full text-left px-4 py-2 rounded text-sm font-medium transition-colors ${
+                      selectedCategory === category.id
+                        ? 'bg-blue-50 text-[#2874f0]'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Products Grid */}
+          <div className="flex-1">
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {categories.find(c => c.id === selectedCategory)?.name || 'All Products'}
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                {filteredProducts.length} products available
+              </p>
+            </div>
+
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+                <p className="text-gray-500">Try selecting a different category</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredProducts.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    {...product}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
