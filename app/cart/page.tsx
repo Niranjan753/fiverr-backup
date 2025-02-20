@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import PDFPreviewModal from '../components/PDFPreviewModal';
+import CartItem from '../components/CartItem';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
@@ -66,206 +67,154 @@ export default function CartPage() {
               </div>
 
               <ul role="list" className="divide-y divide-gray-200">
-                {cart.map((item) => {
-                  const discountedPrice = item.product.price - (item.product.price * (item.product.discount || 0)) / 100;
-                  return (
-                    <li key={item.product.id} className="p-6">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-24 h-24 relative rounded-md overflow-hidden">
-                          <Image
-                            src={item.product.image_url || '/placeholder.jpg'}
-                            alt={item.product.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-
-                        <div className="ml-6 flex-1">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h3 className="text-lg font-medium text-gray-900">{item.product.name}</h3>
-                              <div className="mt-1 flex items-center">
-                                <div className="flex text-yellow-400">
-                                  {[...Array(5)].map((_, i) => (
-                                    <svg
-                                      key={i}
-                                      className={`w-4 h-4 ${i < (item.product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
-                                      fill="currentColor"
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                  ))}
-                                </div>
-                                <span className="text-sm text-gray-600 ml-2">{item.product.rating}</span>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-lg font-medium text-red-600">{formatPrice(discountedPrice)}</div>
-                              {(item.product.discount || 0) > 0 && (
-                                <div className="mt-1">
-                                  <span className="text-sm text-gray-500 line-through mr-2">{formatPrice(item.product.price)}</span>
-                                  <span className="text-sm text-green-600">
-                                    You save {formatPrice((item.product.price * (item.product.discount || 0)) / 100 * item.quantity)}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                              <label htmlFor={`quantity-${item.product.id}`} className="text-sm font-medium text-gray-700">
-                                Quantity:
-                              </label>
-                              <div className="flex items-center">
-                                <button
-                                  onClick={() => item.quantity > 1 && updateQuantity(item.product.id, item.quantity - 1)}
-                                  className="px-2 py-1 border border-gray-300 rounded-l text-gray-600 hover:bg-gray-100"
-                                  disabled={item.quantity <= 1}
-                                >
-                                  -
-                                </button>
-                                <input
-                                  type="number"
-                                  id={`quantity-${item.product.id}`}
-                                  min="1"
-                                  max="100"
-                                  value={item.quantity}
-                                  onChange={(e) => {
-                                    const value = parseInt(e.target.value);
-                                    if (!isNaN(value) && value >= 1 && value <= 100) {
-                                      updateQuantity(item.product.id, value);
-                                    }
-                                  }}
-                                  className="w-16 text-center border-y border-gray-300 py-1"
-                                />
-                                <button
-                                  onClick={() => item.quantity < 100 && updateQuantity(item.product.id, item.quantity + 1)}
-                                  className="px-2 py-1 border border-gray-300 rounded-r text-gray-600 hover:bg-gray-100"
-                                  disabled={item.quantity >= 100}
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => removeFromCart(item.product.id)}
-                              className="text-sm font-medium text-red-600 hover:text-red-500"
-                            >
-                              Remove
-                            </motion.button>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
+                {cart.map((item) => (
+                  <li key={item.product.id}>
+                    <CartItem
+                      product={item.product}
+                      quantity={item.quantity}
+                      onUpdateQuantity={(quantity) => updateQuantity(item.product.id, quantity)}
+                      onRemove={() => removeFromCart(item.product.id)}
+                    />
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 lg:mt-0 lg:col-span-4">
+          <div className="lg:col-span-4">
             <div className="bg-white shadow-sm rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h2>
-              <div className="flow-root">
-                <dl className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <dt className="text-gray-600">Subtotal</dt>
-                    <dd className="text-gray-900 font-medium">{formatPrice(totalPrice)}</dd>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                    <dt className="text-lg font-medium text-gray-900">Order total</dt>
-                    <dd className="text-lg font-medium text-red-600">{formatPrice(totalPrice)}</dd>
-                  </div>
-                </dl>
+              <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+              
+              <div className="mt-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-600">Subtotal</p>
+                  <p className="text-sm font-medium text-gray-900">{formatPrice(totalPrice)}</p>
+                </div>
               </div>
 
               <div className="mt-6">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={handleProceedToCheckout}
-                  className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
+                  className="w-full bg-red-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   Proceed to Checkout
-                </motion.button>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Customer Details Form Modal */}
-      <Transition show={showCustomerForm} as={Fragment}>
-        <Dialog onClose={() => setShowCustomerForm(false)} className="relative z-50">
-          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-          <div className="fixed inset-0 flex items-center justify-center p-4">
-            <Dialog.Panel className="mx-auto max-w-md rounded bg-white p-6">
-              <Dialog.Title className="text-lg font-medium mb-4">Enter Your Details</Dialog.Title>
-              <form onSubmit={handleCustomerSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    value={customerDetails.name}
-                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, name: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                  <input
-                    type="tel"
-                    value={customerDetails.mobile}
-                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, mobile: e.target.value }))}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <textarea
-                    value={customerDetails.address}
-                    onChange={(e) => setCustomerDetails(prev => ({ ...prev, address: e.target.value }))}
-                    rows={3}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                    required
-                  />
-                </div>
-                <div className="flex justify-end space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomerForm(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+      <Transition appear show={showCustomerForm} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={setShowCustomerForm}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-                  >
-                    Generate Estimate
-                  </button>
-                </div>
-              </form>
-            </Dialog.Panel>
+                    Customer Details
+                  </Dialog.Title>
+                  <form onSubmit={handleCustomerSubmit} className="mt-4 space-y-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                        value={customerDetails.name}
+                        onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+                        Mobile Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="mobile"
+                        id="mobile"
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                        value={customerDetails.mobile}
+                        onChange={(e) => setCustomerDetails({ ...customerDetails, mobile: e.target.value })}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                        Delivery Address
+                      </label>
+                      <textarea
+                        name="address"
+                        id="address"
+                        required
+                        rows={4}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                        value={customerDetails.address}
+                        onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="mt-4 flex justify-end space-x-2">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        onClick={() => setShowCustomerForm(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        Generate Invoice
+                      </button>
+                    </div>
+                  </form>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
           </div>
         </Dialog>
       </Transition>
 
-      {/* PDF Preview Modal */}
-      <PDFPreviewModal
-        isOpen={isPDFModalOpen}
-        onClose={() => setIsPDFModalOpen(false)}
-        items={cart}
-        totalAmount={totalPrice}
-        customerDetails={customerDetails}
-      />
+      {isPDFModalOpen && (
+        <PDFPreviewModal
+          isOpen={isPDFModalOpen}
+          onClose={() => setIsPDFModalOpen(false)}
+          cart={cart}
+          customerDetails={customerDetails}
+          totalPrice={totalPrice}
+        />
+      )}
     </div>
   );
 }
