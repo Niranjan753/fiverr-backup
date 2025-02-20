@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { Database } from '../types/database';
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
@@ -11,18 +12,13 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
   },
   db: {
     schema: 'public'
-  },
-  global: {
-    headers: {
-      'x-my-custom-header': 'my-app-name',
-    },
   },
 });
 
@@ -34,4 +30,7 @@ export type Product = {
   price: number;
   category: string;
   image_url: string;
+  stock?: number;
+  brand?: string;
+  featured?: boolean;
 };

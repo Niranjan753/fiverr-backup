@@ -1,18 +1,28 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
 export interface Category {
   id: string;
   name: string;
-  created_at?: string;
+  created_at: string;
 }
 
 export interface Product {
-  id: string;
+  id: number;
+  created_at: string;
   name: string;
+  description: string;
   price: number;
-  description?: string;
-  image_url?: string;
-  category_id?: string;
-  created_at?: string;
-  updated_at?: string;
+  category: string;
+  image_url: string;
+  stock?: number | null;
+  brand?: string | null;
+  featured?: boolean | null;
 }
 
 export interface OrderItem {
@@ -23,10 +33,41 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
-  user_id?: string;
+  user_id: string | null;
   total: number;
   status: 'pending' | 'processing' | 'completed' | 'cancelled';
   items: OrderItem[];
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface Database {
+  public: {
+    Tables: {
+      products: {
+        Row: Product;
+        Insert: Omit<Product, 'id' | 'created_at'>;
+        Update: Partial<Omit<Product, 'id' | 'created_at'>>;
+      }
+      categories: {
+        Row: Category;
+        Insert: Omit<Category, 'id' | 'created_at'>;
+        Update: Partial<Omit<Category, 'id' | 'created_at'>>;
+      }
+      orders: {
+        Row: Order;
+        Insert: Omit<Order, 'id' | 'created_at'>;
+        Update: Partial<Omit<Order, 'id' | 'created_at'>>;
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
 }

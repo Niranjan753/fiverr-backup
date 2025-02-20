@@ -99,22 +99,21 @@ export default function Dashboard() {
 
     try {
       // Validate form data
-      if (!formData.name || !formData.description || !formData.price || !formData.category) {
+      if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.category_id) {
         throw new Error('All fields are required');
       }
 
-      if (!formData.image) {
       if (!newProduct.image) {
         throw new Error('Please select an image');
       }
 
       // Log the form data for debugging
       console.log('Form Data:', {
-        ...formData,
-        image: formData.image ? {
-          name: formData.image.name,
-          size: formData.image.size,
-          type: formData.image.type
+        ...newProduct,
+        image: newProduct.image ? {
+          name: newProduct.image.name,
+          size: newProduct.image.size,
+          type: newProduct.image.type
         } : null
       });
 
@@ -126,85 +125,25 @@ export default function Dashboard() {
       console.log('Attempting file upload...', {
         fileName,
         filePath,
-        fileType: formData.image.type,
-        fileSize: formData.image.size
+        fileType: newProduct.image.type,
+        fileSize: newProduct.image.size
       });
 
-      // Test storage bucket access
-      const { data: bucketTest, error: bucketError } = await supabase
-        .storage
-        .from('products')
-        .list();
-
-      if (bucketError) {
-        console.error('Storage bucket access error:', bucketError);
-        throw new Error('Unable to access storage bucket: ' + bucketError.message);
-      }
-
-      // Upload file
-      const { error: uploadError, data: uploadData } = await supabase.storage
-      console.log('Starting upload process...');
-      console.log('File details:', {
-        name: fileName,
-        type: newProduct.image.type,
-        size: newProduct.image.size
-      });
-
-      // First check if bucket exists
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-
-      console.log('Available buckets:', buckets);
-
-      if (bucketsError) {
-        console.error('Error listing buckets:', bucketsError);
-        throw new Error(`Cannot access storage: ${bucketsError.message}`);
-      }
-
-      // Try to create bucket if it doesn't exist
-      const productsBucket = buckets?.find(b => b.name === 'products');
-      if (!productsBucket) {
-        console.log('Products bucket not found, attempting to create...');
-        const { data: newBucket, error: createError } = await supabase
-          .storage
-          .createBucket('products', {
-            public: true,
-            fileSizeLimit: 1024 * 1024 * 2 // 2MB limit
-          });
-
-        if (createError) {
-          console.error('Error creating bucket:', createError);
-          throw new Error(`Failed to create storage bucket: ${createError.message}`);
-        }
-        console.log('Bucket created successfully:', newBucket);
-      }
-
-      // Now try to upload
+      // Now try to upload to the existing 'products' bucket
       console.log('Attempting to upload to bucket: products');
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('products')
         .upload(`${fileName}`, newProduct.image, {
           cacheControl: '3600',
           upsert: false,
-          contentType: newProduct.image.type
         });
 
       if (uploadError) {
-        console.error('Upload Error Details:', uploadError);
-        throw new Error('File upload failed: ' + uploadError.message);
+        console.error('Error uploading file:', uploadError);
+        throw new Error(`Failed to upload file: ${uploadError.message}`);
       }
 
       console.log('Upload successful:', uploadData);
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-      if (uploadError) {
-        console.error('Detailed upload error:', uploadError);
-        throw new Error(`Failed to upload image: ${uploadError.message}`);
-      }
-
-      console.log('Image uploaded successfully', uploadData);
 
       // Get public URL
       const { data: urlData } = supabase.storage
@@ -215,37 +154,9 @@ export default function Dashboard() {
         throw new Error('Failed to get public URL for uploaded image');
       }
 
-      console.log('Public URL generated:', urlData.publicUrl);
-
-      // Prepare product data
-      const productData = {
-        name: formData.name,
-        description: formData.description,
-        price: parseFloat(formData.price),
-        category: formData.category,
-        image_url: urlData.publicUrl,
-      };
-
-      console.log('Attempting to insert product:', productData);
-
-      // Insert into database
-      const { error: insertError, data: insertData } = await supabase
-        .from('products')
-        .insert([productData]);
-
-      if (insertError) {
-        console.error('Insert Error Details:', insertError);
-        throw new Error('Failed to insert product: ' + insertError.message);
-      }
-
-      console.log('Product inserted successfully:', insertData);
-      if (!urlData.publicUrl) {
-        throw new Error('Failed to generate public URL');
-      }
-
       console.log('Generated public URL:', urlData.publicUrl);
 
-      // Insert product data with explicit RLS bypass if possible
+      // Prepare and insert product data
       const productData = {
         name: newProduct.name,
         description: newProduct.description,
@@ -253,8 +164,8 @@ export default function Dashboard() {
         category: newProduct.category_id,
         image_url: urlData.publicUrl,
         brand: newProduct.brand || '',
-        created_at: new Date().toISOString(), // Add creation timestamp
-        updated_at: new Date().toISOString()  // Add update timestamp
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
 
       console.log('Inserting product data:', productData);
@@ -283,23 +194,13 @@ export default function Dashboard() {
       });
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
-    } catch (error) {
+    } catch (error: any) {
       console.error('Detailed Error:', {
         error,
         name: error instanceof Error ? error.name : 'Unknown',
         message: error instanceof Error ? error.message : 'An unexpected error occurred',
         stack: error instanceof Error ? error.stack : 'No stack trace',
         supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL
-      });
-      
-      const errorMessage = error instanceof Error 
-        ? `Error: ${error.message}`
-        : 'An unexpected error occurred';
-      
-      console.error('Error details:', {
-        error,
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined
       });
       
       const errorMessage = error instanceof Error 
@@ -351,7 +252,7 @@ export default function Dashboard() {
               <h3 className="text-lg font-semibold text-gray-600">Total Products</h3>
               <span className="p-2 bg-blue-100 rounded-lg">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </span>
             </div>
