@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface Product {
   name: string;
-  price: number;
+  price: number;  
   description: string;
   image_url: string;
   category_id: string;
