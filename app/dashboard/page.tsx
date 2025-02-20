@@ -162,10 +162,7 @@ export default function Dashboard() {
         description: newProduct.description,
         price: parseFloat((newProduct.price || 0).toString()),
         category: newProduct.category_id,
-        image_url: urlData.publicUrl,
-        brand: newProduct.brand || '',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        image_url: urlData.publicUrl
       };
 
       console.log('Inserting product data:', productData);
@@ -189,8 +186,7 @@ export default function Dashboard() {
         description: '',
         price: 0,
         category_id: '',
-        brand: '',
-        image: null,
+        image: null
       });
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
