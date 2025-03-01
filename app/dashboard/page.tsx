@@ -8,13 +8,21 @@ import { supabase } from '../../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Product {
+  id: string;
   name: string;
-  price: number;  
-  description: string;
+  price: number;
+  discount: number;
   image_url: string;
   category_id: string;
+  description: string;
   brand?: string;
   image?: File | null;
+  isVisible: boolean;
+}
+
+interface Category {
+  id: string;
+  name: string;
 }
 
 export default function Dashboard() {
@@ -30,13 +38,18 @@ export default function Dashboard() {
     totalSales: 0
   });
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
+    id: '',
     name: '',
     price: 0,
-    description: '',
+    discount: 0,
     image_url: '',
     category_id: '',
-    brand: ''
+    description: '',
+    isVisible: true
   });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isViewingProducts, setIsViewingProducts] = useState(false);
 
   useEffect(() => {
     const auth = Cookies.get('auth');
@@ -44,23 +57,22 @@ export default function Dashboard() {
       router.push('/login');
     }
     fetchStats();
+    fetchProducts();
+    fetchCategories();
   }, [router]);
 
   const fetchStats = async () => {
     try {
-      // Fetch total products
       const { count: productsCount } = await supabase
         .from('products')
         .select('*', { count: 'exact' });
 
-      // Fetch unique categories count
       const { data: categories } = await supabase
         .from('products')
         .select('category');
-      
+
       const uniqueCategories = new Set(categories?.map(item => item.category));
 
-      // For demo purposes - replace with actual analytics
       const mockActiveVisitors = Math.floor(Math.random() * 100);
       const mockTotalSales = Math.floor(Math.random() * 1000000);
 
@@ -73,6 +85,18 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
+  };
+
+  const fetchProducts = async () => {
+    const { data, error } = await supabase.from('products').select('*');
+    if (error) console.error('Error fetching products:', error);
+    else setProducts(data as Product[]);
+  };
+
+  const fetchCategories = async () => {
+    const { data, error } = await supabase.from('categories').select('*');
+    if (error) console.error('Error fetching categories:', error);
+    else setCategories(data as Category[]);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -98,7 +122,6 @@ export default function Dashboard() {
     setMessage({ type: '', text: '' });
 
     try {
-      // Validate form data
       if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.category_id) {
         throw new Error('All fields are required');
       }
@@ -107,29 +130,10 @@ export default function Dashboard() {
         throw new Error('Please select an image');
       }
 
-      // Log the form data for debugging
-      console.log('Form Data:', {
-        ...newProduct,
-        image: newProduct.image ? {
-          name: newProduct.image.name,
-          size: newProduct.image.size,
-          type: newProduct.image.type
-        } : null
-      });
-
-      // Upload image to storage
       const fileExt = newProduct.image.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = fileName;
 
-      console.log('Attempting file upload...', {
-        fileName,
-        filePath,
-        fileType: newProduct.image.type,
-        fileSize: newProduct.image.size
-      });
-
-      // Upload to the 'products' bucket
       const { error: uploadError, data: uploadData } = await supabase.storage
         .from('products')
         .upload(filePath, newProduct.image, {
@@ -143,13 +147,8 @@ export default function Dashboard() {
         throw new Error(`Failed to upload file: ${uploadError.message}`);
       }
 
-      console.log('Upload successful:', uploadData);
-
-      // Get public URL - using the correct path format
       const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${filePath}`;
-      console.log('Generated public URL:', imageUrl);
 
-      // Prepare and insert product data
       const productData = {
         name: newProduct.name,
         description: newProduct.description,
@@ -157,8 +156,6 @@ export default function Dashboard() {
         category: newProduct.category_id,
         image_url: imageUrl
       };
-
-      console.log('Inserting product data:', productData);
 
       const { error: insertError, data: insertData } = await supabase
         .from('products')
@@ -171,8 +168,6 @@ export default function Dashboard() {
         throw new Error(`Failed to add product: ${insertError.message}`);
       }
 
-      console.log('Product inserted successfully:', insertData);
-
       setMessage({ type: 'success', text: 'Product added successfully!' });
       setNewProduct({
         name: '',
@@ -184,18 +179,8 @@ export default function Dashboard() {
       setImagePreview(null);
       fetchStats(); // Refresh stats after adding product
     } catch (error: unknown) {
-      console.error('Detailed Error:', {
-        error,
-        name: error instanceof Error ? error.name : 'Unknown',
-        message: error instanceof Error ? error.message : 'An unexpected error occurred',
-        stack: error instanceof Error ? error.stack : 'No stack trace',
-        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL
-      });
-      
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'An unexpected error occurred while adding the product. Please try again.';
-      
+      console.error('Detailed Error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
       setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);
@@ -205,6 +190,37 @@ export default function Dashboard() {
   const handleLogout = () => {
     Cookies.remove('auth');
     router.push('/login');
+  };
+
+  const handleToggleViewProducts = () => {
+    setIsViewingProducts(!isViewingProducts);
+  };
+
+  const handleUpdateProduct = async (product: Product) => {
+    if (!product.id || !product.name || !product.price) {
+        console.error('Missing required fields for product update');
+        return;
+    }
+    const { error, data } = await supabase.from('products').update(product).eq('id', product.id);
+    if (error) {
+        console.error('Error updating product:', error.message || error);
+    } else {
+        console.log('Product updated successfully:', data);
+        fetchProducts(); // Refresh product list
+    }
+  };
+
+  const handleSave = async (id: string, updatedValue: string) => {
+    const { error } = await supabase
+      .from('products')
+      .update({ name: updatedValue }) // Adjust the field name as necessary
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating product:', error);
+    } else {
+      console.log('Product updated successfully');
+    }
   };
 
   return (
@@ -217,10 +233,10 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => setShowAddProduct(!showAddProduct)}
+                onClick={handleToggleViewProducts}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-all duration-300"
               >
-                {showAddProduct ? 'Hide Form' : 'Add Product'}
+                {isViewingProducts ? 'Hide Products' : 'View Products'}
               </button>
               <button
                 onClick={handleLogout}
@@ -285,128 +301,56 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Add Product Form */}
-        {showAddProduct && (
-          <div className="bg-white shadow-lg rounded-xl p-6 mb-8 transition-all duration-300">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Add New Product</h2>
-            
-            {message.text && (
-              <div className={`p-4 rounded-md mb-6 ${
-                message.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
-              }`}>
-                {message.text}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Product Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newProduct.name}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  name="description"
-                  value={newProduct.description}
-                  onChange={handleInputChange}
-                  required
-                  rows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={newProduct.price}
-                  onChange={handleInputChange}
-                  required
-                  min="0"
-                  step="0.01"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
-                <select
-                  name="category_id"
-                  value={newProduct.category_id}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                >
-                  <option value="">Select a category</option>
-                  <option value="sparklers">Sparklers</option>
-                  <option value="ground_chakkar">Ground Chakkar</option>
-                  <option value="aerial_shots">Aerial Shots</option>
-                  <option value="fountains">Fountains</option>
-                  <option value="rockets">Rockets</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Brand (Optional)</label>
-                <input
-                  type="text"
-                  name="brand"
-                  value={newProduct.brand || ''}
-                  onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Product Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  required
-                  className="mt-1 block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-red-50 file:text-red-700
-                    hover:file:bg-red-100"
-                />
-                {imagePreview && (
-                  <div className="mt-2">
-                    <div className="relative h-32 w-32">
-                      <Image
-                        src={imagePreview}
-                        alt="Preview"
-                        fill
-                        className="object-cover rounded-lg"
+        {/* Product List Table */}
+        {isViewingProducts && (
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-2">Product List</h2>
+            <table className="min-w-full border-collapse border border-gray-200">
+              <thead>
+                <tr>
+                  <th className="border border-gray-300 p-2">Show</th>
+                  <th className="border border-gray-300 p-2">Name</th>
+                  <th className="border border-gray-300 p-2">Price</th>
+                  <th className="border border-gray-300 p-2">Discount</th>
+                  <th className="border border-gray-300 p-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id} className="border border-gray-300">
+                    <td className="border border-gray-300 p-2"><input type="checkbox" defaultChecked={product.isVisible} onChange={() => handleUpdateProduct({...product, isVisible: !product.isVisible})} /></td>
+                    <td className="border border-gray-300 p-2">
+                      <input
+                        type="text"
+                        defaultValue={product.name}
+                        onBlur={(e) => handleSave(product.id, e.target.value)}
                       />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {loading ? 'Adding Product...' : 'Add Product'}
-              </button>
-            </form>
+                    </td>
+                    <td className="border border-gray-300 p-2">₹{product.price}</td>
+                    <td className="border border-gray-300 p-2">{product.discount}%</td>
+                    <td className="border border-gray-300 p-2">
+                      <button onClick={() => handleSave(product.id, product.name)} className="bg-yellow-500 text-white px-2 py-1 rounded">Save</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
     </div>
   );
 }
+
+// import AdminDashboard from '../components/AdminDashboard';
+
+// const Dashboard = () => {
+//   return (
+//     <div className="p-6">
+//       <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
+//       <AdminDashboard />
+//     </div>
+//   );
+// };
+
+// export default Dashboard; 

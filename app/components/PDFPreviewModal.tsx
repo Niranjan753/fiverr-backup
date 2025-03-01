@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import EstimatePDF from './EstimatePDF';
 import { CartItem } from '../context/CartContext';
@@ -25,6 +25,18 @@ export default function PDFPreviewModal({
   totalAmount,
   customerDetails,
 }: PDFPreviewModalProps) {
+  const [downloadCount, setDownloadCount] = useState(0);
+
+  const handleDownload = () => {
+    setDownloadCount(downloadCount + 1);
+    sendNotification();
+  };
+
+  const sendNotification = () => {
+    const { name, mobile } = customerDetails || {};
+    console.log(`Sending notification to ${name} at ${mobile}`);
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -67,6 +79,7 @@ export default function PDFPreviewModal({
                     }
                     fileName={`SRT-Estimate-${new Date().toISOString().split('T')[0]}.pdf`}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                    onClick={handleDownload}
                   >
                     {({ loading }) => loading ? 'Generating PDF...' : 'Download PDF'}
                   </PDFDownloadLink>
