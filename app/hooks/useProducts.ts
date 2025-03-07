@@ -17,7 +17,8 @@ export function useProducts(category?: string) {
 
         let query = supabase
           .from('products')
-          .select('*');
+          .select('*')
+          .eq('is_visible', true);
 
         if (category && category !== '') {
           query = query.eq('category', category);
@@ -37,17 +38,11 @@ export function useProducts(category?: string) {
           name: product.name,
           description: product.description,
           price: product.price,
-          category: product.category,
-          image: product.image_url || '',
-          image_url: product.image_url,
-          discount: 0,
-          rating: 5,
-          features: [],
-          specifications: {},
-          safetyInstructions: [],
-          stock: 100,
-          isNew: true,
-          created_at: product.created_at
+          category_id: product.category_id,
+          image_url: product.image_url || '',
+          is_visible: product.is_visible,
+          stock_status: product.stock_status || 'in_stock',
+          updated_at: product.updated_at
         }));
 
         setProducts(transformedProducts);

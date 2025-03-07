@@ -1,17 +1,16 @@
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  description: string;
   price: number;
-  category: string;
-  image: string;
-  image_url?: string;
-  discount: number;
-  rating: number;
-  features: string[];
-  specifications: Record<string, string>;
-  safetyInstructions: string[];
-  stock: number;
-  isNew: boolean;
-  created_at?: string;
+  description: string;
+  category_id: string;
+  image_url: string;
+  is_visible: boolean;  // Add this
+  stock_status: 'in_stock' | 'out_of_stock';
+  updated_at: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
 }

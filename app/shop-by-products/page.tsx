@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '../components/ProductCard';
 import { supabase } from '../../lib/supabase';
-import type { Product } from '../../lib/supabase';
+import { Product } from '../types/product';
 
 const initialProducts: Product[] = [];
 
@@ -30,9 +30,12 @@ export default function ShopByProducts() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from('products')
-          .select('*');
+          .select('*')
+          .eq('is_visible', true);
+
+        const { data, error } = await query;
 
         if (error) throw error;
         setProducts(data || []);
@@ -47,7 +50,7 @@ export default function ShopByProducts() {
   }, []);
 
   const filteredProducts = products.filter(product => 
-    selectedCategory === 'all' || product.category === selectedCategory
+    selectedCategory === 'all' || product.category_id === selectedCategory
   ).sort((a, b) => {
     switch (sortBy) {
       case 'price_low':
