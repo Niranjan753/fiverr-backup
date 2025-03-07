@@ -49,7 +49,7 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPDF, setShowPDF] = useState(false);
-  const [downloadCount, setDownloadCount] = useState(0);
+  // const [downloadCount, setDownloadCount] = useState(0);
 
   const supabase = createClientComponentClient();
 
@@ -82,14 +82,14 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
     }
   };
 
-  const handleDownload = () => {
-    setDownloadCount(downloadCount + 1);
-    sendNotification();
-  };
+  // const handleDownload = () => {
+  //   setDownloadCount(downloadCount + 1);
+  //   sendNotification();
+  // };
 
-  const sendNotification = () => {
-    console.log(`Sending notification for product list download`);
-  };
+  // const sendNotification = () => {
+  //   console.log(`Sending notification for product list download`);
+  // };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -231,7 +231,7 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
                           selectedDistrict ? `-${selectedDistrict}` : ''
                         }.pdf`}
                         className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
-                        onClick={handleDownload}
+                        // onClick={handleDownload}
                       >
                         {({ loading }) => (loading ? 'Loading...' : 'Download PDF')}
                       </PDFDownloadLink>

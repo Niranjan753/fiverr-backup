@@ -62,7 +62,7 @@ export default function AdminDashboard() {
 
         setLoading(false);
       } catch (error) {
-        console.error('Error in admin dashboard:', error);
+        console.error('Error in admin dashboard:', (error as Error).message || error);
         router.replace('/login');
       }
     };
@@ -217,7 +217,6 @@ export default function AdminDashboard() {
                   </tbody>
                 </table>
               </div>
-              
               <h3 className="text-lg leading-6 font-medium text-gray-900 mt-8">Add New Product</h3>
               <form onSubmit={handleAddProduct} className="mt-5 space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -336,7 +335,6 @@ export default function AdminDashboard() {
                   </tbody>
                 </table>
               </div>
-              
               <h3 className="text-lg leading-6 font-medium text-gray-900 mt-8">Add New Category</h3>
               <form onSubmit={handleAddCategory} className="mt-5">
                 <div className="flex items-center gap-4">
