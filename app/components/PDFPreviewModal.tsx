@@ -2,28 +2,39 @@
 
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, Suspense } from 'react';
-import dynamic from 'next/dynamic';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { CartItem } from '../context/CartContext';
+import EstimatePDF from './EstimatePDF';
+import { ReactElement } from 'react';
+import { DocumentProps } from '@react-pdf/renderer';
 
-const PDFViewer = dynamic(() => import('@react-pdf/renderer').then(mod => mod.PDFViewer), {
-  ssr: false,
-  loading: () => <div>Loading PDF viewer...</div>
-});
+interface PDFComponentProps {
+  children: ReactElement<DocumentProps>;
+}
 
-const PDFDownloadLink = dynamic(() => import('@react-pdf/renderer').then(mod => mod.PDFDownloadLink), {
-  ssr: false,
-  loading: () => <div>Loading download link...</div>
-});
+const PDFViewerComponent = ({ children }: PDFComponentProps) => (
+  <div className="h-[800px] w-full">
+    <PDFViewer width="100%" height="100%" className="border rounded-lg">
+      {children}
+    </PDFViewer>
+  </div>
+);
 
-const EstimatePDF = dynamic(() => import('./EstimatePDF'), {
-  ssr: false
-});
+const PDFDownloadComponent = ({ children }: PDFComponentProps) => (
+  <PDFDownloadLink
+    document={children}
+    fileName={`SRT-Estimate-${new Date().toISOString().split('T')[0]}.pdf`}
+    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+  >
+    {({ loading }) => (loading ? 'Generating PDF...' : 'Download PDF')}
+  </PDFDownloadLink>
+);
 
 interface PDFPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  items: CartItem[];
-  totalAmount: number;
+  cart: CartItem[];
+  totalPrice: number;
   customerDetails?: {
     name: string;
     mobile: string;
@@ -34,10 +45,18 @@ interface PDFPreviewModalProps {
 export default function PDFPreviewModal({
   isOpen,
   onClose,
-  items,
-  totalAmount,
+  cart,
+  totalPrice,
   customerDetails,
 }: PDFPreviewModalProps) {
+  const estimatePDF = (
+    <EstimatePDF
+      items={cart}
+      totalAmount={totalPrice}
+      customerDetails={customerDetails}
+    />
+  );
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -71,33 +90,17 @@ export default function PDFPreviewModal({
 
                 <div className="mb-4">
                   <Suspense fallback={<div>Loading download link...</div>}>
-                    <PDFDownloadLink
-                      document={
-                        <EstimatePDF
-                          items={items}
-                          totalAmount={totalAmount}
-                          customerDetails={customerDetails}
-                        />
-                      }
-                      fileName={`SRT-Estimate-${new Date().toISOString().split('T')[0]}.pdf`}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                    >
-                      {({ loading }) => (loading ? 'Generating PDF...' : 'Download PDF')}
-                    </PDFDownloadLink>
+                    <PDFDownloadComponent>
+                      {estimatePDF}
+                    </PDFDownloadComponent>
                   </Suspense>
                 </div>
 
-                <div className="h-[800px] w-full">
-                  <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading PDF viewer...</div>}>
-                    <PDFViewer width="100%" height="100%" className="border rounded-lg">
-                      <EstimatePDF
-                        items={items}
-                        totalAmount={totalAmount}
-                        customerDetails={customerDetails}
-                      />
-                    </PDFViewer>
-                  </Suspense>
-                </div>
+                <Suspense fallback={<div className="h-[800px] w-full flex items-center justify-center">Loading PDF viewer...</div>}>
+                  <PDFViewerComponent>
+                    {estimatePDF}
+                  </PDFViewerComponent>
+                </Suspense>
 
                 <div className="mt-4 flex justify-end">
                   <button

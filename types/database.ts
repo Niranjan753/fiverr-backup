@@ -20,6 +20,9 @@ export interface Product {
   price: number;
   category_id: string;
   image_url: string;
+  is_visible: boolean;
+  stock_status: 'in_stock' | 'out_of_stock';
+  updated_at: string;
   stock?: number | null;
   brand?: string | null;
   featured?: boolean | null;

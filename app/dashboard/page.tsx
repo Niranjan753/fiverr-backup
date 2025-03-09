@@ -1,19 +1,20 @@
 'use client';
-
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { supabase } from '@/lib/supabase';
-import { Product, Category } from '@/types/database';
+import { Product } from '@/app/types/product';  // Change this import
+import { Category } from '@/types/database';
 import { toast } from 'react-hot-toast';
 
+interface DatabaseError {
+  message: string;
+}
+
 export default function Dashboard() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'products' | 'categories'>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: '',
@@ -21,8 +22,9 @@ export default function Dashboard() {
     description: '',
     image_url: '',
     category_id: '',
+    stock_status: 'in_stock',
     is_visible: true,
-    stock_status: 'in_stock'
+    updated_at: new Date().toISOString()
   });
 
   useEffect(() => {
@@ -52,8 +54,9 @@ export default function Dashboard() {
         return;
       }
       setCategories(categoriesData);
-    } catch (error) {
-      toast.error('Unexpected error occurred');
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Unexpected error occurred: ' + dbError.message);
     } finally {
       setLoading(false);
     }
@@ -81,8 +84,9 @@ export default function Dashboard() {
         stock_status: 'in_stock'
       });
       toast.success('Product added successfully!');
-    } catch (error) {
-      toast.error('Error adding product: ' + error.message);
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Error adding product: ' + dbError.message);
     }
   };
 
@@ -101,10 +105,10 @@ export default function Dashboard() {
       if (error) throw error;
 
       setProducts(products.map(p => (p.id === product.id ? data : p)));
-      setEditingProduct(null);
       toast.success('Product updated successfully!');
-    } catch (error) {
-      toast.error('Error updating product: ' + error.message);
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Error updating product: ' + dbError.message);
     }
   };
 
@@ -121,8 +125,9 @@ export default function Dashboard() {
 
       setProducts(products.filter(product => product.id !== id));
       toast.success('Product deleted successfully!');
-    } catch (error) {
-      toast.error('Error deleting product: ' + error.message);
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Error deleting product: ' + dbError.message);
     }
   };
 
@@ -139,8 +144,9 @@ export default function Dashboard() {
 
       setProducts(products.map(p => (p.id === product.id ? data : p)));
       toast.success(`Product ${data.is_visible ? 'shown' : 'hidden'} successfully!`);
-    } catch (error) {
-      toast.error('Error updating visibility: ' + error.message);
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Error updating visibility: ' + dbError.message);
     }
   };
 
@@ -157,8 +163,9 @@ export default function Dashboard() {
 
       setProducts(products.map(p => (p.id === product.id ? data : p)));
       toast.success('Stock status updated successfully!');
-    } catch (error) {
-      toast.error('Error updating stock status: ' + error.message);
+    } catch (error: unknown) {
+      const dbError = error as DatabaseError;
+      toast.error('Error updating stock status: ' + dbError.message);
     }
   };
 

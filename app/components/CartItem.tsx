@@ -17,7 +17,9 @@ export default function CartItem({ product, quantity, onUpdateQuantity, onRemove
     }
   };
 
-  const discountedPrice = product.price - (product.price * (product.discount || 0)) / 100;
+  const discountedPrice = product.discount 
+    ? product.price - (product.price * product.discount) / 100
+    : product.price;
   const totalPrice = discountedPrice * quantity;
 
   const formatPrice = (price: number) => {
@@ -43,7 +45,9 @@ export default function CartItem({ product, quantity, onUpdateQuantity, onRemove
         <div className="flex justify-between">
           <div>
             <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-            <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+            {product.category_name && (
+              <p className="mt-1 text-sm text-gray-500">{product.category_name}</p>
+            )}
           </div>
           <button
             onClick={onRemove}

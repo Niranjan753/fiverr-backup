@@ -3,16 +3,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '../types/product';
 
+// Extend the Product type to include discount
+interface ProductWithDiscount extends Product {
+  discount?: number;
+}
+
 export type CartItem = {
-  product: Product;
+  product: ProductWithDiscount;
   quantity: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Product, quantity: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: ProductWithDiscount, quantity: number) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -45,7 +50,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setTotalPrice(price);
   }, [cart]);
 
-  const addToCart = (product: Product, quantity: number) => {
+  const addToCart = (product: ProductWithDiscount, quantity: number) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.product.id === product.id);
       
@@ -61,11 +66,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (productId: number) => {
     setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: number, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(productId);
       return;

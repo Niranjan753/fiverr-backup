@@ -20,25 +20,23 @@ export default function CategoryPage({ title, description, products }: CategoryP
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {products.map((product) => {
-            // Ensure required props have default values
-            const productWithDefaults = {
+            // Ensure all optional props have default values
+            const productWithDefaults: Product = {
               ...product,
-              discount: product.discount || 0,
-              rating: product.rating || 4.5,
-              image: product.image_url || product.image || '/placeholder.jpg',
+              discount: product.discount ?? 0,
+              rating: product.rating ?? 4.5,
               image_url: product.image_url || product.image || '/placeholder.jpg',
-              features: product.features || [],
-              specifications: product.specifications || {},
-              safetyInstructions: product.safetyInstructions || [],
-              stock: product.stock || 0,
-              isNew: product.isNew || false,
+              features: product.features ?? [],
+              specifications: product.specifications ?? {},
+              safetyInstructions: product.safetyInstructions ?? [],
+              stock: product.stock ?? 0,
+              isNew: product.isNew ?? false,
             };
             
             return (
               <ProductCard
                 key={product.id}
                 {...productWithDefaults}
-                className="h-full"
               />
             );
           })}

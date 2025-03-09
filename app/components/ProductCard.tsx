@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
 import { Product } from '../types/product';
@@ -19,7 +18,6 @@ export default function ProductCard({
   className = '' 
 }: ProductCardProps) {
   const { addToCart } = useCart();
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({
@@ -27,15 +25,17 @@ export default function ProductCard({
       name,
       price,
       image_url,
-      quantity: 1
-    });
+      description,
+      stock_status,
+      category_id: "1",
+      is_visible: true,
+      updated_at: new Date().toISOString()
+    }, 1);
   };
 
   return (
     <div 
       className={`bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-square">
         <Image

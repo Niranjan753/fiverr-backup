@@ -8,7 +8,7 @@ import { Product } from '../types/product';
 interface ProductModalProps {
   product: Product;
   onClose: () => void;
-};
+}
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
   const formatPrice = (price: number) => {
@@ -69,7 +69,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                         <span className="text-2xl font-medium text-gray-900">
                           {formatPrice(discountedPrice)}
                         </span>
-                        {product.discount > 0 && (
+                        {product.discount && product.discount > 0 && (
                           <>
                             <span className="text-sm text-gray-500 line-through">
                               {formatPrice(product.price)}

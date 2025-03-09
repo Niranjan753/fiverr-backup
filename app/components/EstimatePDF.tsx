@@ -113,13 +113,10 @@ const EstimatePDF = ({ items, totalAmount, customerDetails }: EstimatePDFProps) 
             <View style={[styles.columnHeader, { flex: 0.5 }]}>
               <Text>S.No</Text>
             </View>
-            <View style={[styles.columnHeader, { flex: 0.8 }]}>
-              <Text>Code</Text>
-            </View>
             <View style={[styles.columnHeader, { flex: 2 }]}>
               <Text>Product Name</Text>
             </View>
-            <View style={styles.columnHeader}>
+            <View style={[styles.columnHeader, { flex: 0.8 }]}>
               <Text>Quantity</Text>
             </View>
             <View style={styles.columnHeader}>
@@ -138,34 +135,31 @@ const EstimatePDF = ({ items, totalAmount, customerDetails }: EstimatePDFProps) 
 
           {/* Table Body */}
           {items.map((item, index) => {
-            const discountAmount = (item.price * (item.discount || 0)) / 100;
-            const finalRate = item.price - discountAmount;
+            const discountAmount = (item.product.price * (item.product.discount || 0)) / 100;
+            const finalRate = item.product.price - discountAmount;
             const amount = finalRate * item.quantity;
 
             return (
-              <View key={item.id} style={styles.row}>
+              <View key={index} style={styles.row}>
                 <View style={[styles.column, { flex: 0.5 }]}>
                   <Text>{index + 1}</Text>
                 </View>
-                <View style={[styles.column, { flex: 0.8 }]}>
-                  <Text>{item.id.slice(0, 5)}</Text>
-                </View>
                 <View style={[styles.column, { flex: 2 }]}>
-                  <Text>{item.name}</Text>
+                  <Text>{item.product.name}</Text>
                 </View>
-                <View style={styles.column}>
+                <View style={[styles.column, { flex: 0.8 }]}>
                   <Text>{item.quantity}</Text>
                 </View>
-                <View style={styles.column}>
-                  <Text>{item.price.toFixed(2)}</Text>
+                <View style={[styles.column, { flex: 1 }]}>
+                  <Text>{item.product.price.toFixed(2)}</Text>
                 </View>
-                <View style={styles.column}>
-                  <Text>{discountAmount.toFixed(2)}</Text>
+                <View style={[styles.column, { flex: 1 }]}>
+                  <Text>{item.product.discount || 0}%</Text>
                 </View>
-                <View style={styles.column}>
+                <View style={[styles.column, { flex: 1 }]}>
                   <Text>{finalRate.toFixed(2)}</Text>
                 </View>
-                <View style={styles.column}>
+                <View style={[styles.column, { flex: 1 }]}>
                   <Text>{amount.toFixed(2)}</Text>
                 </View>
               </View>
