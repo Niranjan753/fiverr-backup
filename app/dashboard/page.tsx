@@ -108,7 +108,7 @@ export default function Dashboard() {
       };
 
       // First verify the product exists
-      const { data: existingProduct, error: checkError } = await supabase
+      const { error: checkError } = await supabase
         .from('products')
         .select('id')
         .eq('id', product.id)
@@ -152,7 +152,7 @@ export default function Dashboard() {
       // Update the local state with the returned data
       setProducts(products.map(p => (p.id === product.id ? {
         ...data,
-        category_name: data.categories?.name
+        category_name: data.categories?.name || ''
       } : p)));
       
       toast.success('Product updated successfully!');
@@ -170,7 +170,7 @@ export default function Dashboard() {
 
     try {
       // First verify the product exists
-      const { data: existingProduct, error: checkError } = await supabase
+      const { error: checkError } = await supabase
         .from('products')
         .select('id')
         .eq('id', id)
