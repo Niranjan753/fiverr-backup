@@ -12,20 +12,6 @@ export interface CategoryResponse {
   name: string;
 }
 
-// Type definition for raw Supabase response structure
-interface SupabaseProductResponse {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  category_id: string;
-  stock_status: 'in_stock' | 'out_of_stock';
-  is_visible: boolean;
-  image_url: string;
-  updated_at: string;
-  categories: { name: string } | null;
-}
-
 // Type for product with nested category from Supabase
 export interface ProductWithNestedCategory extends Omit<Product, 'categories'> {
   categories: CategoryResponse | null;
