@@ -1,17 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { signIn, user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Properly decode the redirectPath
+  const redirectPath = searchParams.get('redirectedFrom') 
+    ? decodeURIComponent(searchParams.get('redirectedFrom') || '/dashboard')
+    : '/dashboard';
+
+  const handleRedirect = () => {
+    // Remove any URL encoding artifacts and clean the path
+    const cleanPath = redirectPath.replace(/['"]/g, '').replace(/^\%2F/, '/');
+    router.replace(cleanPath);
+  };
+
+  useEffect(() => {
+    if (user) {
+      handleRedirect();
+    }
+  }, [user]); // Remove router and redirectPath from dependencies
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +47,7 @@ export default function LoginPage() {
       }
 
       if (success) {
-        router.push('/dashboard');
+        handleRedirect();
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -39,10 +57,13 @@ export default function LoginPage() {
     }
   };
 
-  // If already logged in, redirect to dashboard
+  // If user is already logged in, show loading state
   if (user) {
-    router.push('/dashboard');
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
   }
 
   return (
@@ -119,3 +140,15 @@ export default function LoginPage() {
     </div>
   );
 }
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
