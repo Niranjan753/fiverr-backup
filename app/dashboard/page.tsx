@@ -1,10 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { supabase } from '@/lib/supabase';
 import { Product } from '@/app/types/product';
 import { Category } from '@/types/database';
 import { toast } from 'react-hot-toast';
+import { 
+  fetchProducts, 
+  fetchCategories, 
+  updateProduct, 
+  deleteProduct, 
+  addProduct,
+  ApiError 
+} from '@/lib/productService';
 
 interface DatabaseError {
   message: string;
@@ -38,33 +45,37 @@ export default function Dashboard() {
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
-      const { data: productsData, error: productsError } = await supabase
-        .from('products')
-        .select('*, categories(name)')
-        .order('name');
-
-      if (productsError) {
-        toast.error('Error fetching products: ' + productsError.message);
+      // Fetch products
+      const productsResult = await fetchProducts();
+      if (productsResult.error) {
+        toast.error('Error fetching products: ' + productsResult.error.message);
         return;
       }
 
-      const typedProductsData = productsData as unknown as ProductWithCategory[];
-      setProducts(typedProductsData.map(product => ({
-        ...product,
-        category_name: product.categories?.name || ''
-      })));
+      if (productsResult.data) {
+        const typedProductsData = productsResult.data.map(product => ({
+          ...product,
+          categories: product.categories ? { name: (product.categories as any).name } : null
+        })) as unknown as ProductWithCategory[];
+        
+        setProducts(typedProductsData.map(product => ({
+          ...product,
+          category_name: product.categories?.name || ''
+        })));
+      }
 
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
-
-      if (categoriesError) {
-        toast.error('Error fetching categories: ' + categoriesError.message);
+      // Fetch categories
+      const categoriesResult = await fetchCategories();
+      if (categoriesResult.error) {
+        toast.error('Error fetching categories: ' + categoriesResult.error.message);
         return;
       }
-      setCategories(categoriesData);
+      
+      if (categoriesResult.data) {
+        setCategories(categoriesResult.data);
+      }
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Unexpected error occurred: ' + dbError.message);
@@ -76,90 +87,66 @@ export default function Dashboard() {
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .insert([newProduct])
-        .select('*, categories(name)')
-        .single();
+      const result = await addProduct(newProduct);
+      
+      if (result.error) {
+        throw result.error;
+      }
 
-      if (error) throw error;
-
-      const productWithCategory = data as unknown as ProductWithCategory;
-      setProducts([...products, {
-        ...productWithCategory,
-        category_name: productWithCategory.categories?.name || ''
-      }]);
-      setNewProduct({
-        name: '',
-        price: 0,
-        description: '',
-        image_url: '',
-        category_id: '',
-        is_visible: true,
-        stock_status: 'in_stock'
-      });
-      toast.success('Product added successfully!');
+      if (result.data) {
+        const productWithCategory = {
+          ...result.data,
+          categories: result.data.categories ? { name: (result.data.categories as any).name } : null
+        } as unknown as ProductWithCategory;
+        
+        setProducts([...products, {
+          ...productWithCategory,
+          category_name: productWithCategory.categories?.name || ''
+        }]);
+        
+        setNewProduct({
+          name: '',
+          price: 0,
+          description: '',
+          image_url: '',
+          category_id: '',
+          is_visible: true,
+          stock_status: 'in_stock'
+        });
+        
+        toast.success('Product added successfully!');
+      }
     } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error adding product: ' + dbError.message);
+      const apiError = error as ApiError;
+      toast.error('Error adding product: ' + apiError.message);
     }
   };
 
   const handleUpdateProduct = async (product: Product) => {
     try {
-      const updateData = {
-        name: product.name,
-        price: product.price,
-        description: product.description,
-        category_id: product.category_id,
-        stock_status: product.stock_status,
-        is_visible: product.is_visible,
-        image_url: product.image_url,
-        updated_at: new Date().toISOString()
-      };
-
-      // First update the product
-      const { error: updateError } = await supabase
-        .from('products')
-        .update(updateData)
-        .eq('id', product.id);
-
-      if (updateError) {
-        console.error('Update error:', updateError);
-        throw updateError;
-      }
-
-      // Then fetch the updated product with its category
-      const { data: updatedProduct, error: fetchError } = await supabase
-        .from('products')
-        .select(`
-          *,
-          categories (
-            name
-          )
-        `)
-        .eq('id', product.id)
-        .single();
-
-      if (fetchError) {
-        console.error('Fetch error:', fetchError);
-        throw fetchError;
-      }
-
-      if (!updatedProduct) {
-        throw new Error('No data returned after update');
-      }
-
-      const typedProduct = updatedProduct as unknown as ProductWithCategory;
-      setProducts(products.map(p => (p.id === product.id ? {
-        ...typedProduct,
-        category_name: typedProduct.categories?.name || ''
-      } : p)));
+      const result = await updateProduct(product);
       
-      toast.success('Product updated successfully!');
+      if (result.error) {
+        throw result.error;
+      }
+
+      if (result.data) {
+        const updatedProduct = result.data;
+        const typedProduct = {
+          ...updatedProduct,
+          categories: updatedProduct.categories ? { name: (updatedProduct.categories as any).name } : null
+        } as unknown as ProductWithCategory;
+
+        setProducts(products.map(p => (p.id === product.id ? {
+          ...typedProduct,
+          category_name: typedProduct.categories?.name || ''
+        } : p)));
+        
+        toast.success('Product updated successfully!');
+      }
     } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error updating product: ' + (dbError.message || 'Unknown error'));
+      const apiError = error as ApiError;
+      toast.error('Error updating product: ' + apiError.message);
       fetchData();
     }
   };
@@ -168,30 +155,19 @@ export default function Dashboard() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      // First verify the product exists
-      const { error: checkError } = await supabase
-        .from('products')
-        .select('id')
-        .eq('id', id)
-        .single();
-
-      if (checkError) {
-        console.error('Product check error:', checkError);
-        throw new Error('Product not found');
+      const result = await deleteProduct(id);
+      
+      if (result.error) {
+        throw result.error;
       }
 
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setProducts(products.filter(product => product.id !== id));
-      toast.success('Product deleted successfully!');
+      if (result.success) {
+        setProducts(products.filter(product => product.id !== id));
+        toast.success('Product deleted successfully!');
+      }
     } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error deleting product: ' + (dbError.message || 'Unknown error'));
+      const apiError = error as ApiError;
+      toast.error('Error deleting product: ' + apiError.message);
       fetchData();
     }
   };
