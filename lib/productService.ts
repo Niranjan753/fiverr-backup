@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
-import { Product, Category } from '@/app/types/product';
+import { Product } from '@/app/types/product';
+import { Category } from '@/types/database';
 import { PostgrestError } from '@supabase/supabase-js';
 
 export interface ApiError {

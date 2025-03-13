@@ -20,7 +20,7 @@ export interface Product {
 }
 
 export interface Category {
-  id: number;
+  id: string;  // Changed from number to string to match database type
   name: string;
-  created_at?: string;  // Made optional
+  created_at?: string;  // Optional
 }
