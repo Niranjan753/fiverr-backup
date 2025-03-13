@@ -15,14 +15,22 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirectedFrom') || '/dashboard';
 
+  // Handle initial auth state
   useEffect(() => {
     if (user) {
-      router.replace(redirectPath);
+      // Small delay to ensure auth state is fully processed
+      const redirectTimer = setTimeout(() => {
+        router.replace(redirectPath);
+      }, 100);
+      
+      return () => clearTimeout(redirectTimer);
     }
   }, [user, router, redirectPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+
     setLoading(true);
     setError(null);
 
@@ -35,7 +43,10 @@ function LoginForm() {
       }
 
       if (success) {
-        router.push('/dashboard');
+        // Small delay to ensure auth state is updated
+        setTimeout(() => {
+          router.replace(redirectPath);
+        }, 100);
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -44,6 +55,15 @@ function LoginForm() {
       setLoading(false);
     }
   };
+
+  // If user is already logged in, show loading state
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
