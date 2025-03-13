@@ -118,50 +118,42 @@ export default function Dashboard() {
         updated_at: new Date().toISOString()
       };
 
-      const { error: checkError } = await supabase
-        .from('products')
-        .select('id')
-        .eq('id', product.id)
-        .single();
-
-      if (checkError) {
-        console.error('Product check error:', checkError);
-        throw new Error('Product not found');
-      }
-
-      const { data, error } = await supabase
+      // First update the product
+      const { error: updateError } = await supabase
         .from('products')
         .update(updateData)
-        .eq('id', product.id)
+        .eq('id', product.id);
+
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
+
+      // Then fetch the updated product with its category
+      const { data: updatedProduct, error: fetchError } = await supabase
+        .from('products')
         .select(`
-          id,
-          name,
-          price,
-          description,
-          category_id,
-          stock_status,
-          is_visible,
-          image_url,
-          updated_at,
+          *,
           categories (
             name
           )
         `)
+        .eq('id', product.id)
         .single();
 
-      if (error) {
-        console.error('Update error:', error);
-        throw error;
+      if (fetchError) {
+        console.error('Fetch error:', fetchError);
+        throw fetchError;
       }
 
-      if (!data) {
+      if (!updatedProduct) {
         throw new Error('No data returned after update');
       }
 
-      const updatedData = data as unknown as ProductWithCategory;
+      const typedProduct = updatedProduct as unknown as ProductWithCategory;
       setProducts(products.map(p => (p.id === product.id ? {
-        ...updatedData,
-        category_name: updatedData.categories?.name || ''
+        ...typedProduct,
+        category_name: typedProduct.categories?.name || ''
       } : p)));
       
       toast.success('Product updated successfully!');
