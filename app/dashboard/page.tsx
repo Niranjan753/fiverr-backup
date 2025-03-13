@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { supabase } from '@/lib/supabase';
-import { Product } from '@/app/types/product';  // Change this import
+import { Product } from '@/app/types/product';
 import { Category } from '@/types/database';
 import { toast } from 'react-hot-toast';
 
@@ -68,12 +68,15 @@ export default function Dashboard() {
       const { data, error } = await supabase
         .from('products')
         .insert([newProduct])
-        .select()
+        .select('*, categories(name)')
         .single();
 
       if (error) throw error;
 
-      setProducts([...products, data]);
+      setProducts([...products, {
+        ...data,
+        category_name: data.categories?.name
+      }]);
       setNewProduct({
         name: '',
         price: 0,
@@ -144,7 +147,7 @@ export default function Dashboard() {
       const { error } = await supabase
         .from('products')
         .delete()
-        .eq('id', id);
+        .match({ id });
 
       if (error) throw error;
 
@@ -153,114 +156,16 @@ export default function Dashboard() {
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Error deleting product: ' + dbError.message);
+      fetchData();
     }
   };
 
   const toggleVisibility = async (product: Product) => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .update({ 
-          is_visible: !product.is_visible,
-          updated_at: new Date().toISOString()
-        })
-        .match({ id: product.id })
-        .select(`
-          *,
-          categories (
-            name
-          )
-        `)
-        .single();
-
-      if (error) {
-        console.error('Visibility update error:', error);
-        throw error;
-      }
-
-      setProducts(products.map(p => (p.id === product.id ? {
-        ...data,
-        category_name: data.categories?.name
-      } : p)));
-      toast.success(`Product ${data.is_visible ? 'shown' : 'hidden'} successfully!`);
-    } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error updating visibility: ' + dbError.message);
-      fetchData();
-    }
-  };
-
-  const updateStockStatus = async (product: Product, status: 'in_stock' | 'out_of_stock') => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .update({ 
-          stock_status: status,
-          updated_at: new Date().toISOString()
-        })
-        .match({ id: product.id })
-        .select(`
-          *,
-          categories (
-            name
-          )
-        `)
-        .single();
-
-      if (error) {
-        console.error('Stock status update error:', error);
-        throw error;
-      }
-
-      setProducts(products.map(p => (p.id === product.id ? {
-        ...data,
-        category_name: data.categories?.name
-      } : p)));
-      toast.success('Stock status updated successfully!');
-    } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error updating stock status: ' + dbError.message);
-      fetchData();
-    }
-  };
-
-  const handlePriceChange = async (product: Product, newPrice: number) => {
-    if (newPrice < 0) {
-      toast.error('Price cannot be negative');
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .update({
-          price: newPrice,
-          updated_at: new Date().toISOString()
-        })
-        .match({ id: product.id })
-        .select(`
-          *,
-          categories (
-            name
-          )
-        `)
-        .single();
-
-      if (error) {
-        console.error('Price update error:', error);
-        throw error;
-      }
-
-      setProducts(products.map(p => (p.id === product.id ? {
-        ...data,
-        category_name: data.categories?.name
-      } : p)));
-      toast.success('Price updated successfully!');
-    } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Error updating price: ' + dbError.message);
-      fetchData();
-    }
+    const updatedProduct = {
+      ...product,
+      is_visible: !product.is_visible
+    };
+    handleUpdateProduct(updatedProduct);
   };
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">
