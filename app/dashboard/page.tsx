@@ -107,12 +107,33 @@ export default function Dashboard() {
         updated_at: new Date().toISOString()
       };
 
+      // First verify the product exists
+      const { data: existingProduct, error: checkError } = await supabase
+        .from('products')
+        .select('id')
+        .eq('id', product.id)
+        .single();
+
+      if (checkError) {
+        console.error('Product check error:', checkError);
+        throw new Error('Product not found');
+      }
+
+      // Then perform the update
       const { data, error } = await supabase
         .from('products')
         .update(updateData)
-        .match({ id: product.id })
+        .eq('id', product.id)
         .select(`
-          *,
+          id,
+          name,
+          price,
+          description,
+          category_id,
+          stock_status,
+          is_visible,
+          image_url,
+          updated_at,
           categories (
             name
           )
@@ -124,6 +145,10 @@ export default function Dashboard() {
         throw error;
       }
 
+      if (!data) {
+        throw new Error('No data returned after update');
+      }
+
       // Update the local state with the returned data
       setProducts(products.map(p => (p.id === product.id ? {
         ...data,
@@ -133,7 +158,7 @@ export default function Dashboard() {
       toast.success('Product updated successfully!');
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
-      toast.error('Error updating product: ' + dbError.message);
+      toast.error('Error updating product: ' + (dbError.message || 'Unknown error'));
       
       // Refresh the data to ensure consistency
       fetchData();
@@ -144,10 +169,22 @@ export default function Dashboard() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
+      // First verify the product exists
+      const { data: existingProduct, error: checkError } = await supabase
+        .from('products')
+        .select('id')
+        .eq('id', id)
+        .single();
+
+      if (checkError) {
+        console.error('Product check error:', checkError);
+        throw new Error('Product not found');
+      }
+
       const { error } = await supabase
         .from('products')
         .delete()
-        .match({ id });
+        .eq('id', id);
 
       if (error) throw error;
 
@@ -155,17 +192,22 @@ export default function Dashboard() {
       toast.success('Product deleted successfully!');
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
-      toast.error('Error deleting product: ' + dbError.message);
+      toast.error('Error deleting product: ' + (dbError.message || 'Unknown error'));
       fetchData();
     }
   };
 
   const toggleVisibility = async (product: Product) => {
-    const updatedProduct = {
-      ...product,
-      is_visible: !product.is_visible
-    };
-    handleUpdateProduct(updatedProduct);
+    try {
+      const updatedProduct = {
+        ...product,
+        is_visible: !product.is_visible
+      };
+      await handleUpdateProduct(updatedProduct);
+    } catch (error) {
+      console.error('Toggle visibility error:', error);
+      fetchData();
+    }
   };
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">
