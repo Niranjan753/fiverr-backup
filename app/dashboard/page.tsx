@@ -10,7 +10,9 @@ import {
   updateProduct, 
   deleteProduct, 
   addProduct,
-  ApiError 
+  ApiError,
+  ProductWithNestedCategory,
+  CategoryResponse
 } from '@/lib/productService';
 
 interface DatabaseError {
@@ -18,9 +20,8 @@ interface DatabaseError {
 }
 
 interface ProductWithCategory extends Omit<Product, 'categories'> {
-  categories: {
-    name: string;
-  } | null;
+  categories: CategoryResponse | null;
+  category_name?: string;
 }
 
 export default function Dashboard() {
@@ -55,10 +56,14 @@ export default function Dashboard() {
       }
 
       if (productsResult.data) {
-        const typedProductsData = productsResult.data.map(product => ({
-          ...product,
-          categories: product.categories ? { name: (product.categories as any).name } : null
-        })) as unknown as ProductWithCategory[];
+        const typedProductsData = productsResult.data.map(product => {
+          // Safely access categories with proper typing
+          const rawCategories = product.categories as unknown as Record<string, string> | null;
+          return {
+            ...product,
+            categories: rawCategories ? { name: rawCategories.name } : null
+          };
+        }) as ProductWithCategory[];
         
         setProducts(typedProductsData.map(product => ({
           ...product,
@@ -94,15 +99,15 @@ export default function Dashboard() {
       }
 
       if (result.data) {
-        const productWithCategory = {
-          ...result.data,
-          categories: result.data.categories ? { name: (result.data.categories as any).name } : null
-        } as unknown as ProductWithCategory;
+        // Safely transform the data with proper typing
+        const productData = result.data as unknown as ProductWithNestedCategory;
+        const productWithCategory: ProductWithCategory = {
+          ...productData,
+          categories: productData.categories,
+          category_name: productData.categories?.name || ''
+        };
         
-        setProducts([...products, {
-          ...productWithCategory,
-          category_name: productWithCategory.categories?.name || ''
-        }]);
+        setProducts([...products, productWithCategory]);
         
         setNewProduct({
           name: '',
@@ -131,16 +136,15 @@ export default function Dashboard() {
       }
 
       if (result.data) {
-        const updatedProduct = result.data;
-        const typedProduct = {
-          ...updatedProduct,
-          categories: updatedProduct.categories ? { name: (updatedProduct.categories as any).name } : null
-        } as unknown as ProductWithCategory;
+        // Safely transform the data with proper typing
+        const updatedProductData = result.data as unknown as ProductWithNestedCategory;
+        const typedProduct: ProductWithCategory = {
+          ...updatedProductData,
+          categories: updatedProductData.categories,
+          category_name: updatedProductData.categories?.name || ''
+        };
 
-        setProducts(products.map(p => (p.id === product.id ? {
-          ...typedProduct,
-          category_name: typedProduct.categories?.name || ''
-        } : p)));
+        setProducts(products.map(p => (p.id === product.id ? typedProduct : p)));
         
         toast.success('Product updated successfully!');
       }
