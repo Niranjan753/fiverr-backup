@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Product } from '@/app/types/product';
+import { Product, Category } from '@/app/types/product';
 import { PostgrestError } from '@supabase/supabase-js';
 
 export interface ApiError {
@@ -64,7 +64,8 @@ export async function fetchCategories() {
     const { data, error } = await supabase
       .from('categories')
       .select('id, name')
-      .order('name');
+      .order('name')
+      .returns<Category[]>();
 
     if (error) throw error;
     return { data, error: null };
