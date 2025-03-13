@@ -1,35 +1,17 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-function LoginForm() {
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { signIn, user } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  // Properly decode the redirectPath
-  const redirectPath = searchParams.get('redirectedFrom') 
-    ? decodeURIComponent(searchParams.get('redirectedFrom') || '/dashboard')
-    : '/dashboard';
-
-  const handleRedirect = () => {
-    // Remove any URL encoding artifacts and clean the path
-    const cleanPath = redirectPath.replace(/['"]/g, '').replace(/^\%2F/, '/');
-    router.replace(cleanPath);
-  };
-
-  useEffect(() => {
-    if (user) {
-      handleRedirect();
-    }
-  }, [user]); // Remove router and redirectPath from dependencies
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +29,7 @@ function LoginForm() {
       }
 
       if (success) {
-        handleRedirect();
+        router.push('/dashboard');
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -57,13 +39,10 @@ function LoginForm() {
     }
   };
 
-  // If user is already logged in, show loading state
+  // If already logged in, redirect to dashboard
   if (user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
-      </div>
-    );
+    router.push('/dashboard');
+    return null;
   }
 
   return (
@@ -138,17 +117,5 @@ function LoginForm() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
-      </div>
-    }>
-      <LoginForm />
-    </Suspense>
   );
 }
