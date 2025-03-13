@@ -19,15 +19,15 @@ export default function SignUpPage() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
-    const { error: signUpError } = await signUp(email, password);
+    const { error } = await signUp(email, password);
 
-    if (signUpError) {
-      setError(signUpError.message);
+    if (error) {
+      setError(error.message);
     } else {
       setVerificationSent(true);
     }
@@ -43,7 +43,7 @@ export default function SignUpPage() {
             Check your email
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            We've sent you a verification link. Please check your email to complete the signup process.
+            We&apos;ve sent you a verification link. Please check your email to complete the signup process.
           </p>
         </div>
       </div>
