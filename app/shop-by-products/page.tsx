@@ -9,14 +9,14 @@ import { Product } from '../types/product';
 const initialProducts: Product[] = [];
 
 const categories = [
-  { id: 'ground_chakkar', name: 'Ground Chakkar' },
-  { id: 'flower_pots', name: 'Flower Pots' },
+  { id: 'ground-chakkar', name: 'Ground Chakkar' },
+  { id: 'flower-pots', name: 'Flower Pots' },
   { id: 'rockets', name: 'Rockets' },
-  { id: 'single_sound', name: 'Single Sound Crackers' },
+  { id: 'single-sound', name: 'Single Sound Crackers' },
   { id: 'sparklers', name: 'Sparklers' },
-  { id: 'sky_shots', name: 'Sky Shots' },
+  { id: 'sky-shots', name: 'Sky Shots' },
   { id: 'fountains', name: 'Fountains' },
-  { id: 'repeating_shots', name: 'Repeating Shots' }
+  { id: 'repeating-shots', name: 'Repeating Shots' }
 ];
 
 function ProductsContent() {
