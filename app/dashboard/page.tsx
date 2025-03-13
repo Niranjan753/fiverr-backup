@@ -10,6 +10,12 @@ interface DatabaseError {
   message: string;
 }
 
+interface ProductWithCategory extends Omit<Product, 'categories'> {
+  categories: {
+    name: string;
+  } | null;
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'products' | 'categories'>('products');
   const [products, setProducts] = useState<Product[]>([]);
@@ -42,7 +48,12 @@ export default function Dashboard() {
         toast.error('Error fetching products: ' + productsError.message);
         return;
       }
-      setProducts(productsData);
+
+      const typedProductsData = productsData as unknown as ProductWithCategory[];
+      setProducts(typedProductsData.map(product => ({
+        ...product,
+        category_name: product.categories?.name || ''
+      })));
 
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
@@ -73,9 +84,10 @@ export default function Dashboard() {
 
       if (error) throw error;
 
+      const productWithCategory = data as unknown as ProductWithCategory;
       setProducts([...products, {
-        ...data,
-        category_name: data.categories?.name
+        ...productWithCategory,
+        category_name: productWithCategory.categories?.name || ''
       }]);
       setNewProduct({
         name: '',
@@ -95,7 +107,6 @@ export default function Dashboard() {
 
   const handleUpdateProduct = async (product: Product) => {
     try {
-      // Prepare the update data with all necessary fields
       const updateData = {
         name: product.name,
         price: product.price,
@@ -107,7 +118,6 @@ export default function Dashboard() {
         updated_at: new Date().toISOString()
       };
 
-      // First verify the product exists
       const { error: checkError } = await supabase
         .from('products')
         .select('id')
@@ -119,7 +129,6 @@ export default function Dashboard() {
         throw new Error('Product not found');
       }
 
-      // Then perform the update
       const { data, error } = await supabase
         .from('products')
         .update(updateData)
@@ -149,18 +158,16 @@ export default function Dashboard() {
         throw new Error('No data returned after update');
       }
 
-      // Update the local state with the returned data
+      const updatedData = data as unknown as ProductWithCategory;
       setProducts(products.map(p => (p.id === product.id ? {
-        ...data,
-        category_name: data.categories?.name || ''
+        ...updatedData,
+        category_name: updatedData.categories?.name || ''
       } : p)));
       
       toast.success('Product updated successfully!');
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Error updating product: ' + (dbError.message || 'Unknown error'));
-      
-      // Refresh the data to ensure consistency
       fetchData();
     }
   };
