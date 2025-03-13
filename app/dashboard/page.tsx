@@ -228,10 +228,11 @@ export default function Dashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
-                        value={product.category_id}
+                        value={product.category_id || ''}
                         onChange={e => handleEditProduct({ ...product, category_id: e.target.value })}
                         className="border rounded px-2 py-1"
                       >
+                        <option value="">Select Category</option>
                         {categories.map(category => (
                           <option key={category.id} value={category.id}>
                             {category.name}
@@ -241,7 +242,7 @@ export default function Dashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
-                        value={product.stock_status}
+                        value={product.stock_status || 'in_stock'}
                         onChange={e => updateStockStatus(product, e.target.value as 'in_stock' | 'out_of_stock')}
                         className="border rounded px-2 py-1"
                       >
@@ -308,7 +309,7 @@ export default function Dashboard() {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Category</label>
                 <select
-                  value={newProduct.category_id}
+                  value={newProduct.category_id || ''}
                   onChange={e => setNewProduct({ ...newProduct, category_id: e.target.value })}
                   className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
                   required
