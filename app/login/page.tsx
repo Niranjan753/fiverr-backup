@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -9,7 +10,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirectedFrom') || '/dashboard';
+
+  useEffect(() => {
+    if (user) {
+      router.replace(redirectPath);
+    }
+  }, [user, router, redirectPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,14 +28,14 @@ export default function LoginPage() {
 
     try {
       const { error: signInError } = await signIn(email, password);
-
       if (signInError) {
-        console.error('Sign in error:', signInError);
         setError(signInError.message);
+      } else {
+        router.push('/dashboard');
       }
     } catch (err) {
-      console.error('Unexpected error during sign in:', err);
-      setError('An unexpected error occurred');
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,7 +95,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="text-sm text-red-600">
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded">
                 {error}
               </div>
             )}
