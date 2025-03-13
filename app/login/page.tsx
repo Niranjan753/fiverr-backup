@@ -13,19 +13,23 @@ function LoginForm() {
   const { signIn, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirectedFrom') || '/dashboard';
+  
+  // Properly decode the redirectPath
+  const redirectPath = searchParams.get('redirectedFrom') 
+    ? decodeURIComponent(searchParams.get('redirectedFrom') || '/dashboard')
+    : '/dashboard';
 
-  // Handle initial auth state
+  const handleRedirect = () => {
+    // Remove any URL encoding artifacts and clean the path
+    const cleanPath = redirectPath.replace(/['"]/g, '').replace(/^\%2F/, '/');
+    router.replace(cleanPath);
+  };
+
   useEffect(() => {
     if (user) {
-      // Small delay to ensure auth state is fully processed
-      const redirectTimer = setTimeout(() => {
-        router.replace(redirectPath);
-      }, 100);
-      
-      return () => clearTimeout(redirectTimer);
+      handleRedirect();
     }
-  }, [user, router, redirectPath]);
+  }, [user]); // Remove router and redirectPath from dependencies
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +47,7 @@ function LoginForm() {
       }
 
       if (success) {
-        // Small delay to ensure auth state is updated
-        setTimeout(() => {
-          router.replace(redirectPath);
-        }, 100);
+        handleRedirect();
       }
     } catch (err) {
       console.error('Login error:', err);
