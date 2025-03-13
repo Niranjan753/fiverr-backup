@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Product } from '@/app/types/product';
-import CategoryPage from '@/app/components/CategoryPage';
+import CategoryPageComponent from '@/app/components/CategoryPage';
 import { useParams } from 'next/navigation';
 
 const categoryDescriptions: Record<string, string> = {
@@ -28,7 +28,7 @@ const categoryTitles: Record<string, string> = {
   'repeating-shots': 'Repeating Shots Collection'
 };
 
-export default function CategoryPage() {
+export default function CategoryRoute() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const params = useParams();
@@ -65,7 +65,7 @@ export default function CategoryPage() {
   }
 
   return (
-    <CategoryPage
+    <CategoryPageComponent
       title={categoryTitles[slug] || 'Products'}
       description={categoryDescriptions[slug] || 'Explore our collection of quality products.'}
       products={products}
