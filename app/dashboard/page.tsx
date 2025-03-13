@@ -107,11 +107,19 @@ export default function Dashboard() {
       const { data, error } = await supabase
         .from('products')
         .update(updateData)
-        .eq('id', product.id)
-        .select('*, categories(name)')
+        .match({ id: product.id })
+        .select(`
+          *,
+          categories (
+            name
+          )
+        `)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Update error:', error);
+        throw error;
+      }
 
       // Update the local state with the returned data
       setProducts(products.map(p => (p.id === product.id ? {
@@ -152,18 +160,33 @@ export default function Dashboard() {
     try {
       const { data, error } = await supabase
         .from('products')
-        .update({ is_visible: !product.is_visible })
-        .eq('id', product.id)
-        .select()
+        .update({ 
+          is_visible: !product.is_visible,
+          updated_at: new Date().toISOString()
+        })
+        .match({ id: product.id })
+        .select(`
+          *,
+          categories (
+            name
+          )
+        `)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Visibility update error:', error);
+        throw error;
+      }
 
-      setProducts(products.map(p => (p.id === product.id ? data : p)));
+      setProducts(products.map(p => (p.id === product.id ? {
+        ...data,
+        category_name: data.categories?.name
+      } : p)));
       toast.success(`Product ${data.is_visible ? 'shown' : 'hidden'} successfully!`);
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Error updating visibility: ' + dbError.message);
+      fetchData();
     }
   };
 
@@ -171,18 +194,33 @@ export default function Dashboard() {
     try {
       const { data, error } = await supabase
         .from('products')
-        .update({ stock_status: status })
-        .eq('id', product.id)
-        .select()
+        .update({ 
+          stock_status: status,
+          updated_at: new Date().toISOString()
+        })
+        .match({ id: product.id })
+        .select(`
+          *,
+          categories (
+            name
+          )
+        `)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Stock status update error:', error);
+        throw error;
+      }
 
-      setProducts(products.map(p => (p.id === product.id ? data : p)));
+      setProducts(products.map(p => (p.id === product.id ? {
+        ...data,
+        category_name: data.categories?.name
+      } : p)));
       toast.success('Stock status updated successfully!');
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Error updating stock status: ' + dbError.message);
+      fetchData();
     }
   };
 
@@ -199,17 +237,29 @@ export default function Dashboard() {
           price: newPrice,
           updated_at: new Date().toISOString()
         })
-        .eq('id', product.id)
-        .select()
+        .match({ id: product.id })
+        .select(`
+          *,
+          categories (
+            name
+          )
+        `)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Price update error:', error);
+        throw error;
+      }
 
-      setProducts(products.map(p => (p.id === product.id ? data : p)));
+      setProducts(products.map(p => (p.id === product.id ? {
+        ...data,
+        category_name: data.categories?.name
+      } : p)));
       toast.success('Price updated successfully!');
     } catch (error: unknown) {
       const dbError = error as DatabaseError;
       toast.error('Error updating price: ' + dbError.message);
+      fetchData();
     }
   };
 
