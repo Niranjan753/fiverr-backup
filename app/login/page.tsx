@@ -27,10 +27,14 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const { error: signInError } = await signIn(email, password);
+      const { error: signInError, success } = await signIn(email, password);
+      
       if (signInError) {
         setError(signInError.message);
-      } else {
+        return;
+      }
+
+      if (success) {
         router.push('/dashboard');
       }
     } catch (err) {

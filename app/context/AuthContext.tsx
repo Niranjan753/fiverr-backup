@@ -4,28 +4,26 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null; success: boolean }>;
   signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signIn: async () => ({ error: null }),
+  signIn: async () => ({ error: null, success: false }),
   signUp: async () => ({ error: null }),
-  signOut: async () => {},
+  signOut: async () => ({ error: null }),
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     // Check active sessions and sets the user
@@ -52,14 +50,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (!error && data?.user) {
         toast.success('Successfully signed in!');
-        router.push('/dashboard');
+        return { error: null, success: true };
       }
 
-      return { error };
+      return { error, success: false };
     } catch (error) {
       const authError = error as AuthError;
       toast.error(authError.message || 'Failed to sign in');
-      return { error: authError };
+      return { error: authError, success: false };
     }
   };
 
@@ -88,13 +86,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        toast.error('Failed to sign out');
+        return { error };
+      }
       toast.success('Successfully signed out!');
-      router.push('/login');
+      return { error: null };
     } catch (error) {
       const authError = error as AuthError;
       toast.error(authError.message || 'Failed to sign out');
-      throw error;
+      return { error: authError };
     }
   };
 
