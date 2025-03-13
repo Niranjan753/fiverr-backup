@@ -63,7 +63,7 @@ export async function fetchCategories() {
   try {
     const { data, error } = await supabase
       .from('categories')
-      .select('id, name, created_at')
+      .select('id, name')
       .order('name');
 
     if (error) throw error;
