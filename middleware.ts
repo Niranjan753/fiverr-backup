@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
     secure: true,
     sameSite: 'lax' as const,
     path: '/',
-    domain: hostname.includes('localhost') ? 'localhost' : '.vercel.app'
+    domain: hostname
   };
 
   // Set cookie headers

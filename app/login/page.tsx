@@ -20,13 +20,11 @@ export default function LoginPage() {
     // Simple hardcoded authentication
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
       // Set authentication cookie with proper domain
-      const domain = window.location.hostname.includes('localhost') 
-        ? 'localhost' 
-        : '.vercel.app';
+      const hostname = window.location.hostname;
 
       Cookies.set('isAuthenticated', 'true', {
         path: '/',
-        domain: domain,
+        domain: hostname,
         secure: true,
         sameSite: 'lax'
       });
