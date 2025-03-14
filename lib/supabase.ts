@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '../types/database';
+import { PostgrestError } from '@supabase/supabase-js';
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
@@ -25,13 +26,26 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 // Helper function to check if we're in a production environment
 export const isProduction = process.env.NODE_ENV === 'production';
 
-// Helper function to handle Supabase errors
-export const handleSupabaseError = (error: any) => {
+// Custom error type for handling various error types
+type SupabaseErrorType = PostgrestError | Error | unknown;
+
+// Helper function to handle Supabase errors with proper typing
+export const handleSupabaseError = (error: SupabaseErrorType): string => {
   console.error('Supabase error:', error);
+  
   if (isProduction) {
     return 'An error occurred while processing your request';
   }
-  return error.message || 'Unknown error occurred';
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return (error as { message: string }).message;
+  }
+
+  return 'Unknown error occurred';
 };
 
 export type Product = {
