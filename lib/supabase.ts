@@ -15,29 +15,24 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce',
-    storage: {
-      getItem: (key) => {
-        if (typeof window !== 'undefined') {
-          return window.localStorage.getItem(key);
-        }
-        return null;
-      },
-      setItem: (key, value) => {
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(key, value);
-        }
-      },
-      removeItem: (key) => {
-        if (typeof window !== 'undefined') {
-          window.localStorage.removeItem(key);
-        }
-      },
-    },
+    autoRefreshToken: true
   },
+  db: {
+    schema: 'public'
+  }
 });
+
+// Helper function to check if we're in a production environment
+export const isProduction = process.env.NODE_ENV === 'production';
+
+// Helper function to handle Supabase errors
+export const handleSupabaseError = (error: any) => {
+  console.error('Supabase error:', error);
+  if (isProduction) {
+    return 'An error occurred while processing your request';
+  }
+  return error.message || 'Unknown error occurred';
+};
 
 export type Product = {
   id: number;

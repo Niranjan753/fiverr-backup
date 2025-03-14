@@ -4,31 +4,14 @@ import { FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Product } from '@/app/types/product';
 import { Category } from '@/types/database';
 import { toast } from 'react-hot-toast';
-import { 
-  fetchProducts, 
-  fetchCategories, 
-  updateProduct, 
-  deleteProduct, 
-  addProduct,
-  ApiError,
-  ProductWithNestedCategory,
-  CategoryResponse
-} from '@/lib/productService';
-
-interface DatabaseError {
-  message: string;
-}
-
-interface ProductWithCategory extends Omit<Product, 'categories'> {
-  categories: CategoryResponse | null;
-  category_name?: string;
-}
+import { supabase, handleSupabaseError } from '@/lib/supabase';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'products' | 'categories'>('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(false);
   
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: '',
@@ -38,7 +21,6 @@ export default function Dashboard() {
     category_id: '',
     stock_status: 'in_stock',
     is_visible: true,
-    updated_at: new Date().toISOString()
   });
 
   useEffect(() => {
@@ -48,42 +30,26 @@ export default function Dashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch products
-      const productsResult = await fetchProducts();
-      if (productsResult.error) {
-        toast.error('Error fetching products: ' + productsResult.error.message);
-        return;
-      }
+      // Fetch products with error handling
+      const { data: productsData, error: productsError } = await supabase
+        .from('products')
+        .select('*, categories(name)')
+        .order('name');
 
-      if (productsResult.data) {
-        const typedProductsData = productsResult.data.map(product => {
-          // Safely access categories with proper typing
-          const rawCategories = product.categories as unknown as Record<string, string> | null;
-          return {
-            ...product,
-            categories: rawCategories ? { name: rawCategories.name } : null
-          };
-        }) as ProductWithCategory[];
-        
-        setProducts(typedProductsData.map(product => ({
-          ...product,
-          category_name: product.categories?.name || ''
-        })));
-      }
+      if (productsError) throw productsError;
 
-      // Fetch categories
-      const categoriesResult = await fetchCategories();
-      if (categoriesResult.error) {
-        toast.error('Error fetching categories: ' + categoriesResult.error.message);
-        return;
-      }
-      
-      if (categoriesResult.data) {
-        setCategories(categoriesResult.data);
-      }
-    } catch (error: unknown) {
-      const dbError = error as DatabaseError;
-      toast.error('Unexpected error occurred: ' + dbError.message);
+      // Fetch categories with error handling
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name');
+
+      if (categoriesError) throw categoriesError;
+
+      setProducts(productsData || []);
+      setCategories(categoriesData || []);
+    } catch (error) {
+      toast.error(handleSupabaseError(error));
     } finally {
       setLoading(false);
     }
@@ -91,88 +57,86 @@ export default function Dashboard() {
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUpdateLoading(true);
     try {
-      const result = await addProduct(newProduct);
-      
-      if (result.error) {
-        throw result.error;
-      }
+      const { data, error } = await supabase
+        .from('products')
+        .insert([newProduct])
+        .select('*, categories(name)')
+        .single();
 
-      if (result.data) {
-        // Safely transform the data with proper typing
-        const productData = result.data as unknown as ProductWithNestedCategory;
-        const productWithCategory: ProductWithCategory = {
-          ...productData,
-          categories: productData.categories,
-          category_name: productData.categories?.name || ''
-        };
-        
-        setProducts([...products, productWithCategory]);
-        
-        setNewProduct({
-          name: '',
-          price: 0,
-          description: '',
-          image_url: '',
-          category_id: '',
-          is_visible: true,
-          stock_status: 'in_stock'
-        });
-        
-        toast.success('Product added successfully!');
-      }
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      toast.error('Error adding product: ' + apiError.message);
+      if (error) throw error;
+
+      setProducts([...products, data]);
+      setNewProduct({
+        name: '',
+        price: 0,
+        description: '',
+        image_url: '',
+        category_id: '',
+        is_visible: true,
+        stock_status: 'in_stock'
+      });
+      toast.success('Product added successfully!');
+    } catch (error) {
+      toast.error(handleSupabaseError(error));
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
   const handleUpdateProduct = async (product: Product) => {
+    setUpdateLoading(true);
     try {
-      const result = await updateProduct(product);
-      
-      if (result.error) {
-        throw result.error;
-      }
+      const { data, error } = await supabase
+        .from('products')
+        .update({
+          name: product.name,
+          price: product.price,
+          description: product.description,
+          category_id: product.category_id,
+          stock_status: product.stock_status,
+          is_visible: product.is_visible,
+          image_url: product.image_url,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', product.id)
+        .select('*, categories(name)')
+        .single();
 
-      if (result.data) {
-        // Safely transform the data with proper typing
-        const updatedProductData = result.data as unknown as ProductWithNestedCategory;
-        const typedProduct: ProductWithCategory = {
-          ...updatedProductData,
-          categories: updatedProductData.categories,
-          category_name: updatedProductData.categories?.name || ''
-        };
+      if (error) throw error;
 
-        setProducts(products.map(p => (p.id === product.id ? typedProduct : p)));
-        
-        toast.success('Product updated successfully!');
-      }
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      toast.error('Error updating product: ' + apiError.message);
+      setProducts(products.map(p => p.id === product.id ? data : p));
+      toast.success('Product updated successfully!');
+    } catch (error) {
+      toast.error(handleSupabaseError(error));
+      // Refresh data to ensure consistency
       fetchData();
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
   const handleDeleteProduct = async (id: number) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
+    setUpdateLoading(true);
     try {
-      const result = await deleteProduct(id);
-      
-      if (result.error) {
-        throw result.error;
-      }
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
 
-      if (result.success) {
-        setProducts(products.filter(product => product.id !== id));
-        toast.success('Product deleted successfully!');
-      }
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      toast.error('Error deleting product: ' + apiError.message);
+      if (error) throw error;
+
+      setProducts(products.filter(product => product.id !== id));
+      toast.success('Product deleted successfully!');
+    } catch (error) {
+      toast.error(handleSupabaseError(error));
+      // Refresh data to ensure consistency
       fetchData();
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
@@ -184,14 +148,16 @@ export default function Dashboard() {
       };
       await handleUpdateProduct(updatedProduct);
     } catch (error) {
-      console.error('Toggle visibility error:', error);
+      toast.error(handleSupabaseError(error));
       fetchData();
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen">
-    <div className="text-xl font-semibold">Loading...</div>
-  </div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-xl font-semibold">Loading...</div>
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -201,12 +167,14 @@ export default function Dashboard() {
         <button 
           onClick={() => setActiveTab('products')}
           className={`mr-4 px-4 py-2 rounded ${activeTab === 'products' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          disabled={updateLoading}
         >
           Products
         </button>
         <button 
           onClick={() => setActiveTab('categories')}
           className={`px-4 py-2 rounded ${activeTab === 'categories' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          disabled={updateLoading}
         >
           Categories
         </button>
@@ -238,6 +206,7 @@ export default function Dashboard() {
                             p.id === product.id ? { ...p, name: e.target.value } : p
                           ))}
                           className="border rounded px-2 py-1 w-full text-sm"
+                          disabled={updateLoading}
                         />
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap">
@@ -254,6 +223,7 @@ export default function Dashboard() {
                             className="border rounded px-2 py-1 w-20 text-sm"
                             min="0"
                             step="1"
+                            disabled={updateLoading}
                           />
                           <span className="ml-1 text-gray-500 text-sm">₹</span>
                         </div>
@@ -265,6 +235,7 @@ export default function Dashboard() {
                             p.id === product.id ? { ...p, category_id: e.target.value } : p
                           ))}
                           className="border rounded px-2 py-1 text-sm w-32"
+                          disabled={updateLoading}
                         >
                           <option value="">Select Category</option>
                           {categories.map(category => (
@@ -281,6 +252,7 @@ export default function Dashboard() {
                             p.id === product.id ? { ...p, stock_status: e.target.value as 'in_stock' | 'out_of_stock' } : p
                           ))}
                           className="border rounded px-2 py-1 text-sm w-28"
+                          disabled={updateLoading}
                         >
                           <option value="in_stock">In Stock</option>
                           <option value="out_of_stock">Out of Stock</option>
@@ -290,18 +262,21 @@ export default function Dashboard() {
                         <button
                           onClick={() => handleUpdateProduct(product)}
                           className="px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded hover:bg-blue-600"
+                          disabled={updateLoading}
                         >
                           Update
                         </button>
                         <button
                           onClick={() => toggleVisibility(product)}
                           className={`p-1.5 rounded ${product.is_visible ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
+                          disabled={updateLoading}
                         >
                           {product.is_visible ? <FaEye /> : <FaEyeSlash />}
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(product.id)}
                           className="p-1.5 text-red-600 hover:text-red-900 rounded hover:bg-red-50"
+                          disabled={updateLoading}
                         >
                           <FaTrash />
                         </button>
@@ -325,6 +300,7 @@ export default function Dashboard() {
                     onChange={e => setNewProduct({ ...newProduct, name: e.target.value })}
                     className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
                     required
+                    disabled={updateLoading}
                   />
                 </div>
                 <div>
@@ -335,6 +311,7 @@ export default function Dashboard() {
                     onChange={e => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
                     className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
                     required
+                    disabled={updateLoading}
                   />
                 </div>
               </div>
@@ -345,6 +322,7 @@ export default function Dashboard() {
                   onChange={e => setNewProduct({ ...newProduct, description: e.target.value })}
                   className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
                   rows={3}
+                  disabled={updateLoading}
                 />
               </div>
               <div>
@@ -354,6 +332,7 @@ export default function Dashboard() {
                   onChange={e => setNewProduct({ ...newProduct, category_id: e.target.value })}
                   className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
                   required
+                  disabled={updateLoading}
                 >
                   <option value="">Select Category</option>
                   {categories.map(category => (
@@ -370,14 +349,16 @@ export default function Dashboard() {
                   value={newProduct.image_url}
                   onChange={e => setNewProduct({ ...newProduct, image_url: e.target.value })}
                   className="mt-1 block w-full border rounded-md shadow-sm py-2 px-3"
+                  disabled={updateLoading}
                 />
               </div>
               <div>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+                  disabled={updateLoading}
                 >
-                  Add Product
+                  {updateLoading ? 'Adding...' : 'Add Product'}
                 </button>
               </div>
             </form>
