@@ -27,18 +27,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('Error checking auth session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -48,12 +58,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
 
-      if (!error && data?.user) {
+      if (error) {
+        toast.error(error.message);
+        return { error, success: false };
+      }
+
+      if (data?.user) {
+        setUser(data.user);
         toast.success('Successfully signed in!');
         return { error: null, success: true };
       }
 
-      return { error, success: false };
+      return { error: null, success: false };
     } catch (error) {
       const authError = error as AuthError;
       toast.error(authError.message || 'Failed to sign in');
@@ -90,6 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error('Failed to sign out');
         return { error };
       }
+      setUser(null);
       toast.success('Successfully signed out!');
       return { error: null };
     } catch (error) {

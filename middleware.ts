@@ -1,30 +1,27 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req: request, res });
+  // Check authentication from cookies
+  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // Check auth condition
+  // Must be authenticated to access /dashboard
   if (request.nextUrl.pathname.startsWith('/dashboard')) {
-    if (!session) {
-      // Auth condition not met, redirect to login page
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/login';
-      redirectUrl.searchParams.set('redirectedFrom', request.nextUrl.pathname);
-      return NextResponse.redirect(redirectUrl);
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
-  return res;
+  // If logged in, can't access /login
+  if (request.nextUrl.pathname === '/login') {
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+  }
+
+  return NextResponse.next();
 }
 
-// Only run middleware on these paths
 export const config = {
-  matcher: ['/dashboard/:path*']
+  matcher: ['/dashboard/:path*', '/login']
 };
