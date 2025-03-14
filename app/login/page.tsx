@@ -19,9 +19,22 @@ export default function LoginPage() {
 
     // Simple hardcoded authentication
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      // Set authentication cookie
-      Cookies.set('isAuthenticated', 'true', { path: '/' });
-      window.location.href = '/dashboard';
+      // Set authentication cookie with proper domain
+      const domain = window.location.hostname.includes('localhost') 
+        ? 'localhost' 
+        : '.vercel.app';
+
+      Cookies.set('isAuthenticated', 'true', {
+        path: '/',
+        domain: domain,
+        secure: true,
+        sameSite: 'lax'
+      });
+
+      // Small delay to ensure cookie is set
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 100);
     } else {
       setError('Invalid email or password');
       setLoading(false);
