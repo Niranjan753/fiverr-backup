@@ -3,7 +3,7 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getClientComponentClient } from '@/lib/supabase';
 import ProductListPDF from './ProductListPDF';
 
 const STATES = [
@@ -51,11 +51,16 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
   const [showPDF, setShowPDF] = useState(false);
   // const [downloadCount, setDownloadCount] = useState(0);
 
-  const supabase = createClientComponentClient();
+  const supabase = getClientComponentClient();
 
   const fetchProducts = async () => {
     if (!selectedState) {
       setError('Please select a state');
+      return;
+    }
+
+    if (!supabase) {
+      setError('Unable to connect to the database');
       return;
     }
 

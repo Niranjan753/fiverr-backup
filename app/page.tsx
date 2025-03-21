@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getClientComponentClient } from '@/lib/supabase';
 import VideoHero from "./components/VideoHero";
 import WelcomeSection from './components/WelcomeSection';
 import FeaturesSection from './components/FeaturesSection';
@@ -10,13 +10,15 @@ import ReviewsSection from './components/ReviewsSection';
 import FeaturedCategories from './components/FeaturedCategories';
 
 export default function Home() {
-  const supabase = createClientComponentClient();
+  const supabase = getClientComponentClient();
 
   useEffect(() => {
     async function fetchProductCounts() {
       // ... same fetch logic ...
     }
-    fetchProductCounts();
+    if (supabase) {
+      fetchProductCounts();
+    }
   }, [supabase]);
 
   return (

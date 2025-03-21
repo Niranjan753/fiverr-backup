@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { getClientComponentClient } from '@/lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -16,10 +16,12 @@ export default function ShopByBrands() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const supabase = createClientComponentClient();
+  const supabase = getClientComponentClient();
 
   useEffect(() => {
     async function fetchBrandsFromProducts() {
+      if (!supabase) return;
+      
       try {
         setLoading(true);
         setError('');
