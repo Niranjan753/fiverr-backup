@@ -5,7 +5,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { getClientComponentClient } from '@/lib/supabase';
 import ProductListPDF from './ProductListPDF';
-import { Database } from '@/types/database';
 
 const STATES = [
   'Tamil Nadu',
@@ -31,8 +30,9 @@ const TN_DISTRICTS = [
   // Add more districts as needed
 ];
 
+// Make sure this matches the Product type in ProductListPDF
 interface Product {
-  id: number;
+  id: string;  // Changed back to string to match PDF component
   name: string;
   price: number;
   category: string;
@@ -83,15 +83,15 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
 
       if (data) {
         const typedProducts: Product[] = data.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          category: item.category,
-          description: item.description,
-          image_url: item.image_url,
-          stock_status: item.stock_status,
-          created_at: item.created_at,
-          updated_at: item.updated_at
+          id: String(item.id), // Convert number to string
+          name: String(item.name),
+          price: Number(item.price),
+          category: String(item.category),
+          description: item.description ? String(item.description) : undefined,
+          image_url: item.image_url ? String(item.image_url) : undefined,
+          stock_status: item.stock_status ? String(item.stock_status) : undefined,
+          created_at: item.created_at ? String(item.created_at) : undefined,
+          updated_at: item.updated_at ? String(item.updated_at) : undefined
         }));
         setProducts(typedProducts);
         setShowPDF(true);
