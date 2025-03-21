@@ -5,6 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { getClientComponentClient } from '@/lib/supabase';
 import ProductListPDF from './ProductListPDF';
+import { Database } from '@/types/database';
 
 const STATES = [
   'Tamil Nadu',
@@ -31,10 +32,15 @@ const TN_DISTRICTS = [
 ];
 
 interface Product {
-  id: string;
+  id: number;
   name: string;
   price: number;
   category: string;
+  description?: string;
+  image_url?: string;
+  stock_status?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface ProductListModalProps {
@@ -70,13 +76,24 @@ const ProductListModal = ({ isOpen, onClose }: ProductListModalProps) => {
     try {
       const { data, error: supabaseError } = await supabase
         .from('products')
-        .select('*')
+        .select('id, name, price, category, description, image_url, stock_status, created_at, updated_at')
         .order('category');
 
       if (supabaseError) throw supabaseError;
 
       if (data) {
-        setProducts(data as Product[]);
+        const typedProducts: Product[] = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          category: item.category,
+          description: item.description,
+          image_url: item.image_url,
+          stock_status: item.stock_status,
+          created_at: item.created_at,
+          updated_at: item.updated_at
+        }));
+        setProducts(typedProducts);
         setShowPDF(true);
       }
     } catch (err) {
