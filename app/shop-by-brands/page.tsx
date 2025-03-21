@@ -14,6 +14,10 @@ interface BrandCounts {
   [key: string]: number;
 }
 
+interface ProductBrand {
+  brand: string | null;
+}
+
 export default function ShopByBrands() {
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -49,7 +53,7 @@ export default function ShopByBrands() {
 
         // Count products for each brand
         const brandCounts: BrandCounts = {};
-        data.forEach(product => {
+        (data as ProductBrand[]).forEach(product => {
           if (product.brand) {
             brandCounts[product.brand] = (brandCounts[product.brand] || 0) + 1;
           }
