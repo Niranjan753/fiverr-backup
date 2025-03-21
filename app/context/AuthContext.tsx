@@ -1,31 +1,34 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User, AuthError } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
-import { toast } from 'react-hot-toast';
+import { User } from '@supabase/supabase-js';
+import { getClientComponentClient } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null; success: boolean }>;
-  signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signOut: () => Promise<{ error: AuthError | null }>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signIn: async () => ({ error: null, success: false }),
-  signUp: async () => ({ error: null }),
-  signOut: async () => ({ error: null }),
+  signOut: async () => {},
 });
+
+export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const supabase = getClientComponentClient();
 
   useEffect(() => {
+    if (!supabase) return;
+
     // Check active sessions and sets the user
     const initializeAuth = async () => {
       try {
@@ -41,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
@@ -49,78 +52,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error(error.message);
-        return { error, success: false };
-      }
-
-      if (data?.user) {
-        setUser(data.user);
-        toast.success('Successfully signed in!');
-        return { error: null, success: true };
-      }
-
-      return { error: null, success: false };
-    } catch (error) {
-      const authError = error as AuthError;
-      toast.error(authError.message || 'Failed to sign in');
-      return { error: authError, success: false };
-    }
-  };
-
-  const signUp = async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (!error) {
-        toast.success('Check your email for the confirmation link!');
-      }
-      
-      return { error };
-    } catch (error) {
-      const authError = error as AuthError;
-      toast.error(authError.message || 'Failed to sign up');
-      return { error: authError };
-    }
-  };
+  }, [supabase]);
 
   const signOut = async () => {
+    if (!supabase) return;
+
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        toast.error('Failed to sign out');
-        return { error };
-      }
+      await supabase.auth.signOut();
       setUser(null);
-      toast.success('Successfully signed out!');
-      return { error: null };
+      toast.success('Successfully signed out');
+      router.push('/login');
     } catch (error) {
-      const authError = error as AuthError;
-      toast.error(authError.message || 'Failed to sign out');
-      return { error: authError };
+      console.error('Error signing out:', error);
+      toast.error('Error signing out');
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export const useAuth = () => useContext(AuthContext); 
+} 

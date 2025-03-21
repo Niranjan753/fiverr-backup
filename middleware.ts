@@ -1,48 +1,44 @@
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  
-  // Get the hostname from the request
-  const hostname = request.headers.get('host') || '';
-  
-  // Check authentication from cookies
-  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req: request, res });
 
-  // Must be authenticated to access /dashboard
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
-    if (!isAuthenticated) {
+  // Refresh session if expired - required for Server Components
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Protected routes
+  const protectedPaths = ['/dashboard', '/admin'];
+  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
+
+  if (isProtectedPath) {
+    if (!session) {
+      // Redirect to login if accessing protected route without session
       const redirectUrl = new URL('/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
-  }
-
-  // If logged in, can't access /login
-  if (request.nextUrl.pathname === '/login') {
-    if (isAuthenticated) {
+  } else if (request.nextUrl.pathname === '/login') {
+    if (session) {
+      // Redirect to dashboard if already logged in
       const redirectUrl = new URL('/dashboard', request.url);
       return NextResponse.redirect(redirectUrl);
     }
   }
 
-  // Set cookie attributes
-  const cookieOptions = {
-    secure: true,
-    sameSite: 'lax' as const,
-    path: '/',
-    domain: hostname
-  };
-
-  // Set cookie headers
-  response.headers.set(
-    'Set-Cookie',
-    `isAuthenticated=${isAuthenticated}; Path=${cookieOptions.path}; Domain=${cookieOptions.domain}; SameSite=${cookieOptions.sameSite}${cookieOptions.secure ? '; Secure' : ''}`
-  );
-
-  return response;
+  return res;
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login']
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+  ],
 };
