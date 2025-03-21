@@ -10,12 +10,14 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signOut: async () => {},
+  signUp: async () => ({ success: false, error: 'Not implemented' })
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -68,9 +70,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signUp = async (email: string, password: string) => {
+    if (!supabase) return { success: false, error: 'Supabase client not initialized' };
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error signing up:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'An error occurred during signup' 
+      };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signOut, signUp }}>
       {children}
     </AuthContext.Provider>
   );
-} 
+}
